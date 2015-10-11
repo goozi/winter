@@ -113,7 +113,7 @@ public class TerritoryController extends BaseController {
   @ResponseBody
   public List<ComboTree> setPTerritory(HttpServletRequest request, ComboTree comboTree) {
     CriteriaQuery cq = new CriteriaQuery(TSTerritory.class);
-    cq.eq("TSTerritory.id", "0");
+    cq.eq("TSTerritory.id", "1");
     cq.add();
     CriteriaQuery cqIn = new CriteriaQuery(TSTerritory.class);
     if (comboTree.getId() != null) {

@@ -66,7 +66,7 @@ public class CgReportController extends BaseController {
 		loadVars(cgReportMap);
 		//step.4 页面css js引用
 		cgReportMap.put(CgAutoListConstant.CONFIG_IFRAME, getHtmlHead(request));
-		String html = viewEngine.parseTemplate("/org/jeecgframework/web/cgreport/engine/core/cgreportlist.ftl", cgReportMap);
+		String html = viewEngine.parseTemplate("/com/qihang/winter/web/cgreport/engine/core/cgreportlist.ftl", cgReportMap);
 		try {
 			response.setContentType("text/html");
 			response.setHeader("Cache-Control", "no-store");
@@ -122,7 +122,7 @@ public class CgReportController extends BaseController {
 		loadVars(cgReportMap);
 		//step.4 页面css js引用
 		cgReportMap.put(CgAutoListConstant.CONFIG_IFRAME, getHtmlHead(request));
-		String html = viewEngine.parseTemplate("/org/jeecgframework/web/cgreport/engine/core/cgreportlistpopup.ftl", cgReportMap);
+		String html = viewEngine.parseTemplate("/com/qihang/winter/web/cgreport/engine/core/cgreportlistpopup.ftl", cgReportMap);
 		try {
 			response.setContentType("text/html");
 			response.setHeader("Cache-Control", "no-store");
@@ -299,7 +299,7 @@ public class CgReportController extends BaseController {
 	/**
 	 * 装载数据字典
 	 * @param m	要放入freemarker的数据
-	 * @param bean 读取出来的动态配置数据
+	 * @param cgReportMap 读取出来的动态配置数据
 	 */
 	@SuppressWarnings("unchecked")
 	private void loadDic(Map m, Map<String, Object> cgReportMap) {
