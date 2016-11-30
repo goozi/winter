@@ -1,0 +1,43 @@
+.qh-logo{
+  width: 117px;
+  height: 38px;
+  background: url("img/logo.png");
+  float: left;
+  margin: 21px 10px 22px 15px;
+}
+.qh-divider{
+  background: url("img/divider_vertical.png");
+  width: 2px;
+  height: 68px;
+  float: left;
+  margin: 6px 2px 7px 2px;
+}
+.qh-title{
+  background: url("img/title.png");
+  width: 446px;
+  height: 41px;
+  float: left;
+  margin: 20px 2px 20px 10px;
+}
+.qh-nav-left{
+  height: 81px;
+  width: 1311px;
+  background: url("img/head.jpg");
+}
+.qh-nav-right{
+  height: 81px;
+  width: 352px;
+  background: url("img/head_bg.jpg");
+  overflow: hidden;
+  display: inline;
+}
+
+.qh-menu-divider{
+  height: 2px;
+  width: 231px;
+  background-image: url("img/divider_across.png");
+}
+
+.qh-icon-home{
+  background: url("img/nav_home.png") no-repeat;
+}
