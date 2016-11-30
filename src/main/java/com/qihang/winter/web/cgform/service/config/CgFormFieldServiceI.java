@@ -184,4 +184,10 @@ public interface CgFormFieldServiceI extends CommonService {
 	 */
 	public boolean checkTableExist(String tableName);
 
+	/**
+	 * 获取工作流数据
+	 * @param projectCode
+	 * @return
+	 */
+	public List<Map<String,Object>> loadFlowInfo(String projectCode,String isAll,String billId);
 }

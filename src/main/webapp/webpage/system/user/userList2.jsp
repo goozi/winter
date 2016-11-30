@@ -16,7 +16,7 @@
 
 <div id="userListtb" style="padding: 3px; height: 25px">
 	<div style="float: left;">
-	   <a href="#" id="add" class="easyui-linkbutton" plain="true" icon="icon-add" onclick="add('用户录入','userController.do?addorupdate','userList2')">用户录入</a> 
+	   <a href="#" id="add" class="easyui-linkbutton" plain="true" icon="icon-add" onclick="add('用户新增','userController.do?addorupdate','userList2')">用户新增</a>
 	   <a href="#" class="update" plain="true" icon="icon-edit" onclick="update('用户编辑','userController.do?addorupdate','userList2')">用户编辑</a>
 	</div>
 	<div align="right">

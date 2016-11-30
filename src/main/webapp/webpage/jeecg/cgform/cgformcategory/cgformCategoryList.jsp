@@ -26,7 +26,7 @@
 				url="cgformCategoryController.do?del&id={id}" />
 			<t:dgFunOpt exp="form_isDbSynch#eq#Y&&jformType#ne#3"
 				funname="addbytab(form_id,form_content)" title="form.template"></t:dgFunOpt>
-			<t:dgToolBar title="录入" icon="icon-add" width="600" height="300"
+			<t:dgToolBar title="新增" icon="icon-add" width="600" height="300"
 				url="cgformCategoryController.do?addorupdate" funname="add"></t:dgToolBar>
 			<t:dgToolBar title="编辑" icon="icon-edit" width="600" height="300"
 				url="cgformCategoryController.do?addorupdate" funname="update"></t:dgToolBar>

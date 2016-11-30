@@ -1,15 +1,17 @@
+<#assign entityPackage=entityPackage?replace("/",".")>
+
 package ${bussiPackage}.service.impl.${entityPackage};
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import ${bussiPackage}.service.${entityPackage}.${entityName}ServiceI;
-import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
-import org.jeecgframework.core.common.exception.BusinessException;
-import org.jeecgframework.core.util.MyBeanUtils;
+import com.qihang.winter.core.common.service.impl.CommonServiceImpl;
+import com.qihang.winter.core.common.exception.BusinessException;
+import com.qihang.winter.core.util.MyBeanUtils;
 import ${bussiPackage}.entity.${entityPackage}.${entityName}Entity;
 <#list subTab as sub>
-import ${bussiPackage}.entity.${sub.entityPackage}.${sub.entityName}Entity;
+import ${bussiPackage}.entity.${sub.entityPackage?replace("/",".")}.${sub.entityName}Entity;
 </#list>
 @Service("${entityName?uncap_first}Service")
 @Transactional

@@ -96,9 +96,9 @@ public class StudentEntity implements java.io.Serializable {
 	public void setSex(java.lang.String sex){
 		this.sex = sex;
 	}
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "COURSE_ID")
+
 	public CourseEntity getCourse() {
 		return course;
 	}

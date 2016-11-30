@@ -9,7 +9,7 @@
     <t:dgCol title="common.operation" field="opt" width="100"></t:dgCol>
 	<t:dgDelOpt url="functionController.do?delrule&id={id}" title="common.delete"></t:dgDelOpt>
 	<t:dgFunOpt funname="editoperation(id,operationname)" title="common.edit"></t:dgFunOpt>
-	<t:dgToolBar title="common.add.param" langArg="common.operation" icon="icon-add" url="functionController.do?addorupdaterule&functionId=${functionId}" funname="add"></t:dgToolBar>
+	<t:dgToolBar title="common.add.param" langArg="common.operation" icon="icon-add" url="functionController.do?addorupdaterule&functionId=${functionId}" funname="add" windowType="dialog"></t:dgToolBar>
 	</t:datagrid>
 <script type="text/javascript">
 function editoperation(operationId,operationname)

@@ -84,9 +84,9 @@ public class MenuTag extends TagSupport {
 			sb.append("var _menus="+ListtoMenu.getMenu(parentFun, childFun));
 			sb.append("</script>");
 		}
-		if(style.equals("june_bootstrap"))
+		if(style.equals("june_bootstrap") || style.equals("scm_bootstrap"))
 		{
-			sb.append(ListtoMenu.getBootstrapMenu(menuFun));
+			sb.append(ListtoMenu.getBootstrapMenu(menuFun,style));
 		}
 		if(style.equals("ace"))
 		{

@@ -95,7 +95,7 @@ function getIframeDocument(id){
  *            data
  */
 function getDataHanlder(data) {
-	data = eval("(" + data + ")");
+	//data = eval("(" + data + ")");
 	// 兼容之前order最小为0的问题
 	var orderMin = data[0].orderNum == 0;
 	$.each(data, function(idx, item) {
@@ -391,4 +391,107 @@ function fix(type){
 }
 
 
+//是否工作流切换事件
+function changeSel(){
+	var value = $("input:radio[name='isWorkFlow']:checked").val();
+	if(value==0){
+		$("#flowDiv").attr("style","display: none;");
+		$("#flowInfo").combobox("setValue",'');
+		//delWorkFlowStatusColumn();
+	}else if(value == 1){
+		$("#flowDiv").attr("style","display: block;");
+		//addWorkFlowStatusColumn();
+	}
+}
+//添加工作流状态字段
+function addWorkFlowStatusColumn(){
+	for (var i = 0; i < filedTypes.length; i++) {
+		var filedType=filedTypes[i];
+		var tr = $(getIframeDocument(filedType)).find("#" + bodytr
+			+ filedType + " tr").clone();
+		$("#tab_div_" + filedType).append(tr);
+		resetTrNum('#tab_div_' + filedType);
+		var length = $("#tab_div_" + filedType+" tr").length;
+		var tds = $("#tab_div_" + filedType)[0].children[0].children[length-1].children;
+		if(filedType=="check") {
+			for (var j = 0; j < tds.length; j++) {
+				var td = tds[j].children;
+				var value = "";
+				if(j==0) {
+					value = "flow_status";
+				}else if(j==1){
+					value = "流程状态"
+				}
+				td[0].value=value;
+			}
+		}else if(filedType == "page"){
+			for (var j = 0; j < tds.length; j++) {
+				var td = tds[j].children;
+				if(j==0) {
+					td[0].value = "flow_status";
+				}else if(j==1){
+					td[0].value = "流程状态"
+				}else if(j==2 || j==3){
+					td[0].checked=false;
+				}else if(j==5){
+					td[0].value = 10;
+				}
+			}
+		}else if(filedType == "database"){
+			for (var j = 0; j < tds.length; j++) {
+				var td = tds[j].children;
+				if(j==3) {
+					td[0].value = "flow_status";
+				}else if(j==4){
+					td[0].value = "流程状态"
+				}else if(j==5){
+					td[0].value=10;
+				}else if(j==8){
+					td[0].value = "int";
+				}
+			}
+		}else if(filedType == "key"){
+			for (var j = 0; j < tds.length; j++) {
+				var td = tds[j].children;
+				if(j==0) {
+					td[0].value = "flow_status";
+				}else if(j==1){
+					td[0].value = "流程状态"
+				}
+			}
+		}
+	}
+}
+//删除工作流状态字段
+function delWorkFlowStatusColumn(){
+	$("#tab_div_database").find('.fieldNameInput').each(function(index, ele){
+		//$.post("cgFormHeadController.do?delField&id="+ $("#tab_div_database").find("input[name='ck']:checked").val());
+		//toDelete.push($(this).find("input[name='ck']:checked").val());
+		//var selectIndex = ele.rowIndex;
+		//for (var i = 0; i < filedTypes.length; i++) {
+		//	$("#tab_div_" + filedTypes[i]).find("tr").eq(selectIndex).remove();
+		//}
+		if(ele.value=="flow_status"){
+			for (var i = 0; i < filedTypes.length; i++) {
+				$("#tab_div_" + filedTypes[i]).find("tr").eq(index).remove();
+			}
+			for (var i = 0; i < filedTypes.length; i++) {
+				resetTrNum("#tab_div_" + filedTypes[i]);
+			}
+		}
+	})
+	//for (var i = 0; i < filedTypes.length; i++) {
+	//	resetTrNum("#tab_div_" + filedTypes[i]);
+	//}
+}
 
+$(function(){
+	var isWorkFlow = $("#isWorkFlow").val();
+	if(isWorkFlow){
+		if(isWorkFlow == 1){
+			$("input:radio[name='isWorkFlow']").eq(1).attr("checked","checked");
+		}else if(isWorkFlow == 0){
+			$("input:radio[name='isWorkFlow']").eq(0).attr("checked","checked");
+		}
+	}
+})

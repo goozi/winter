@@ -40,6 +40,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -85,7 +86,7 @@ public class ExcelTempletController extends BaseController {
 	@SuppressWarnings("all")
 	@RequestMapping(params = "exportXls")
 	public void exportXls(HttpServletRequest request,
-			HttpServletResponse response,String field, DataGrid dataGrid) {
+			HttpServletResponse response,@RequestParam(value="field",required = false)String field, DataGrid dataGrid) {
 
 		String codedFileName = "文件";
 		String sheetName="导出信息";
@@ -255,7 +256,7 @@ public class ExcelTempletController extends BaseController {
 	 * @param docName
 	 * @return
 	 */
-	private static String  getDocVersion(String docName){
+	private static String  getDocVersion(@RequestParam(value ="docName",required = false)String docName){
 		if(docName.indexOf("(")>0){
 			return docName.substring(docName.indexOf("-v")+2, docName.indexOf("("));
 		}else {

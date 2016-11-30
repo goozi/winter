@@ -5,7 +5,7 @@
 <div id="system_function_functionList" class="easyui-layout" fit="true"><%--   update-end--Author:duanql  Date:20130619 for：操作按钮窗口显示控制--%>
 <div region="center" style="padding: 1px;">
     <t:datagrid name="functionList" title="menu.manage"
-                actionUrl="functionController.do?functionGrid" idField="id" treegrid="true" pagination="false">
+                actionUrl="functionController.do?functionGrid" idField="id" treegrid="true" pagination="false" checkOnSelect="true">
         <t:dgCol title="common.id" field="id" treefield="id" hidden="true"></t:dgCol>
         <t:dgCol title="menu.name" field="functionName" treefield="text"></t:dgCol>
         <t:dgCol title="common.icon" field="TSIcon_iconPath" treefield="code" image="true"></t:dgCol>
@@ -18,8 +18,8 @@
         <t:dgFunOpt funname="operationDetail(id)" title="button.setting"></t:dgFunOpt>
         <t:dgFunOpt funname="operationData(id)" title="数据规则"></t:dgFunOpt>
         <%--   update-end--Author:anchao  Date:20130415 for：按钮权限控制--%>
-        <t:dgToolBar title="common.add.param" langArg="common.menu" icon="icon-add" url="functionController.do?addorupdate" funname="addFun"></t:dgToolBar>
-        <t:dgToolBar title="common.edit.param" langArg="common.menu" icon="icon-edit" url="functionController.do?addorupdate" funname="update"></t:dgToolBar>
+        <t:dgToolBar title="common.add.param" langArg="common.menu" icon="icon-add" url="functionController.do?addorupdate" funname="addFun" windowType="dialog"></t:dgToolBar>
+        <t:dgToolBar title="common.edit.param" langArg="common.menu" icon="icon-edit" url="functionController.do?addorupdate" funname="update" windowType="dialog"></t:dgToolBar>
     </t:datagrid>
 </div>
 </div>
@@ -61,12 +61,12 @@ function operationDetail(functionId)
 }
 <%--   update-end--Author:anchao  Date:20130415 for：按钮权限控制--%>
 <%--   update-start--Author:Zerrion  Date:20130622 for：菜单录入代入父菜单--%>
-function addFun(title,url, id) {
+function addFun(title,url, id,width,height,windowType) {
 	var rowData = $('#'+id).datagrid('getSelected');
 	if (rowData) {
 		url += '&TSFunction.id='+rowData.id;
 	}
-	add(title,url,'functionList');
+	add(title,url,'functionList',width,height,windowType);
 }
 <%--   update-end--Author:Zerrion  Date:20130622 for：菜单录入代入父菜单--%>
 </script>

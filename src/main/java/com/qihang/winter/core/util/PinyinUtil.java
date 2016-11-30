@@ -275,7 +275,7 @@ public class PinyinUtil {
 	 * 
 	 * 将字符数组转换成字符串
 	 * 
-	 * @param str
+	 * @param ch
 	 * 
 	 * @param separator
 	 *            各个字符串之间的分隔符
@@ -307,7 +307,7 @@ public class PinyinUtil {
 	 * 
 	 * 将字符数组转换成字符串
 	 * 
-	 * @param str
+	 * @param ch
 	 * 
 	 * @return
 	 */
@@ -549,6 +549,36 @@ public class PinyinUtil {
 	}
 
 	/**
+	 * 提取每个汉字的首字母
+	 *  把特殊字符去掉，像账套代码就不需要特殊字符
+	 * @param str
+	 * @return String
+	 */
+	public static String getPinYinHeadCharDelSpecialChar(String str) {
+		String convert = "";
+		for (int j = 0; j < str.length(); j++) {
+			char word = str.charAt(j);
+			// 提取汉字的首字母
+			String[] pinyinArray = PinyinHelper.toHanyuPinyinStringArray(word);
+			if (pinyinArray != null) {
+				convert += pinyinArray[0].charAt(0);
+			} else {
+				convert += word;
+			}
+		}
+		//强制将中文特殊字符、英文特殊字符去掉
+		String[] regs = {"！","，","。","；","：","（","）","【","】","《","》","？","、","’","‘","“","”","——",
+				"!",",",".",";",":","(",")","[","]","<",">","?","\\","'","'","\"","\"","--"};
+		for(int i = 0; i < regs.length/2 ; i++){
+			convert = convert.replaceAll(regs[i],regs[i+regs.length/2]);
+		}
+		for(int i = 0; i < regs.length ; i++){
+			convert = convert.replace(regs[i],"");
+		}
+		return convert;
+	}
+
+	/**
 	 * 将字符串转换成ASCII码
 	 * 
 	 * @param cnStr
@@ -575,6 +605,49 @@ public class PinyinUtil {
 	 */
 	public static String converterToFirstSpell(String chines) {
 		String pinyinName = "";
+		//强转中文特殊字符为英文字符
+		String[] regs = {"！","，","。","；","：","（","）","【","】","《","》","？","、","’","‘","“","”","——",
+				"!",",",".",";",":","(",")","[","]","<",">","?","\\","'","'","\"","\"","--"};
+		for(int i = 0; i < regs.length/2 ; i++){
+			chines = chines.replaceAll(regs[i],regs[i+regs.length/2]);
+		}
+		char[] nameChar = chines.toCharArray();
+		HanyuPinyinOutputFormat defaultFormat = new HanyuPinyinOutputFormat();
+		defaultFormat.setCaseType(HanyuPinyinCaseType.LOWERCASE);
+		defaultFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+		for (int i = 0; i < nameChar.length; i++) {
+			if (nameChar[i] > 128) {
+				try {
+					pinyinName += PinyinHelper.toHanyuPinyinStringArray(
+							nameChar[i], defaultFormat)[0].charAt(0);
+				} catch (BadHanyuPinyinOutputFormatCombination e) {
+					e.printStackTrace();
+				}
+			} else {
+				pinyinName += nameChar[i];
+			}
+		}
+		return pinyinName;
+	}
+
+	/**
+	 * 汉字转换位汉语拼音首字母，英文字符不变
+	 *   把特殊字符去掉，像账套代码就不需要特殊字符
+	 * @param chines
+	 *            汉字
+	 * @return 拼音
+	 */
+	public static String converterToFirstSpellDelSpecialChar(String chines) {
+		String pinyinName = "";
+		//强制将中文特殊字符、英文特殊字符去掉
+		String[] regs = {"！","，","。","；","：","（","）","【","】","《","》","？","、","’","‘","“","”","——",
+				"!",",",".",";",":","(",")","[","]","<",">","?","\\","'","'","\"","\"","--"};
+		for(int i = 0; i < regs.length/2 ; i++){
+			chines = chines.replaceAll(regs[i],regs[i+regs.length/2]);
+		}
+		for(int i = 0; i < regs.length ; i++){
+			chines = chines.replace(regs[i],"");
+		}
 		char[] nameChar = chines.toCharArray();
 		HanyuPinyinOutputFormat defaultFormat = new HanyuPinyinOutputFormat();
 		defaultFormat.setCaseType(HanyuPinyinCaseType.LOWERCASE);

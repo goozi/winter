@@ -199,7 +199,7 @@ public class CgTableServiceImpl extends CommonServiceImpl implements CgTableServ
 				}
 			}
 			parentIds = parentIds.substring(1);
-			String subSQL = "select `" + parentIdFieldName + "`, count(*) ct from " + table + " a where a.`" + parentIdFieldName + "` in" + "(" + parentIds + ") group by a.`" + parentIdFieldName + "`";
+			String subSQL = "select " + parentIdFieldName + ", count(*) ct from " + table + " a where a." + parentIdFieldName + " in" + "(" + parentIds + ") group by a." + parentIdFieldName;
 			List<Map<String, Object>> subCountResult =  this.findForJdbc(subSQL);
 			Map<String, Object> subCountMap = new HashMap<String, Object>();
 			for (Map<String, Object> map : subCountResult) {

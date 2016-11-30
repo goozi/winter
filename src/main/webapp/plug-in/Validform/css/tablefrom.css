@@ -4,17 +4,27 @@ body {
 	margin-right: 0px;
 	margin-bottom: 0px;
 	font-size:12px;
-	background-image: url(resources/fc/images/bj.jpg);
+	/*background-image: url(resources/fc/images/bj.jpg);*/
 }
 .formtable .inputxt{
 	border:1px solid #a5aeb6;
 	width:150px;
-	padding:3px 2px;
+	padding:2px 2px;
+	-moz-box-sizing : border-box ;
+	-webkit-box-sizing : border-box ;
+	box-sizing : border-box ;
+	height : 20px ;
+	* height : 14px ;
+}
+.formtable .inputxtarea{
+	border:1px solid #a5aeb6;
+	padding:2px 2px;
 }
 .formtable select{
-	padding:3px 2px;
+	padding:2px 2px;
 	width:155px;
 }
+
 .Validform_label {
 	font-size: 12px;
 	font-weight: bold;
@@ -70,4 +80,8 @@ body {
 .passwordStrength .bgStrength{
 	color:#fff;
 	background-color:#71b83d;
+}
+
+.gray{
+	color: darkgray;
 }

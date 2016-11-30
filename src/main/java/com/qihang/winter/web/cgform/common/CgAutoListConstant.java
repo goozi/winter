@@ -35,6 +35,8 @@ public class CgAutoListConstant {
 	public static final String CONFIG_NOLISTSTR = "config_noliststr";
 	/** iframe */
 	public static final String CONFIG_IFRAME = "config_iframe";
+	/** 窗口类型 */
+	public static final String CONFIG_WINDOWTYPE = "config_windowtype";
 	/** 表名 */
 	public static final String TABLENAME = "tableName";
 	/** 字段串 */
@@ -128,4 +130,16 @@ public class CgAutoListConstant {
 	public static final String SYS_MODE_DEV = "DEV";
 	/** 系统模式--发布模式 */
 	public static final String SYS_MODE_PUB = "PUB";
+
+
+	/**
+	 * 工作流配置信息
+	 */
+	/**是否工作流*/
+	public static final String IS_WORKFLOW ="isWorkFlow";
+	/**
+	 * 工作流关联值
+	 */
+	public static final String FLOW_INFO = "flowInfo";
+
 }

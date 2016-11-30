@@ -54,7 +54,7 @@ function browseFolder(path) {
 </style>
 </head>
 <body style="overflow-y: hidden; overflow-x: hidden;" scroll="no">
-<t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" tiptype="1" action="generateController.do?dogenerate">
+<t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" tiptype="1" action="generateController.do?dogenerate" windowType="dialog">
 	<input id="id" name="id" type="hidden" value="${cgFormHeadPage.id}">
 	<input id="tableName" name="tableName" type="hidden" value="${cgFormHeadPage.tableName}">
 	<input type="hidden" id="fieldRowNum" name="fieldRowNum" value="1">

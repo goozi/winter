@@ -49,6 +49,7 @@ public class BaseCodeFactory {
 
 
   public String getCodePathServiceStyle(String path, String type, String entityPackage, String entityName) {
+//    entityPackage = entityPackage.replace(".","/");
     StringBuilder str = new StringBuilder();
     if (StringUtils.isNotBlank(type)) {
       String codeType = ((CodeType) Enum.valueOf(CodeType.class, type)).getValue();
@@ -111,6 +112,7 @@ public class BaseCodeFactory {
 
 
   public String getCodePathProjectStyle(String path, String type, String entityPackage, String entityName) {
+//    entityPackage = entityPackage.replace(".","/");
     StringBuilder str = new StringBuilder();
     if (StringUtils.isNotBlank(type)) {
       String codeType = ((CodeType) Enum.valueOf(CodeType.class, type)).getValue();

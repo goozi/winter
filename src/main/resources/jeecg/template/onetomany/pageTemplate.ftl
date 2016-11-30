@@ -1,3 +1,5 @@
+<#assign entityPackage=entityPackage?replace("/",".")>
+
 package ${bussiPackage}.page.${entityPackage};
 
 import java.math.BigDecimal;
@@ -15,7 +17,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.SequenceGenerator;
 
 <#list subTab as sub>
-import ${bussiPackage}.entity.${sub.entityPackage}.${sub.entityName}Entity;
+import ${bussiPackage}.entity.${sub.entityPackage?replace("/",".")}.${sub.entityName}Entity;
 </#list>
 
 /**   

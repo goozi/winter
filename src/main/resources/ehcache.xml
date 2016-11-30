@@ -16,6 +16,14 @@
 			properties="replicatePuts=false,replicateUpdatesViaCopy=false" />
 	</cache>
 
+	<!-- 账套信息缓存 -->
+	<cache name="accountConfigCache" maxElementsInMemory="500" overflowToDisk="true"
+		   eternal="true">
+		<cacheEventListenerFactory
+				class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
+				properties="replicatePuts=false,replicateUpdatesViaCopy=false" />
+	</cache>
+
 	<cache name="eternalCache" maxElementsInMemory="500"
 		overflowToDisk="true" eternal="false" timeToIdleSeconds="1200"
 		timeToLiveSeconds="1200">

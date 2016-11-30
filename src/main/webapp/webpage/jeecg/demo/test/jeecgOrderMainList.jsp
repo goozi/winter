@@ -15,7 +15,7 @@
 	<t:dgCol title="备注" field="goContent"></t:dgCol>
 	<t:dgCol title="操作" field="opt" width="100"></t:dgCol>
 	<t:dgDelOpt title="删除" url="jeecgOrderMainController.do?del&id={id}" />
-	<t:dgToolBar title="录入" icon="icon-add" url="jeecgOrderMainController.do?addorupdate" funname="add" width="1000" height="400"></t:dgToolBar>
+	<t:dgToolBar title="新增" icon="icon-add" url="jeecgOrderMainController.do?addorupdate" funname="add" width="1000" height="400"></t:dgToolBar>
 	<t:dgToolBar title="编辑" icon="icon-edit" url="jeecgOrderMainController.do?addorupdate" funname="update" width="1000" height="400"></t:dgToolBar>
 </t:datagrid></div>
 </div>

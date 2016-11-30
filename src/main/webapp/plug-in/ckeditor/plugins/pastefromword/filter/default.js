@@ -1374,11 +1374,16 @@
 		// Firefox will be confused by those downlevel-revealed IE conditional
 		// comments, fixing them first( convert it to upperlevel-revealed one ).
 		// e.g. <![if !vml]>...<![endif]>
+		return data;
 		if (CKEDITOR.env.gecko)
-			data = data.replace(
-					/(<!--\[if[^<]*?\])-->([\S\s]*?)<!--(\[endif\]-->)/gi,
-					'$1$2$3');
-
+			data = data.replace(/(<!--\[if[^<]*?\])-->([\S\s]*?)<!--(\[endif\]-->)/gi,'$1$2$3');
+			var j = new g(),k = j.dataFilter;k.addRules(CKEDITOR.plugins.pastefromword.getRules(editor));
+			editor.fire('beforeCleanWord',{filter:k});
+		try{
+			data = j.toHtml(data,false);
+		}catch(I){
+			alert(editor.lang.pastefromword.error);
+		}
 		// #9456 - Webkit doesn't wrap list number with span, which is crucial
 		// for filter to recognize list.
 		//
@@ -1401,7 +1406,7 @@
 		// </span>
 		// <!--[endif]-->Test3<o:p></o:p>
 		// </p>
-		if (CKEDITOR.env.webkit) {
+/*		if (CKEDITOR.env.webkit) {
 			data = data
 					.replace(
 							/(class="MsoListParagraph[^>]+><!--\[if !supportLists\]-->)([^<]+<span[^<]+<\/span>)(<!--\[endif\]-->)/gi,
@@ -1417,7 +1422,7 @@
 		// Allow extending data filter rules.
 		editor.fire('beforeCleanWord', {
 			filter : dataFilter
-		});
+		});*/
 		
 //		try {
 //			data = dataProcessor.toHtml(data);

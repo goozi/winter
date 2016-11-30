@@ -2,26 +2,25 @@ package com.qihang.winter.core.extend.hqlsearch;
 
 import java.beans.PropertyDescriptor;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.qihang.winter.core.annotation.query.QueryTimeFormat;
 import com.qihang.winter.core.extend.hqlsearch.parse.ObjectParseUtil;
 import com.qihang.winter.core.extend.hqlsearch.parse.PageValueConvertRuleEnum;
 import com.qihang.winter.core.extend.hqlsearch.parse.vo.HqlRuleEnum;
-import com.qihang.winter.core.util.JeecgDataAutorUtils;
+import com.qihang.winter.core.util.*;
+import com.qihang.winter.web.system.pojo.base.TSDepart;
+import com.qihang.winter.web.system.service.SystemService;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.Restrictions;
 import com.qihang.winter.core.common.hibernate.qbc.CriteriaQuery;
-import com.qihang.winter.core.util.JSONHelper;
-import com.qihang.winter.core.util.ResourceUtil;
-import com.qihang.winter.core.util.StringUtil;
 import com.qihang.winter.web.demo.entity.test.QueryCondition;
 import com.qihang.winter.web.system.pojo.base.TSDataRule;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.NumberUtils;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 
@@ -47,7 +46,7 @@ public class HqlGenerateUtil {
 	 * @throws Exception
 	 */
 	public static void installHql(CriteriaQuery cq, Object searchObj) {
-		installHql(cq,searchObj,null);
+		installHql(cq, searchObj, null);
 
 	}
 
@@ -78,6 +77,21 @@ public class HqlGenerateUtil {
 				System.out.println("DEBUG sqlbuilder:"+sql);
 				cq.add(Restrictions.sqlRestriction(sql));
 			}
+      List<String> acList = (List<String>)ContextHolderUtils.getSession().getAttribute("acList");
+		if(acList == null){
+			acList = new ArrayList<String>();
+		}
+      for(String ac : acList){
+        Object value = cq.getMap().get(ac);
+        if(value != null) {
+          String fieldName = HibernateUtil.getColumnName(searchObj.getClass(),ac);
+          String acSql = " (" + fieldName + " like '" + value + "' or " +
+									(ResourceUtil.getConfigByName("jdbc.url.jeecg").equals("mysql") ? "" : "dbo.") +
+									"FB_GetChineseSpell(" + fieldName + ") like '" + value + "') ";
+          cq.getCriterionList().remove(ac);
+          cq.add(Restrictions.sqlRestriction(acSql));
+        }
+      }
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -134,11 +148,35 @@ public class HqlGenerateUtil {
 						|| type.contains("class java.math")) {
 					// for：查询拼装的替换
 					if (value != null && !value.equals("")) {
-						HqlRuleEnum rule = PageValueConvertRuleEnum
-								.convert(value);
-						value = PageValueConvertRuleEnum.replaceValue(rule,
-								value);
-						ObjectParseUtil.addCriteria(cq, aliasName, rule, value);
+						//Zerrion 151027 改为默认模糊查询
+						//如果查询条件不为sonId时进行模糊查询
+						if(!"sonId".toLowerCase().equals(aliasName.toLowerCase())) {
+							if (type.contains("class java.lang.String") && !value.toString().contains("*")) {
+								value = "*" + value + "*";
+							}
+							HqlRuleEnum rule = PageValueConvertRuleEnum
+									.convert(value);
+							value = PageValueConvertRuleEnum.replaceValue(rule,
+									value);
+							ObjectParseUtil.addCriteria(cq, aliasName, rule, value);
+						} else {
+							//默认不查询分支机构
+							if(!"000".equals(value)) {
+								SystemService systemService = systemService = ApplicationContextUtil.getContext().getBean(SystemService.class);
+								Set<String> sonList = systemService.formatterSonId(value.toString());
+								ObjectParseUtil.addCriteria(cq, aliasName, HqlRuleEnum.IN, sonList.toArray());
+							}
+						}
+					} else if("sonId".toLowerCase().equals(aliasName.toLowerCase())){
+						//若分支机构查询数据为空，则查询当前分支机构数据
+						SystemService systemService = systemService = ApplicationContextUtil.getContext().getBean(SystemService.class);
+						String userName = ResourceUtil.getSessionUserName().getUserName();
+						if(!"programmer".equals(userName)) {
+							TSDepart sonInfo = ResourceUtil.getSessionUserName().getCurrentDepart();
+							TSDepart parentSonId = systemService.getParentSonInfo(sonInfo);
+							//Set<String> sonList = systemService.getAllSonId(parentSonId.getId());
+							ObjectParseUtil.addCriteria(cq, aliasName, HqlRuleEnum.EQ, parentSonId.getId());
+						}
 					} else if (parameterMap != null) {
 						ObjectParseUtil.addCriteria(cq, aliasName,
 								HqlRuleEnum.GE, beginValue);
@@ -214,6 +252,13 @@ public class HqlGenerateUtil {
 		return false;
 	}
 
+	/**
+	 * 添加数据规则到查询条件中
+	 * @param tsDataRule
+	 * @param aliasName
+	 * @param propertyType
+	 * @param cq
+   */
 	private static void addRuleToCriteria(TSDataRule tsDataRule,
 			String aliasName, Class propertyType, CriteriaQuery cq) {
 		HqlRuleEnum rule = HqlRuleEnum.getByValue(tsDataRule
@@ -323,14 +368,15 @@ public class HqlGenerateUtil {
 	 * 根据对象拼装sql 
 	 * TODO 结合DataRule
 	 * @param list
-	 * @param tab格式化
+	 * @param tab
 	 * @return
 	 */
 	public static String getSql(List<QueryCondition> list,String tab){
 		StringBuffer sb=new StringBuffer();
 		sb.append(" 1=1 ");
 		for(QueryCondition c :list){
-			sb.append(tab+c);sb.append("\r\n");
+            sb.append(tab + c);
+            sb.append("\r\n");
 			if(c.getChildren()!=null){
 				
 				List list1= JSONHelper.toList(c.getChildren(), QueryCondition.class);

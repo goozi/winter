@@ -471,6 +471,23 @@
 
 		e.preventDefault();
 		$sidebar.ace_sidebar('toggleMenu', this);
+		var evt = window.document.createEvent('UIEvents');
+		evt.initUIEvent('resize', true, false, window, 0);
+		window.dispatchEvent(evt);
+		/*//$('#page-content-area').height($(window).height()-130);
+		//$('iframe').height($(window).height()-180<510?510:$(window).height()-180);
+		$('iframe').width($('#page-content-area').width()-20);
+		//$('#maintabs').height($(window).height()-180<510?510:$(window).height()-180);
+		$('#maintabs').width($('#page-content-area').width());
+		var title = $('.tabs-selected').text();
+		if (title == '首页') {
+			$('iframe').attr('src', $('iframe').attr('src'));
+		}
+			$('#maintabs').tabs({
+				width: $("#maintabs").parent().width()
+				//height: $("#maintabs").parent().height()
+			});
+		*/
 	})
 	//this button is used in `mobile_style = 3` responsive menu style to expand minimized sidebar
 	.on(ace.click_event+'.ace.menu', '.sidebar-expand', function(e){

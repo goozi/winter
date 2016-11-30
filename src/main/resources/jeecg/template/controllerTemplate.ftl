@@ -1,3 +1,4 @@
+<#assign entityPackage=entityPackage?replace("/",".")>
 package ${bussiPackage}.controller.${entityPackage};
 import java.util.List;
 
@@ -12,16 +13,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import org.jeecgframework.core.common.controller.BaseController;
-import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
-import org.jeecgframework.core.common.model.json.AjaxJson;
-import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.Globals;
-import org.jeecgframework.core.util.StringUtil;
-import org.jeecgframework.tag.core.easyui.TagUtil;
-import org.jeecgframework.web.system.pojo.base.TSDepart;
-import org.jeecgframework.web.system.service.SystemService;
-import org.jeecgframework.core.util.MyBeanUtils;
+import com.qihang.winter.core.common.controller.BaseController;
+import com.qihang.winter.core.common.hibernate.qbc.CriteriaQuery;
+import com.qihang.winter.core.common.model.json.AjaxJson;
+import com.qihang.winter.core.common.model.json.DataGrid;
+import com.qihang.winter.core.constant.Globals;
+import com.qihang.winter.core.util.StringUtil;
+import com.qihang.winter.tag.core.easyui.TagUtil;
+import com.qihang.winter.web.system.pojo.base.TSDepart;
+import com.qihang.winter.web.system.service.SystemService;
+import com.qihang.winter.core.util.MyBeanUtils;
 
 import ${bussiPackage}.entity.${entityPackage}.${entityName}Entity;
 import ${bussiPackage}.service.${entityPackage}.${entityName}ServiceI;
@@ -81,7 +82,7 @@ public class ${entityName}Controller extends BaseController {
 	public void datagrid(${entityName}Entity ${entityName?uncap_first},HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		CriteriaQuery cq = new CriteriaQuery(${entityName}Entity.class, dataGrid);
 		//查询条件组装器
-		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, ${entityName?uncap_first}, request.getParameterMap());
+		com.qihang.winter.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, ${entityName?uncap_first}, request.getParameterMap());
 		this.${entityName?uncap_first}Service.getDataGridReturn(cq, true);
 		TagUtil.datagrid(response, dataGrid);
 	}

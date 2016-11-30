@@ -78,7 +78,8 @@ public class DbTableUtil {
 			dbTableHandle = new DbTableOracleHandleImpl();
 		}else if (dialect.equals("org.hibernate.dialect.PostgreSQLDialect")) {
 			dbTableHandle = new DbTablePostgresHandleImpl();
-		}else if (dialect.equals("org.hibernate.dialect.SQLServerDialect")) {
+		}else if (dialect.equals("org.hibernate.dialect.SQLServerDialect") ||
+				dialect.equals("com.qihang.winter.core.common.hibernate.dialect.QihangSQLServer2005Dialect")) {
 			dbTableHandle = new TableSQLServerHandleImpl();
 		}
 		return dbTableHandle;
@@ -100,7 +101,8 @@ public class DbTableUtil {
 			dataType="ORACLE";
 		}else if (dialect.equals("org.hibernate.dialect.PostgreSQLDialect")) {
 			dataType = "POSTGRESQL";
-		}else if (dialect.equals("org.hibernate.dialect.SQLServerDialect")) {
+		}else if (dialect.equals("org.hibernate.dialect.SQLServerDialect") ||
+            dialect.equals("com.qihang.winter.core.common.hibernate.dialect.QihangSQLServer2005Dialect")) {
 			dataType="SQLSERVER";
 		}
 		return dataType;

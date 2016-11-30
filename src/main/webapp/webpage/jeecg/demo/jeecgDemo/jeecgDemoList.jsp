@@ -21,8 +21,8 @@
 	<%--update-end--Author:fangwenrong  Date:20150510 for：添加各项显示长度，解决显示排版问题--%>
 <!--	<t:dgFunOpt exp="status#eq#0" operationCode="szqm" funname="szqm(id)" title="审核" />-->
 	<t:dgDelOpt operationCode="del" title="删除" url="jeecgDemoController.do?del&id={id}" />
-	<t:dgToolBar operationCode="add" title="录入" icon="icon-add" url="jeecgDemoController.do?addorupdate" funname="add"></t:dgToolBar>
-	<t:dgToolBar operationCode="mobileAdd" title="mobile录入" icon="icon-add" url="jeecgDemoController.do?addorupdatemobile" funname="addMobile"></t:dgToolBar>
+	<t:dgToolBar operationCode="add" title="新增" icon="icon-add" url="jeecgDemoController.do?addorupdate" funname="add"></t:dgToolBar>
+	<t:dgToolBar operationCode="mobileAdd" title="mobile新增" icon="icon-add" url="jeecgDemoController.do?addorupdatemobile" funname="addMobile"></t:dgToolBar>
 	<t:dgToolBar operationCode="edit" title="编辑" icon="icon-edit" url="jeecgDemoController.do?addorupdate" funname="update"></t:dgToolBar>
 	<t:dgToolBar operationCode="edit" title="mobile编辑" icon="icon-edit" url="jeecgDemoController.do?addorupdatemobile" funname="updateMobile"></t:dgToolBar>
 	<t:dgToolBar operationCode="detail" title="查看" icon="icon-search" url="jeecgDemoController.do?addorupdate" funname="detail"></t:dgToolBar>

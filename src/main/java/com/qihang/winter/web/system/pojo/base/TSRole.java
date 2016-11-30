@@ -15,6 +15,7 @@ import com.qihang.winter.core.common.entity.IdEntity;
 public class TSRole extends IdEntity implements java.io.Serializable {
 	private String roleName;//角色名称
 	private String roleCode;//角色编码
+	private String projectCode;//程序代码
 	/**创建时间*/
 	private java.util.Date createDate;
 	/**创建人ID*/
@@ -138,5 +139,14 @@ public class TSRole extends IdEntity implements java.io.Serializable {
 	 */
 	public void setUpdateName(java.lang.String updateName){
 		this.updateName = updateName;
+	}
+
+	@Column(name = "projectCode", length = 4)
+	public String getProjectCode() {
+		return projectCode;
+	}
+
+	public void setProjectCode(String projectCode) {
+		this.projectCode = projectCode;
 	}
 }

@@ -866,8 +866,8 @@ a:hover {
 		to(#f2f2f2));
 	background: -o-gradient(linear, 0 0, 0 100%, from(#f7f7f7), to(#f2f2f2));
 	background: -ms-gradient(linear, 0 0, 0 100%, from(#f7f7f7), to(#f2f2f2));
-	filter: progid:DXImageTransform.Microsoft.gradient(startcolorstr=#f7f7f7,
-		endcolorstr=#f2f2f2, gradientType=0);
+	/*filter: progid:DXImageTransform.Microsoft.gradient(startcolorstr=#f7f7f7,
+		endcolorstr=#f2f2f2, gradientType=0);*/
 	height: 28px;
 	padding: 0 20px;
 	cursor: pointer;
@@ -891,8 +891,8 @@ a.l-btn span.l-btn-left .icon-ok{
 		to(#f2f2f2));
 	background: -o-gradient(linear, 0 0, 0 100%, from(#FFFFFF), to(#f2f2f2));
 	background: -ms-gradient(linear, 0 0, 0 100%, from(#FFFFFF), to(#f2f2f2));
-	filter: progid:DXImageTransform.Microsoft.gradient(startcolorstr=#FFFFFF,
-		endcolorstr=#f2f2f2, gradientType=0);
+	/*filter: progid:DXImageTransform.Microsoft.gradient(startcolorstr=#FFFFFF,*/
+		/*endcolorstr=#f2f2f2, gradientType=0);*/
 	color: #666666;
 	cursor: pointer;
 }
@@ -1394,7 +1394,7 @@ a.view {
 }
 
 .defaultIcon {
-	background: url(../images/default.png) no-repeat;
+	background: url(default/images/default.png) no-repeat;
 	width: 30px;
 	height: 14px;
 	display: inline-block;

@@ -82,6 +82,13 @@ public interface CommonService {
 			String propertyName, Object value);
 
 	/**
+	 * 按属性查找对象列表.
+	 * @param mode 查询模式 false使用=, true使用like
+	 */
+	public <T> List<T> findByProperty(Class<T> entityClass,
+																		String propertyName, Object value,boolean mode);
+
+	/**
 	 * 加载全部实体
 	 * 
 	 * @param <T>
@@ -134,6 +141,15 @@ public interface CommonService {
 	/**
 	 * 根据sql查找List
 	 * 
+	 * @param <T>
+	 * @param query
+	 * @return
+	 */
+	public <T> List<T> findListbySql(String query,Class<T> entity);
+
+	/**
+	 * 根据sql查找List
+	 *
 	 * @param <T>
 	 * @param query
 	 * @return
@@ -350,4 +366,6 @@ public interface CommonService {
 			int maxResult);
 
 	public <T> List<T> findByDetached(DetachedCriteria dc);
+
+
 }

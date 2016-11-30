@@ -9,8 +9,8 @@
 	<t:dgCol title="类型编码" field="typecode"></t:dgCol>
 	<t:dgCol title="操作" field="opt"></t:dgCol>
 	<t:dgDelOpt url="systemController.do?delType&id={id}" title="删除"></t:dgDelOpt>
-	<t:dgToolBar title="${typegroup.typegroupname}录入" icon="icon-add" url="systemController.do?addorupdateType&typegroupid=${typegroup.id}" funname="add"></t:dgToolBar>
-	<t:dgToolBar title="类别编辑" icon="icon-edit" url="systemController.do?addorupdateType&typegroupid=${typegroup.id}" funname="update"></t:dgToolBar>
+	<t:dgToolBar title="${typegroup.typegroupname}新增" icon="icon-add" url="systemController.do?addorupdateType&typegroupid=${typegroup.id}" funname="add" windowType="dialog"></t:dgToolBar>
+	<t:dgToolBar title="类别编辑" icon="icon-edit" url="systemController.do?addorupdateType&typegroupid=${typegroup.id}" funname="update" windowType="dialog"></t:dgToolBar>
 </t:datagrid></div>
 </div>
 

@@ -16,7 +16,7 @@
 </div>
 
 <div style="display: none">
-    <t:formvalid formid="formobj" layout="div" dialog="true" action="roleController.do?doAddUserToRole&roleId=${param.roleId}" beforeSubmit="setUserIds">
+    <t:formvalid formid="formobj" layout="div" dialog="true" action="roleController.do?doAddUserToRole&roleId=${param.roleId}" beforeSubmit="setUserIds" windowType="dialog">
         <input id="userIds" name="userIds">
     </t:formvalid>
 </div>

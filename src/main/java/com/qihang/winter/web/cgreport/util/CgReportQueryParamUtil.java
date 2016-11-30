@@ -54,7 +54,12 @@ public class CgReportQueryParamUtil extends QueryParamUtil
 					//模糊查询
 					value = value.replaceAll("\\*", "%");
 					params.put(filedName, CgReportConstant.OP_LIKE+value);
-				}else{
+				}else if(filedType.equals("String")){
+					value = value.substring(1,value.length()-1);
+					value = "'%"+value+"%'";
+					params.put(filedName, CgReportConstant.OP_LIKE+value);
+				}
+				else{
 					params.put(filedName, CgReportConstant.OP_EQ+value);
 				}
 			}

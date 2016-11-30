@@ -24,18 +24,18 @@
 	<t:dgFunOpt funname="delCgForm(id,tableName)" title="common.delete"></t:dgFunOpt>
 	<t:dgFunOpt funname="remCgForm(id)" title="common.remove"></t:dgFunOpt>
 	<t:dgFunOpt exp="isDbSynch#eq#N" title="sync.db" funname="doDbsynch(id,content)" />
-	<%--<t:dgFunOpt exp="isDbSynch#eq#Y&&jformType#ne#3" funname="addbytab(id,content)" title="form.template"></t:dgFunOpt>--%>
+	<t:dgFunOpt exp="isDbSynch#eq#Y&&jformType#ne#3" funname="addbytab(id,content)" title="form.template"></t:dgFunOpt>
 	<t:dgFunOpt exp="isDbSynch#eq#Y&&jformType#ne#3" funname="addlisttab(tableName,content)" title="function.test"></t:dgFunOpt>
 	<t:dgFunOpt exp="isDbSynch#eq#Y&&jformType#ne#3" funname="popMenuLink(tableName,content)" title="config.place"></t:dgFunOpt>
 	<t:dgToolBar title="create.form" icon="icon-add" width="900" height="600" url="cgFormHeadController.do?addorupdate" funname="addForm"></t:dgToolBar>
 	<t:dgToolBar title="edit.form" icon="icon-edit" width="900" height="600" url="cgFormHeadController.do?addorupdate" funname="updateForm"></t:dgToolBar>
-	<%--<t:dgToolBar title="custom.button" icon="icon-edit" url="cgformButtonController.do?cgformButton" funname="cgFormButton"></t:dgToolBar>--%>
-	<%--<t:dgToolBar title="js.enhance" icon="icon-edit" url="cgformEnhanceJsController.do?addorupdate" funname="enhanceJs"></t:dgToolBar>--%>
-	<%--<t:dgToolBar title="sql.enhance" icon="icon-edit" url="cgformButtonSqlController.do?addorupdate" funname="cgFormButtonSql"></t:dgToolBar>--%>
+	<t:dgToolBar title="custom.button" icon="icon-edit" url="cgformButtonController.do?cgformButton" funname="cgFormButton"></t:dgToolBar>
+	<t:dgToolBar title="js.custom" icon="icon-edit" url="cgformEnhanceJsController.do?addorupdate" funname="enhanceJs" windowType="dialog"></t:dgToolBar>
+	<t:dgToolBar title="sql.custom" icon="icon-edit" url="cgformButtonSqlController.do?addorupdate" funname="cgFormButtonSql" windowType="dialog"></t:dgToolBar>
 	<t:dgToolBar title="form.export" icon="icon-putout" url="cgformSqlController.do?doMigrateOut" funname="doMigrateOut"></t:dgToolBar>
 	<t:dgToolBar title="form.import" icon="icon-put" url="cgformSqlController.do?inSqlFile" funname="toCgformMigrate"></t:dgToolBar>
-	<t:dgToolBar title="code.generate" icon="icon-add" url="generateController.do?gogenerate" funname="generate"></t:dgToolBar>
-	<%--<t:dgToolBar title="form.generate" icon="icon-add" url="cgformTransController.do?trans" funname="addToData"></t:dgToolBar>--%>
+	<t:dgToolBar title="code.generate" icon="icon-add" url="generateController.do?gogenerate" funname="generate" windowType="dialog"></t:dgToolBar>
+	<t:dgToolBar title="form.generate" icon="icon-add" url="cgformTransController.do?trans" funname="addToData"></t:dgToolBar>
 </t:datagrid></div>
 </div>
 

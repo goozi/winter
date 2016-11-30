@@ -10,10 +10,17 @@
 			"s" : "不能输入特殊字符！",
 			"s6-18" : "请填写6到18位字符！",
 			"p" : "请填写邮政编码！",
-			"m" : "请填写手机号码！",
+			"m" : "请填写正确的手机号码！",
 			"e" : "邮箱地址格式不对！",
 			"url" : "请填写网址！",
-			"w1" : "必须输入字母开头、可带数字、下划线的字符"
+			"w1" : "必须输入字母开头、可带数字、下划线的字符",
+			"po" : "请填写正确固定电话",
+			"f" : "传真格式不对！",
+			"int" : "预警天数应大于0！",
+			"float":"请填写正确的数字格式",
+			"vfloat":"请填写正小数",
+			"number":"请填写正确的整数格式",
+			"idCard":"请填写正确的身份证格式"
 		},
 		def : "请填写正确信息！",
 		undef : "datatype未定义！",
@@ -88,13 +95,21 @@
 			"*6-16" : /^[\w\W]{6,16}$/,
 			"n" : /^\d+$/,
 			"n6-16" : /^\d{6,16}$/,
-			"s" : /^[\u4E00-\u9FA5\uf900-\ufa2d\w\.\s]+$/,
-			"s6-18" : /^[\u4E00-\u9FA5\uf900-\ufa2d\w\.\s]{6,18}$/,
+			"s" : /^[\u2E80-\uA4CF-\uf900-\ufa2d\w\.\s]+$/,
+			"s6-18" : /^[\u2E80-\uA4CF-\uf900-\ufa2d\w\.\s]{6,18}$/,
 			"p" : /^[0-9]{6}$/,
 			"m" : /^13[0-9]{9}$|14[0-9]{9}|15[0-9]{9}$|18[0-9]{9}$/,
 			"e" : /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
 			"url" : /^(\w+:\/\/)?\w+(\.\w+)+.*$/,
-			"w1" : /^([a-zA-Z]+)([\w]+)*$/
+			"w1" : /^([a-zA-Z]+)([\w]+)*$/,
+			"po" : /^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,8}$/,
+			"f" : /^((\(\d{2,3}\))|(\d{3}\-))?(\(0\d{2,3}\)|0\d{2,3}-)?[1-9]\d{6,7}(\-\d{1,4})?$/,
+			"int" : /^[1-9]\d*$/,
+			"float":/^(\-|\+)?\d{0,10}(\.\d{1,10})?$/,
+			"vfloat":/^(\+)?(([1-9]\d{0,9})|(\d{0,10}\.\d{1,10}))$/,
+			"number":/^(\-|\+)?\d{0,10}$/,
+			"idCard":/^\d{17}(\d|X|x)$/
+
 		},
 		toString : Object.prototype.toString,
 		isEmpty : function(val) {
@@ -121,14 +136,21 @@
 			inputval = $.trim(inputval);
 			return Validform.util.isEmpty.call(obj, inputval) ? "" : inputval;
 		},
-		ajax_check:function(tableName,fieldName,fieldVlaue,param){
+		//ajax_check:function(tableName,fieldName,fieldVlaue,param){
+		ajax_check:function(tableName,fieldName,fieldVlaue,param,paramdbKey){
 			   //获取编辑页面的数据主键
 					var obid = null;
 					if(param!=null){
 						 var obid_id = param;
 						 obid = obid_id;
 					}else{
-						 obid = $("input[id='id']").val();
+						 obid = $("input[name='id']").val();
+					}
+					var dbKey = null;
+			        if (paramdbKey!=null){
+						dbKey = paramdbKey;
+					}else{
+						dbKey = "";
 					}
 					
 					$.ajaxSetup({ async: false});//同步ajax 
@@ -140,7 +162,8 @@
 							tableName : tableName,
 							fieldName : fieldName,
 							fieldVlaue: fieldVlaue,
-							rowObid   : obid
+							rowObid   : obid,
+							dbKey : dbKey
 						},
 						dataType : 'json',
 						success : function(response) {
@@ -652,10 +675,14 @@
 			var settings = brothers.settings;
 			var subpost = subpost || "";
 			var inputval = Validform.util.getValue.call(curform, $(this));
+			if(Validform.util.isEmpty.call($(this), inputval)&&$(this).attr("ignore") == "ignore"){
+				return true;
+			}
 			if (settings.ignoreHidden && $(this).is(":hidden")
 					|| $(this).data("dataIgnore") === "dataIgnore") {
 				return true;
 			}
+
 			if (settings.dragonfly && !$(this).data("cked")
 					&& Validform.util.isEmpty.call($(this), inputval)
 					&& $(this).attr("ignore") != "ignore") {
@@ -680,6 +707,10 @@
 								sweep : settings.tipSweep
 							}, "bycheck");
 					!settings.tipSweep && _this.addClass("Validform_error");
+					//Zerrion 151126 校验提示窗2秒后自动关闭
+					setTimeout(function(){
+						$.Hidemsg();
+					},2000);
 				}
 				return false;
 			}
@@ -689,7 +720,13 @@
 			//if(tipType==null||tipType!=1){
 			if(validType!=null){
 		       var params=validType.split(",");
-		       var  ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val());
+		       //var  ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val());
+				var  ajaxResultValue;
+				if (params.length>3){//有4个参数：表名,字段名,如果是编辑则id,可选第四个参数扩展为db_key
+					ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val(),params[3]);
+				}else{//3个参数
+					ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val());
+				}
 			   var resultParams= new Array(); //定义一数组
                 resultParams=ajaxResultValue.split("+"); //字符分割     
 			   if (resultParams[1] == "false" && tipType == 1) {
@@ -860,7 +897,13 @@
 				   var validType=$(this).attr("validType");
 					if(validType!=null&&$(this).val()!=""){
 				       var params=validType.split(",");
-				       var   ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val());
+				       //var   ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val());
+						var  ajaxResultValue;
+						if (params.length>3){//有4个参数：表名,字段名,如果是编辑则id,可选第四个参数扩展为db_key
+							ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val(),params[3]);
+						}else{//3个参数
+							ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val());
+						}
 					   var resultParams= new Array(); //定义一数组
 		                resultParams=ajaxResultValue.split("+"); //字符分割     
 					  if(resultParams[1]=="false"){
@@ -881,7 +924,13 @@
 				   var validType=$(this).attr("validType");
 					if(validType!=null&&$(this).val()!=""){
 				       var params=validType.split(",");
-				       var  ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val());
+				       //var  ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val());
+						var  ajaxResultValue;
+						if (params.length>3){//有4个参数：表名,字段名,如果是编辑则id,可选第四个参数扩展为db_key
+							ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val(),params[3]);
+						}else{//3个参数
+							ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val());
+						}
 					   var resultParams= new Array(); //定义一数组
 		                resultParams=ajaxResultValue.split("+"); //字符分割     
 					  if(resultParams[1]=="false"){
@@ -1257,6 +1306,10 @@
 		$(window).bind("scroll resize", function() {
 			!msghidden && setCenter(msgobj, 400);
 		});
+		setTimeout(function(){
+      msgobj.hide();
+      msghidden = true;
+    },2000);
 	}
 	;
 	$.Showmsg = function(msg) {

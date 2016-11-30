@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.qihang.winter.poi.excel.entity.TemplateExportParams;
+import com.qihang.winter.poi.excel.export.styler.IExcelExportStyler;
+import com.qihang.winter.poi.exception.excel.enums.ExcelExportEnum;
 import com.qihang.winter.poi.util.PoiElUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -147,11 +150,11 @@ public final class ExcelExportOfTemplateUtil extends com.qihang.winter.poi.excel
 
     }
 
-    public Workbook createExcleByTemplate(com.qihang.winter.poi.excel.entity.TemplateExportParams params, Class<?> pojoClass,
+    public Workbook createExcleByTemplate(TemplateExportParams params, Class<?> pojoClass,
                                           Collection<?> dataSet, Map<String, Object> map) {
         // step 1. 判断模板的地址
         if (params == null || map == null || StringUtils.isEmpty(params.getTemplateUrl())) {
-            throw new ExcelExportException(com.qihang.winter.poi.exception.excel.enums.ExcelExportEnum.PARAMETER_ERROR);
+            throw new ExcelExportException(ExcelExportEnum.PARAMETER_ERROR);
         }
         Workbook wb = null;
         // step 2. 判断模板的Excel类型,解析模板
@@ -159,7 +162,7 @@ public final class ExcelExportOfTemplateUtil extends com.qihang.winter.poi.excel
             this.teplateParams = params;
             wb = getCloneWorkBook();
             // 创建表格样式
-            setExcelExportStyler((com.qihang.winter.poi.excel.export.styler.IExcelExportStyler) teplateParams.getStyle()
+            setExcelExportStyler((IExcelExportStyler) teplateParams.getStyle()
                 .getConstructor(Workbook.class).newInstance(wb));
             // step 3. 解析模板
             for (int i = 0, le = params.isScanAllsheet() ? wb.getNumberOfSheets() : params

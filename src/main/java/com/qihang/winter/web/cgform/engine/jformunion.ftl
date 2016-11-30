@@ -4,6 +4,29 @@
  <head>
   <title>订单信息</title>
   ${config_iframe}
+
+     <style >
+         /** 20160629 页脚样式 **/
+         body{
+             position: absolute;
+             width: 100%;
+             height: 100%;
+         }
+         .footlabel{
+             float: left;
+             margin-left: 15px;
+         }
+
+         .footspan{
+             float: left;
+             margin-left: 5px;
+             margin-right: 5px;
+             font-weight: bold;
+             color: grey;
+             margin-bottom: 5px;
+         }
+     </style>
+
  </head>
  <script type="text/javascript">
  $(document).ready(function(){
@@ -36,6 +59,20 @@
 	}
  </script>
  <body>
+  <form id="formobj" action="cgFormBuildController.do?saveOrUpdateMore" name="formobj" method="post">
+  <#if (head.windowType=='tab')>
+      <div class="ui_buttons" style="float:left;">
+          <input type="button" id="btn_sub" class="ui_state_highlight" value="确定"/>
+          <input type="button" id="closeTab" class="button" value="关闭"/></div>
+      <br/>
+  <#else>
+      <input type="hidden" id="btn_sub" class="btn_sub"/>
+  </#if>
+ <#if isAudit == "true">
+     <input id="auditKey" value="${flowInfo}" type="hidden"/>
+     <div id="tree" style="float: left; width: 20%"></div>
+     <div style="float: left; width: 80%">
+ </#if>
   <form id="formobj" action="cgFormBuildController.do?saveOrUpdateMore" name="formobj" method="post"><input type="hidden" id="btn_sub" class="btn_sub"/>
 	<#include "com/qihang/winter/web/cgform/engine/jformhead.ftl">
 			
@@ -54,6 +91,11 @@
 		//其他模式显示提交按钮
 		$("#sub_tr").show();
 	}
+	<#if isAudit == "true">
+        $('#tree').tree({
+            data:${audit_tree}
+        });
+	</#if>
    });
    function upload() {
   	<#list columns as po>
@@ -145,6 +187,20 @@
 			</#if>
 		</#list>
 		</table>
+<#if isAudit == "true">
+ </div>
+</#if>
+<!-- 页脚显示-->
+          <div style="position: absolute;bottom: 10px;left:10px;" id="footdiv">
+		  <#list columnsfoot as foot>
+              <label  class="Validform_label footlabel">${foot.content}: </label>
+              <span  class="inputxt footspan"> ###此处替换###</span>
+
+		  </#list>
+
+          </div>
+
+
 	<script type="text/javascript">${js_plug_in?if_exists}</script>	
  </body>
  </html>

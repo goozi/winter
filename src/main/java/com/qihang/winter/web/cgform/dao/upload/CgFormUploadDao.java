@@ -1,6 +1,6 @@
 package com.qihang.winter.web.cgform.dao.upload;
 
-import com.qihang.winter.minidao.annotation.Arguments;
+import com.qihang.winter.winterdao.annotation.Arguments;
 import org.springframework.stereotype.Repository;
 
 /**

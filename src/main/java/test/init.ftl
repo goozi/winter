@@ -1,10 +1,10 @@
 package jeecg.system.service.impl;
 
-import org.jeecgframework.web.system.pojo.base.TSFunction;
-import org.jeecgframework.web.system.pojo.base.TSIcon;
-import org.jeecgframework.web.system.service.RepairService;
+import com.qihang.winter.web.system.pojo.base.TSFunction;
+import com.qihang.winter.web.system.pojo.base.TSIcon;
+import com.qihang.winter.web.system.service.RepairService;
 
-import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
+import com.qihang.winter.core.common.service.impl.CommonServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

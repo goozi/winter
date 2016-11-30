@@ -23,7 +23,7 @@
 	<t:dgCol title="工资" field="salary"></t:dgCol>
 	<t:dgCol title="操作" field="opt" width="100"></t:dgCol>
 	<t:dgDelOpt title="删除" url="jpPersonController.do?del&id={id}" />
-	<t:dgToolBar title="录入" icon="icon-add" url="jpPersonController.do?addorupdate" funname="add"></t:dgToolBar>
+	<t:dgToolBar title="新增" icon="icon-add" url="jpPersonController.do?addorupdate" funname="add"></t:dgToolBar>
 	<t:dgToolBar title="编辑" icon="icon-edit" url="jpPersonController.do?addorupdate" funname="update"></t:dgToolBar>
 	<t:dgToolBar title="导出excel" onclick="jpPersonListExportXls();"></t:dgToolBar>
 	<t:dgToolBar title="导入excel" onclick="jpPersonListImportXls()"></t:dgToolBar>

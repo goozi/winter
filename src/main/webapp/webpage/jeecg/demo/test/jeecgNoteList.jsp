@@ -11,8 +11,8 @@
 	<t:dgCol title="工资" field="salary"></t:dgCol>
 	<t:dgCol title="操作" field="opt" width="100"></t:dgCol>
 	<t:dgDelOpt title="删除" url="jeecgNoteController.do?del&id={id}" />
-	<t:dgToolBar title="录入" icon="icon-add" url="jeecgNoteController.do?addorupdate" funname="add" operationCode="add"></t:dgToolBar>
-	<t:dgToolBar title="录入无默认按钮" icon="icon-add" url="jeecgNoteController.do?addorupdate" funname="noteAdd" operationCode="add"></t:dgToolBar>
+	<t:dgToolBar title="新增" icon="icon-add" url="jeecgNoteController.do?addorupdate" funname="add" operationCode="add"></t:dgToolBar>
+	<t:dgToolBar title="新增无默认按钮" icon="icon-add" url="jeecgNoteController.do?addorupdate" funname="noteAdd" operationCode="add"></t:dgToolBar>
 	<t:dgToolBar title="编辑" icon="icon-edit" url="jeecgNoteController.do?addorupdate" funname="update"></t:dgToolBar>
 </t:datagrid>
 

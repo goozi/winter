@@ -32,7 +32,8 @@ function dataFlush(){
   	  	success: function (data) {
             //修改webOS界面菜单不出现的问题
             var menu;
-            menu = eval("(" +data+")");
+            // menu = eval("(" +data+")");
+            menu = data;
             var array = menu.msg.split("$$");
             menujson=array[0];
             menujson = eval("("+menujson+")");

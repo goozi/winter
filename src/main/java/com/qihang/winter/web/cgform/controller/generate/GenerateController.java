@@ -45,7 +45,9 @@ import com.qihang.winter.web.cgform.service.config.CgFormFieldServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONArray;
@@ -140,7 +142,9 @@ public class GenerateController extends BaseController {
 	 * @param generateEntity
 	 * @param request
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
+	 *
+	 * Modify：JeecgReadTable.checkTableExist() 查询规定mysql，改为cgFormFieldService.checkTableExist(tableName); 2015/10/17
 	 */
 	@RequestMapping(params = "dogenerate")
 	public void dogenerate(CgFormHeadEntity cgFormHead, GenerateEntity generateEntity, CreateFileProperty createFileProperty,
@@ -158,7 +162,7 @@ public class GenerateController extends BaseController {
 		String ftlDescription = generateEntity.getFtlDescription();
 		try {
 			//step.2 判断表是否存在
-			boolean tableexist = new JeecgReadTable().checkTableExist(tableName);
+			boolean tableexist = cgFormFieldService.checkTableExist(tableName);
 			if(tableexist){
 				//step.3 判断是不是用用户自定义界面
 				String html;
@@ -373,7 +377,7 @@ public class GenerateController extends BaseController {
 	 */
 	@RequestMapping(params = "doExpandFileTree")
 	@ResponseBody
-	public Object doExpandFileTree(String parentNode){
+	public Object doExpandFileTree(@RequestParam(value = "parentNode",required = false)String parentNode){
 		JSONArray fjson = new JSONArray();
 		try{
 			if(StringUtil.isEmpty(parentNode)){
@@ -392,11 +396,11 @@ public class GenerateController extends BaseController {
 					fjson.add(item);
 				}
 			}else{
-				try {
+				/*try {
 					parentNode =  new String(parentNode.getBytes("ISO-8859-1"), "UTF-8");
 				} catch (UnsupportedEncodingException e1) {
 					e1.printStackTrace();
-				}
+				}*/
 				//返回子目录集
 				File parent = new File(parentNode);
 				File[] chs = parent.listFiles();

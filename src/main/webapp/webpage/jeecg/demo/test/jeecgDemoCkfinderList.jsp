@@ -10,7 +10,7 @@
 	<t:dgCol title="备注" field="remark" hidden="true"></t:dgCol>
 	<t:dgCol title="操作" field="opt" width="100"></t:dgCol>
 	<t:dgDelOpt title="删除" url="jeecgDemoCkfinderController.do?del&id={id}" />
-	<t:dgToolBar title="录入" icon="icon-add" url="jeecgDemoCkfinderController.do?addorupdate" funname="add"></t:dgToolBar>
+	<t:dgToolBar title="新增" icon="icon-add" url="jeecgDemoCkfinderController.do?addorupdate" funname="add"></t:dgToolBar>
 	<t:dgToolBar title="编辑" icon="icon-edit" url="jeecgDemoCkfinderController.do?addorupdate" funname="update"></t:dgToolBar>
 	<t:dgToolBar title="查看" icon="icon-search" url="jeecgDemoCkfinderController.do?addorupdate" funname="detail"></t:dgToolBar>
 	<t:dgFunOpt funname="preview(id)" title="预览"></t:dgFunOpt>

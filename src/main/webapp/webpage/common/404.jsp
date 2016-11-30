@@ -85,7 +85,7 @@
 
     <h5>代码生成后，编辑菜单地址</h5>
     <ol>
-        <li>系统管理-->菜单管理-->录入菜单</li>
+        <li>系统管理-->菜单管理-->新增菜单</li>
         <li>填写地址：<span class="propValue">guomingTestController.do?guomingTest</span></li>
     </ol>
 

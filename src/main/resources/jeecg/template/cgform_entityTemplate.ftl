@@ -1,3 +1,4 @@
+<#assign entityPackage=entityPackage?replace("/",".")>
 <#if packageStyle == "service">
 package ${bussiPackage}.${entityPackage}.entity;
 <#else>
@@ -20,7 +21,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.SequenceGenerator;
-import Excel;
+import com.qihang.winter.poi.excel.annotation.Excel;
 
 /**   
  * @Title: Entity

@@ -43,7 +43,7 @@ public class LeaveController extends BaseController{
 	
 	/**
      * 请假流程启动
-     * @param deploymentId 流程部署ID
+     * @param leave 流程部署ID
      */
 	@RequestMapping(params = "leaveStart")
 	@ResponseBody
@@ -85,7 +85,7 @@ public class LeaveController extends BaseController{
 	
 	/**
      * 完成任务
-     * @param deploymentId 流程部署ID
+     * @param taskId 流程部署ID
      */
 	@RequestMapping(params = "completeTask")
 	@ResponseBody

@@ -23,7 +23,7 @@
 	<t:dgCol title="工资" field="salary" query="true"></t:dgCol>
 
 	<t:dgCol title="生日" field="birthday" formatter="yyyy/MM/dd" query="true"></t:dgCol>
-	<t:dgToolBar operationCode="edit" title="录入" icon="icon-edit" url="jeecgDemoController.do?addorupdate" funname="add"></t:dgToolBar>
+	<t:dgToolBar operationCode="edit" title="新增" icon="icon-edit" url="jeecgDemoController.do?addorupdate" funname="add"></t:dgToolBar>
 	<t:dgToolBar operationCode="edit" title="编辑" icon="icon-edit" url="jeecgDemoController.do?addorupdate" funname="update"></t:dgToolBar>
 	<t:dgToolBar operationCode="add" title="高级查询" icon="icon-search" funname="queryBuilder" ></t:dgToolBar>
 </t:datagrid></div>

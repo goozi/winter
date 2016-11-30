@@ -20,9 +20,10 @@
             var companyOrgType = '<option value="1" <c:if test="${orgType=='1'}">selected="selected"</c:if>><t:mutiLang langKey="common.company"/></option>';
             orgTypeSelect.empty();
             orgTypeSelect.append(companyOrgType);
-        } else { // 非第一级，不显示公司选择项
-            $("#orgType option:first").remove();
         }
+//        else { // 非第一级，不显示公司选择项
+//            $("#orgType option:first").remove();
+//        }
         if($("#id").val()) {
             $('#cc').combotree('disable');
         }
@@ -34,7 +35,7 @@
         var orgTypeSelect = $("#orgType");
         var optionNum = orgTypeSelect.get(0).options.length;
         if(optionNum == 1) {
-            $("#orgType option:first").remove();
+//            $("#orgType option:first").remove();
             var bumen = '<option value="2" <c:if test="${orgType=='2'}">selected="selected"</c:if>><t:mutiLang langKey="common.department"/></option>';
             var gangwei = '<option value="3" <c:if test="${orgType=='3'}">selected="selected"</c:if>><t:mutiLang langKey="common.position"/></option>';
             orgTypeSelect.append(bumen).append(gangwei);
@@ -43,7 +44,7 @@
 </script>
 </head>
 <body style="overflow-y: hidden" scroll="no">
-<t:formvalid formid="formobj" layout="div" dialog="true" action="systemController.do?saveDepart">
+<t:formvalid formid="formobj" windowType="dialog" layout="div" dialog="true" action="systemController.do?saveDepart">
 	<input id="id" name="id" type="hidden" value="${depart.id }">
 	<fieldset class="step">
         <div class="form">

@@ -1,10 +1,10 @@
 package com.qihang.winter.core.common.model.json;
 
-import java.util.List;
-
-import com.qihang.winter.tag.vo.datatable.SortDirection;
 import com.qihang.winter.core.util.ContextHolderUtils;
 import com.qihang.winter.core.util.ResourceUtil;
+import com.qihang.winter.tag.vo.datatable.SortDirection;
+
+import java.util.List;
 
 
 /**
@@ -21,6 +21,7 @@ public class DataGrid {
 	private SortDirection order = SortDirection.asc;// 按什么排序(asc,desc)
 	private String field;//字段
 	private String treefield;//树形数据表文本字段
+	private String mergeField;//行合并的字段
 	private List results;// 结果集
 	private int total;//总记录数
 	private String footer;//合计列
@@ -73,6 +74,10 @@ public class DataGrid {
 		return 10000;
 	}
 
+	public int returnRows() {
+			return rows;
+	}
+
 	public void setRows(int rows) {
 		this.rows = rows;
 	}
@@ -107,5 +112,12 @@ public class DataGrid {
 	public void setFooter(String footer) {
 		this.footer = footer;
 	}
-	
+
+	public String getMergeField() {
+		return mergeField;
+	}
+
+	public void setMergeField(String mergeField) {
+		this.mergeField = mergeField;
+	}
 }

@@ -5,6 +5,9 @@ import javax.servlet.http.HttpServletRequest;
 import com.qihang.winter.core.common.controller.BaseController;
 import com.qihang.winter.core.common.dao.jdbc.JdbcDao;
 import com.qihang.winter.core.common.model.json.AjaxJson;
+import com.qihang.winter.core.constant.Globals;
+import com.qihang.winter.core.extend.datasource.DataSourceContextHolder;
+import com.qihang.winter.core.extend.datasource.DataSourceType;
 import com.qihang.winter.web.system.pojo.base.DuplicateCheckPage;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -39,6 +42,10 @@ public class DuplicateCheckAction extends BaseController {
 	@ResponseBody
 	public AjaxJson doDuplicateCheck(DuplicateCheckPage duplicateCheckPage, HttpServletRequest request) {
 
+		String sessiondataSourceType = "";
+		if (duplicateCheckPage.getDbKey()!=null && !duplicateCheckPage.getDbKey().equals("")){//hjhadd20160906需要切换到指定数据源，否则以当前数据源来验证数据
+			sessiondataSourceType = DataSourceContextHolder.switchDataSourceTypeBefore(Globals.DATA_SOURCE_JEECG, request);
+		}
 		AjaxJson j = new AjaxJson();
 		Long num = null;
 		
@@ -61,7 +68,10 @@ public class DuplicateCheckAction extends BaseController {
 		}else{
 			//该值不可用
 			j.setSuccess(false);
-			j.setMsg("该值不可用，系统中已存在！");
+			j.setMsg("该值'"+duplicateCheckPage.getFieldVlaue() + "'不可用，系统中已存在！");
+		}
+		if (duplicateCheckPage.getDbKey()!=null && !duplicateCheckPage.getDbKey().equals("")) {//hjhadd20160906需要切换到指定数据源，否则以当前数据源来验证数据,查询完主库后，再要回到原数据源
+			DataSourceContextHolder.switchDataSourceTypeAfter(sessiondataSourceType, request);
 		}
 		return j;
 	}

@@ -134,6 +134,7 @@ function getIcon(menuid) {
 }
 
 function addTab(subtitle, url, icon) {
+	alert(subtitle);
 	// begin author：屈然博 2013-7-12 for：解决firefox 点击一次请求两次的问题
 	var progress = $("div.messager-progress");
 	if(progress.length){return;}

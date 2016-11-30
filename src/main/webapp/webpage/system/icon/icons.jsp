@@ -7,13 +7,13 @@
 <t:base type="jquery,easyui,tools"></t:base>
 </head>
 <body style="overflow-y: hidden" scroll="no">
-<t:formvalid formid="formobj" layout="div" dialog="true" beforeSubmit="upload">
+<t:formvalid formid="formobj" layout="div" dialog="true" beforeSubmit="upload" windowType="dialog">
 	<input name="id" id="id" type="hidden" value="${icon.id}">
 	<fieldset class="step">
 	<div class="form">
         <label class="Validform_label"> <t:mutiLang langKey="common.icon.name"/>: </label>
-        <input name="iconName" datatype="s2-10" id="iconName" value="${icon.iconName}" class="inputxt">
-        <span class="Validform_checktip"><t:mutiLang langKey="iconname.rang2to10"/></span>
+        <input name="iconName" datatype="s2-20" id="iconName" value="${icon.iconName}" class="inputxt">
+        <span class="Validform_checktip">请填写2到20个字符</span>
     </div>
 	<div class="form">
         <label class="Validform_label"> <t:mutiLang langKey="common.icon.type"/>: </label>

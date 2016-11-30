@@ -82,7 +82,8 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 			}
 			column.setTable(t);
 			// 设置checkbox的值
-			PublicUtil.judgeCheckboxValue(column,"isNull,isShow,isShowList,isQuery,isKey");
+			/** 20160628添加页脚字段 **/
+			PublicUtil.judgeCheckboxValue(column,"isNull,isShow,isShowList,isQuery,isKey,isPageFoot");
 			if (oConvertUtils.isEmpty(column.getId())) {
 				databaseFieldIsChange = true;
 				this.save(column);
@@ -144,8 +145,9 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 		CgFormFieldEntity column;
 		for (int i = 0; i < cgFormHead.getColumns().size(); i++) {
 			column = cgFormHead.getColumns().get(i);
+			/** 20160628添加页脚字段 **/
 			PublicUtil.judgeCheckboxValue(column,
-					"isNull,isShow,isShowList,isQuery,isKey");
+					"isNull,isShow,isShowList,isQuery,isKey,isPageFoot");
 			column.setTable(cgFormHead);
 			this.save(column);
 		}
@@ -163,20 +165,26 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 		CgFormFieldEntity column;
 		for (int i = 0; i < cgFormHead.getColumns().size(); i++) {
 			column = cgFormHead.getColumns().get(i);
+			/** 20160628添加页脚字段 **/
 			PublicUtil.judgeCheckboxValue(column,
-					"isNull,isShow,isShowList,isQuery,isKey");
+					"isNull,isShow,isShowList,isQuery,isKey,isPageFoot");
 			column.setTable(cgFormHead);
 			this.save(column);
 		}
 	}
 
-	
+	/**
+	 * 检查表是否存在
+	 * @param tableName
+	 * @return
+	 * @modify Zerrion 2015-11-11 加入视图支持
+   */
 	public Boolean judgeTableIsExit(String tableName) {
 		Connection conn = null;
 		ResultSet rs = null;
 		String tableNamePattern = tableName;
 		try {
-			String[] types = { "TABLE" };
+			String[] types = { "TABLE","VIEW" };
 			conn = SessionFactoryUtils.getDataSource(
 					getSession().getSessionFactory()).getConnection();
 			String dataBaseType = DbTableUtil.getDataType(getSession());
@@ -236,7 +244,13 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 					}
 				}
 				cgFormHead.setIsDbSynch("Y");
-				this.saveOrUpdate(cgFormHead);	
+				for(CgFormFieldEntity field :cgFormHead.getColumns()){
+					if(field.getFieldDefault().startsWith("'")&&field.getFieldDefault().endsWith("'")){
+						field.setFieldDefault(field.getFieldDefault().substring(1,field.getFieldDefault().length()-1));
+					}
+
+				}
+				this.saveOrUpdate(cgFormHead);
 			}else if(SYN_FORCE.equals(synMethod)){
 				//强制方式同步
 				try {
@@ -613,6 +627,8 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 		if (fieldList != null) {
 			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 			List<Map<String, Object>> textareaList = new ArrayList<Map<String, Object>>();
+			// 20160624页脚字段
+			List<Map<String, Object>> footList = new ArrayList<Map<String, Object>>();
 			for (Map<String, Object> map : fieldList) {
 				if(operationCodesMap.containsKey(map.get("field_name"))){
 					if(operationCodesMap.get(map.get("field_name")).getOperationType() == 0){
@@ -622,14 +638,21 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 						map.put("operationCodesReadOnly",true);
 					}
 				}
-				if (!"textarea".equals((String) map.get("show_type"))) {
-					list.add(map);
+				// 20160624排除页脚字段
+				if(!"Y".equals((String) map.get("is_page_foot"))){
+					if (!"textarea".equals((String) map.get("show_type"))) {
+						list.add(map);
+					} else {
+						textareaList.add(map);
+					}
 				} else {
-					textareaList.add(map);
+					footList.add(map);
 				}
+
 			}
 			data.put("columns", list);
 			data.put("columnsarea", textareaList);
+			data.put("columnsfoot", footList);
 		}
 		// js增强
 		String jsCode = "";
@@ -705,6 +728,42 @@ public class CgFormFieldServiceImpl extends CommonServiceImpl implements
 			result =false;
 		}
 		return result;
+	}
+
+	/**
+	 * 获取工作流数据
+	 * @param projectCode
+	 * @return
+	 */
+	@Override
+	public List<Map<String, Object>> loadFlowInfo(String projectCode,String isAll,String billId) {
+		StringBuffer sql = new StringBuffer();
+		sql.append("select ID_,NAME_ from ACT_RE_PROCDEF p inner JOIN (");
+		sql.append("select max(VERSION_)VERSION_,KEY_ from ACT_RE_PROCDEF p GROUP BY KEY_");
+		sql.append(")q on p.KEY_=q.KEY_ AND p.VERSION_=q.VERSION_ ");
+		if(StringUtils.isNotEmpty(isAll)) {
+			sql.append("where q.KEY_ not in (select act_id from t_s_treeinfo ");
+			if(StringUtils.isNotEmpty(billId)){
+				sql.append(" where id <> '"+billId+"'");
+			}
+			sql.append(")");
+		}
+		List<Object> result = this.findListbySql(sql.toString());
+		List<Map<String,Object>> flowInfo = new ArrayList<Map<String, Object>>();
+		if(null != result && result.size() > 0){
+			for(Object obj : result) {
+				Map<String,Object> map = new HashMap<String, Object>();
+				Object[] value = (Object[]) obj;
+				String idStr = (String) value[0];
+				if(StringUtils.isNotEmpty(idStr)){
+					String[] idArr = idStr.split(":");
+					map.put("id",idArr[0]);
+					map.put("value",(String) value[1]);
+					flowInfo.add(map);
+				}
+			}
+		}
+		return flowInfo;
 	}
 
 }

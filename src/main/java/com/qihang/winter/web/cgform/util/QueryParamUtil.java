@@ -54,12 +54,14 @@ public class QueryParamUtil {
 			sql_inj_throw(value);
 			value = applyType(b.getType(),value);
 			if(!StringUtil.isEmpty(value)){
+        //Zerrion 2016-04-21 默认支持模糊查询
 				if(value.contains("*")){
 					//模糊查询
 					value = value.replaceAll("\\*", "%");
 					params.put(b.getFieldName(), CgAutoListConstant.OP_LIKE+value);
 				}else{
-					params.put(b.getFieldName(), CgAutoListConstant.OP_EQ+value);
+          value = "'%"+value.replaceAll("'", "")+"%'";
+					params.put(b.getFieldName(), CgAutoListConstant.OP_LIKE+value);
 				}
 			}
 		}else if("group".equals(b.getQueryMode())){
@@ -160,7 +162,7 @@ public class QueryParamUtil {
 			dateFunction = "TO_DATE('"+dateStr+"','"+dateFormat+"')";
 		}else if("sqlserver".equalsIgnoreCase(dbType)){
 			//sqlserver日期函数
-			dateFunction = "(CONVERT(VARCHAR,'"+dateStr+"') as DATETIME)";
+			dateFunction = "(CAST(CONVERT(VARCHAR,'"+dateStr+"') as DATETIME))";
 		}else if("postgres".equalsIgnoreCase(dbType)){
 			//postgres日期函数
 			dateFunction = "'"+dateStr+"'::date ";

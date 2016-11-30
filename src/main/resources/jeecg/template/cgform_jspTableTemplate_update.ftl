@@ -10,6 +10,27 @@
   <script type="text/javascript">
   //编写自定义JS代码
   </script>
+<!--20160629页脚样式 -->
+     <style >
+         body{
+             position: absolute;
+             width: 100%;
+             height: 100%;
+         }
+         .footlabel{
+             float: left;
+             margin-left: 15px;
+         }
+
+         .footspan{
+             float: left;
+             margin-left: 5px;
+             margin-right: 5px;
+             font-weight: bold;
+             color: grey;
+             margin-bottom: 5px;
+         }
+     </style>
  </head>
  <body>
   <t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" action="${entityName?uncap_first}Controller.do?doUpdate" tiptype="1">
@@ -125,7 +146,11 @@
 									               </#if>
 									               </#if>  value='${'$'}{${entityName?uncap_first}Page.${po.fieldName}}'>
 								</#if>
-							<span class="Validform_checktip"></span>
+							<span class="Validform_checktip">
+								<#if po.fieldValidType?if_exists?starts_with('*') || (po.fieldValidType?if_exists?html == '' && po.isNull != 'Y')>
+                                  *
+								</#if>
+							</span>
 							<label class="Validform_label" style="display: none;">${po.content?if_exists?html}</label>
 						</td>
 			<#if (columns?size>10)>
@@ -146,5 +171,15 @@
 				</#list>
 			</table>
 		</t:formvalid>
+<!--页脚字段显示 -->
+  <div style="position: absolute;bottom: 10px;left:60px;">
+  <#list columnsfoot as foot>
+      <label  class="Validform_label footlabel">${foot.content}: </label>
+      <span  class="inputxt footspan"> ###此处替换###</span>
+
+
+  </#list>
+
+  </div>
  </body>
   <script src = "webpage/${bussiPackage?replace('.','/')}/${entityPackage}/${entityName?uncap_first}.js"></script>		

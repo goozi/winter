@@ -19,6 +19,7 @@ public class DataGridUrl {
 	private String funname;//自定义函数名称
 	private boolean isRadio;//是否是单选框
 	private String onclick;//选项单击事件
+	private String windowType;////窗口类型：dialog对话框，tab标签页方式打开
 	public String getOnclick() {
 		return onclick;
 	}
@@ -115,6 +116,12 @@ public class DataGridUrl {
 	public void setIcon(String icon) {
 		this.icon = icon;
 	}
-	
 
+	public String getWindowType() {
+		return windowType;
+	}
+
+	public void setWindowType(String windowType) {
+		this.windowType = windowType;
+	}
 }

@@ -2,6 +2,8 @@ package com.qihang.winter.web.system.controller.core;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.qihang.buss.sc.util.AccountUtil;
+import com.qihang.buss.sc.util.BillNoGenerate;
 import com.qihang.winter.core.common.controller.BaseController;
 import com.qihang.winter.core.common.hibernate.qbc.CriteriaQuery;
 import com.qihang.winter.core.common.model.json.AjaxJson;
@@ -11,12 +13,14 @@ import com.qihang.winter.core.common.model.json.TreeGrid;
 import com.qihang.winter.core.constant.Globals;
 import com.qihang.winter.core.extend.hqlsearch.HqlGenerateUtil;
 import com.qihang.winter.core.util.MutiLangUtil;
+import com.qihang.winter.core.util.ResourceUtil;
 import com.qihang.winter.core.util.StringUtil;
 import com.qihang.winter.core.util.oConvertUtils;
 import com.qihang.winter.tag.core.easyui.TagUtil;
 import com.qihang.winter.tag.vo.easyui.ComboTreeModel;
 import com.qihang.winter.tag.vo.easyui.TreeGridModel;
 import com.qihang.winter.web.system.pojo.base.TSDepart;
+import com.qihang.winter.web.system.pojo.base.TSRole;
 import com.qihang.winter.web.system.pojo.base.TSUser;
 import com.qihang.winter.web.system.pojo.base.TSUserOrg;
 import com.qihang.winter.web.system.service.SystemService;
@@ -34,6 +38,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -136,10 +141,10 @@ public class DepartController extends BaseController {
 
         systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
       } else {
-        message = MutiLangUtil.paramDelFail("common.department");
+        message = MutiLangUtil.paramDelFail("common.department,<br/>[该组织机构下存在用户，请确认]");
       }
     } else {
-      message = MutiLangUtil.paramDelFail("common.department");
+      message = MutiLangUtil.paramDelFail("common.department,<br/>[该组织机构下存在子部门，请确认]");
     }
 
     j.setMsg(message);
@@ -274,6 +279,7 @@ public class DepartController extends BaseController {
     if (treegrid.getId() == null) {
       cq.isNull("TSPDepart");
     }
+    cq.eq("deleted",Globals.ENABLE_CODE.toString());
     cq.add();
     List<TreeGrid> departList = null;
     departList = systemService.getListByCriteriaQuery(cq, false);
@@ -475,5 +481,86 @@ public class DepartController extends BaseController {
     CriteriaQuery cq = new CriteriaQuery(TSDepart.class, dataGrid);
     this.systemService.getDataGridReturn(cq, true);
     TagUtil.datagrid(response, dataGrid);
+  }
+
+  /*****************************亚明项目分支机构*********************************/
+  /**
+   * 分支机构列表页面跳转
+   *
+   * @return
+   */
+  @RequestMapping(params = "depart_sc")
+  public ModelAndView depart_sc() {
+    return new ModelAndView("com/qihang/buss/sc/sys/depart/departList");
+  }
+
+  /**
+   * 分支机构新增跳转功能
+   * @param depart
+   * @param req
+   * @return
+   */
+  @RequestMapping(params = "add_sc")
+  public ModelAndView add_sc(TSDepart depart, HttpServletRequest req) {
+    List<TSDepart> departList = systemService.getList(TSDepart.class);
+    req.setAttribute("departList", departList);
+//        这个if代码段没有用吧，注释之
+//		if (StringUtil.isNotEmpty(depart.getId())) {
+//			TSDepart tspDepart = new TSDepart();
+//			TSDepart tsDepart = new TSDepart();
+//			depart = systemService.getEntity(TSDepart.class, depart.getId());
+//			tspDepart.setId(depart.getId());
+//			tspDepart.setDepartname(depart.getDepartname());
+//			tsDepart.setTSPDepart(tspDepart);
+//			req.setAttribute("depart", tsDepart);
+//		}
+    req.setAttribute("pid", depart.getId());
+    String billNo = BillNoGenerate.getBasicBillNo(depart.getId(),depart.getOrgCode());
+    depart.setOrgCode(billNo);
+    depart.setId(null);
+    req.setAttribute("depart",depart);
+    return new ModelAndView("com/qihang/buss/sc/sys/depart/depart");
+  }
+
+  /**
+   * 分支机构编辑表页面跳转
+   *
+   * @return
+   */
+  @RequestMapping(params = "update_sc")
+  public ModelAndView update_sc(TSDepart depart, HttpServletRequest req) {
+    List<TSDepart> departList = systemService.getList(TSDepart.class);
+    req.setAttribute("departList", departList);
+    if (StringUtil.isNotEmpty(depart.getId())) {
+      depart = systemService.getEntity(TSDepart.class, depart.getId());
+      req.setAttribute("depart", depart);
+    }
+    return new ModelAndView("com/qihang/buss/sc/sys/depart/depart");
+  }
+
+  /**
+   * 获取分支机构树
+   * @return
+   */
+  @RequestMapping(params = "loadDepartTree")
+  @ResponseBody
+  public List<Map<String,Object>> loadDepartTree(HttpSession session){
+    TSDepart sonInfo = ResourceUtil.getSessionUserName().getCurrentDepart();
+    TSDepart depart = systemService.getParentSonInfo(sonInfo);
+    String roleIds = (String) session.getAttribute("roleIds");//单前登录用户；
+    List<Map<String,Object>> departTree = userService.loadDepartTree(depart.getId(),roleIds);
+    return departTree;
+  }
+
+  @RequestMapping(params = "getBillNo")
+  @ResponseBody
+  public AjaxJson getBillNo(String parentId){
+    AjaxJson j = new AjaxJson();
+    TSDepart depart = systemService.getEntity(TSDepart.class,parentId);
+    if(null != depart){
+      String basicCode = BillNoGenerate.getBasicBillNo(depart.getId(),depart.getOrgCode());
+      j.setObj(basicCode);
+    }
+    return j;
   }
 }

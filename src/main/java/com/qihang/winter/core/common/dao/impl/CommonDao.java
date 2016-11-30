@@ -81,7 +81,9 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 		String userRole = "";
 		List<TSRoleUser> sRoleUser = findByProperty(TSRoleUser.class, "TSUser.id", user.getId());
 		for (TSRoleUser tsRoleUser : sRoleUser) {
-			userRole += tsRoleUser.getTSRole().getRoleCode() + ",";
+			if (tsRoleUser.getTSRole()!=null) {
+				userRole += tsRoleUser.getTSRole().getRoleCode() + ",";
+			}
 		}
 		return userRole;
 	}
@@ -89,8 +91,6 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 
 	/**
 	 * 文件上传
-	 * 
-	 * @param request
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -170,10 +170,10 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 					// 动态调用 set方法给文件对象内容赋值
 					reflectHelper.setMethodValue(uploadFile.getExtend(), extend);
 				}
-				if (uploadFile.getByteField() != null) {
+				/*if (uploadFile.getByteField() != null) {
 					// 二进制文件保存在数据库中
 					reflectHelper.setMethodValue(uploadFile.getByteField(), StreamUtils.InputStreamTOByte(mf.getInputStream()));
-				}
+				}*/
 				File savefile = new File(savePath);
 				if (uploadFile.getRealPath() != null) {
 					// 设置文件数据库的物理路径
@@ -203,9 +203,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 
 	/**
 	 * 文件下载或预览
-	 * 
-	 * @param request
-	 * @throws Exception
+	 *
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -394,9 +392,7 @@ public class CommonDao extends GenericBaseCommonDao implements ICommonDao, IGene
 	 * 
 	 * @param all
 	 *            全部对象
-	 * @param in
-	 *            已拥有的对象
-	 * @param comboBox
+	 * @param comboTree
 	 *            模型
 	 * @return
 	 */

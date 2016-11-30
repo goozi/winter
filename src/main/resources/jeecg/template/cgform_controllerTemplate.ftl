@@ -1,3 +1,4 @@
+<#assign entityPackage=entityPackage?replace("/",".")>
 <#if packageStyle == "service">
 package ${bussiPackage}.${entityPackage}.controller;
 import ${bussiPackage}.${entityPackage}.entity.${entityName}Entity;
@@ -21,35 +22,35 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import org.springframework.context.annotation.Scope;
-import org.jeecgframework.core.common.controller.BaseController;
-import org.jeecgframework.core.common.exception.BusinessException;
-import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
-import org.jeecgframework.core.common.model.json.AjaxJson;
-import org.jeecgframework.core.common.model.json.DataGrid;
-import org.jeecgframework.core.constant.Globals;
-import org.jeecgframework.core.util.StringUtil;
-import org.jeecgframework.tag.core.easyui.TagUtil;
-import org.jeecgframework.web.system.pojo.base.TSDepart;
-import org.jeecgframework.web.system.service.SystemService;
-import org.jeecgframework.core.util.MyBeanUtils;
+import com.qihang.winter.core.common.controller.BaseController;
+import com.qihang.winter.core.common.exception.BusinessException;
+import com.qihang.winter.core.common.hibernate.qbc.CriteriaQuery;
+import com.qihang.winter.core.common.model.json.AjaxJson;
+import com.qihang.winter.core.common.model.json.DataGrid;
+import com.qihang.winter.core.constant.Globals;
+import com.qihang.winter.core.util.StringUtil;
+import com.qihang.winter.tag.core.easyui.TagUtil;
+import com.qihang.winter.web.system.pojo.base.TSDepart;
+import com.qihang.winter.web.system.service.SystemService;
+import com.qihang.winter.core.util.MyBeanUtils;
 
 import java.io.OutputStream;
-import org.jeecgframework.core.util.BrowserUtils;
-import ExcelExportUtil;
-import ExcelImportUtil;
-import ExportParams;
-import ImportParams;
-import TemplateExportParams;
-import NormalExcelConstants;
-import TemplateExcelConstants;
+import com.qihang.winter.core.util.BrowserUtils;
+import com.qihang.winter.poi.excel.ExcelExportUtil;
+import com.qihang.winter.poi.excel.ExcelImportUtil;
+import com.qihang.winter.poi.excel.entity.ExportParams;
+import com.qihang.winter.poi.excel.entity.ImportParams;
+import com.qihang.winter.poi.excel.entity.TemplateExportParams;
+import com.qihang.winter.poi.excel.entity.vo.NormalExcelConstants;
+import com.qihang.winter.poi.excel.entity.vo.TemplateExcelConstants;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.jeecgframework.core.util.ResourceUtil;
+import com.qihang.winter.core.util.ResourceUtil;
 import java.io.IOException;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import java.util.Map;
-import org.jeecgframework.core.util.ExceptionUtil;
+import com.qihang.winter.core.util.ExceptionUtil;
 
 
 
@@ -92,7 +93,7 @@ public class ${entityName}Controller extends BaseController {
 	 */
 	@RequestMapping(params = "${entityName?uncap_first}")
 	public ModelAndView ${entityName?uncap_first}(HttpServletRequest request) {
-		return new ModelAndView("${bussiPackage?replace(".","/")}/${entityPackage}/${entityName?uncap_first}List");
+		return new ModelAndView("${bussiPackage?replace(".","/")}/${entityPackage?replace(".","/")}/${entityName?uncap_first}List");
 	}
 
 	/**
@@ -101,14 +102,13 @@ public class ${entityName}Controller extends BaseController {
 	 * @param request
 	 * @param response
 	 * @param dataGrid
-	 * @param user
 	 */
 
 	@RequestMapping(params = "datagrid")
 	public void datagrid(${entityName}Entity ${entityName?uncap_first},HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		CriteriaQuery cq = new CriteriaQuery(${entityName}Entity.class, dataGrid);
 		//查询条件组装器
-		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, ${entityName?uncap_first}, request.getParameterMap());
+		com.qihang.winter.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, ${entityName?uncap_first}, request.getParameterMap());
 		try{
 		//自定义追加查询条件
 		<#list columns as po>
@@ -201,7 +201,7 @@ public class ${entityName}Controller extends BaseController {
 	/**
 	 * 添加${ftl_description}
 	 * 
-	 * @param ids
+	 * @param ${entityName?uncap_first}
 	 * @return
 	 */
 	@RequestMapping(params = "doAdd")
@@ -224,7 +224,7 @@ public class ${entityName}Controller extends BaseController {
 	/**
 	 * 更新${ftl_description}
 	 * 
-	 * @param ids
+	 * @param ${entityName?uncap_first}
 	 * @return
 	 */
 	@RequestMapping(params = "doUpdate")
@@ -283,7 +283,7 @@ public class ${entityName}Controller extends BaseController {
 			${entityName?uncap_first} = ${entityName?uncap_first}Service.getEntity(${entityName}Entity.class, ${entityName?uncap_first}.getId());
 			req.setAttribute("${entityName?uncap_first}Page", ${entityName?uncap_first});
 		}
-		return new ModelAndView("${bussiPackage?replace(".","/")}/${entityPackage}/${entityName?uncap_first}-add");
+		return new ModelAndView("${bussiPackage?replace(".","/")}/${entityPackage?replace(".","/")}/${entityName?uncap_first}-add");
 	}
 	/**
 	 * ${ftl_description}编辑页面跳转
@@ -296,7 +296,7 @@ public class ${entityName}Controller extends BaseController {
 			${entityName?uncap_first} = ${entityName?uncap_first}Service.getEntity(${entityName}Entity.class, ${entityName?uncap_first}.getId());
 			req.setAttribute("${entityName?uncap_first}Page", ${entityName?uncap_first});
 		}
-		return new ModelAndView("${bussiPackage?replace(".","/")}/${entityPackage}/${entityName?uncap_first}-update");
+		return new ModelAndView("${bussiPackage?replace(".","/")}/${entityPackage?replace(".","/")}/${entityName?uncap_first}-update");
 	}
 	
 	/**
@@ -320,7 +320,7 @@ public class ${entityName}Controller extends BaseController {
 	public String exportXls(${entityName}Entity ${entityName?uncap_first},HttpServletRequest request,HttpServletResponse response
 			, DataGrid dataGrid,ModelMap modelMap) {
 		CriteriaQuery cq = new CriteriaQuery(${entityName}Entity.class, dataGrid);
-		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, ${entityName?uncap_first}, request.getParameterMap());
+		com.qihang.winter.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, ${entityName?uncap_first}, request.getParameterMap());
 		List<${entityName}Entity> ${entityName?uncap_first}s = this.${entityName?uncap_first}Service.getListByCriteriaQuery(cq,false);
 		modelMap.put(NormalExcelConstants.FILE_NAME,"${ftl_description}");
 		modelMap.put(NormalExcelConstants.CLASS,${entityName}Entity.class);

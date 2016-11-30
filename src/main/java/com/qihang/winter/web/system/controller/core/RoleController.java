@@ -1,5 +1,6 @@
 package com.qihang.winter.web.system.controller.core;
 
+import com.alibaba.druid.util.StringUtils;
 import com.qihang.winter.core.common.controller.BaseController;
 import com.qihang.winter.core.common.hibernate.qbc.CriteriaQuery;
 import com.qihang.winter.core.common.model.json.*;
@@ -18,6 +19,7 @@ import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import com.qihang.winter.web.system.service.MutiLangServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -84,11 +86,15 @@ public class RoleController extends BaseController {
 	 */
 
 	@RequestMapping(params = "roleGrid")
-	public void roleGrid(TSRole role, HttpServletRequest request,
+	public void roleGrid(@Value("#{sysProp[PROJECT_CODE]}")String projectCode,TSRole role, HttpServletRequest request,
 											 HttpServletResponse response, DataGrid dataGrid) {
 		CriteriaQuery cq = new CriteriaQuery(TSRole.class, dataGrid);
-		HqlGenerateUtil.installHql(cq,
-				role);
+		HqlGenerateUtil.installHql(cq, role);
+		if(StringUtil.isNotEmpty(projectCode) && !"00".equals(projectCode) && !ResourceUtil.getSessionUserName().getUserName().equals("programmer")){
+			//一级菜单且排序号以项目代码开头或开发平台自带的菜单，或除一级菜单外的所有菜单
+			cq.eq("projectCode",projectCode);
+		}
+
 		cq.add();
 		this.systemService.getDataGridReturn(cq, true);
 		TagUtil.datagrid(response, dataGrid);
@@ -246,6 +252,10 @@ public class RoleController extends BaseController {
 		}else {
 			cc =Restrictions.eq("id", "-1");
 		}
+		TSUser loginUser = ResourceUtil.getSessionUserName();
+		if("ap".equals(loginUser.getUserName())){
+			cq.eq("createName","农资管理员");
+		}
 		cq.add(cc);
 		HqlGenerateUtil.installHql(cq, user);
 		this.systemService.getDataGridReturn(cq, true);
@@ -370,9 +380,14 @@ public class RoleController extends BaseController {
 	 */
 	@RequestMapping(params = "setAuthority")
 	@ResponseBody
-	public List<ComboTree> setAuthority(TSRole role,
+	public List<ComboTree> setAuthority(@Value("#{sysProp[PROJECT_CODE]}")String projectCode,TSRole role,
 			HttpServletRequest request, ComboTree comboTree) {
 		CriteriaQuery cq = new CriteriaQuery(TSFunction.class);
+		if(StringUtil.isNotEmpty(projectCode) && !"00".equals(projectCode)){
+			//一级菜单且排序号以项目代码开头或开发平台自带的菜单，或除一级菜单外的所有菜单
+			cq.or(Restrictions.and(Restrictions.or(Restrictions.like("functionOrder",projectCode+"%"),Restrictions.like("functionOrder","99%")),Restrictions.eq("functionLevel",
+							Short.valueOf("0"))),Restrictions.not(Restrictions.eq("functionLevel",Short.valueOf("0"))));
+		}
 		if (comboTree.getId() != null) {
 			cq.eq("TSFunction.id", comboTree.getId());
 		}
@@ -490,8 +505,9 @@ public class RoleController extends BaseController {
 	public ModelAndView addorupdate(TSRole role, HttpServletRequest req) {
 		if (role.getId() != null) {
 			role = systemService.getEntity(TSRole.class, role.getId());
-			req.setAttribute("role", role);
+
 		}
+		req.setAttribute("role", role);
 		return new ModelAndView("system/role/role");
 	}
 
@@ -768,6 +784,11 @@ public class RoleController extends BaseController {
         
 
         cq.add(Property.forName("id").notIn(subCq.getDetachedCriteria()));
+
+		TSUser loginUser = ResourceUtil.getSessionUserName();
+		if("ap".equals(loginUser.getUserName())){
+			cq.eq("userKey","农资监管用户");
+		}
         cq.add();
 
         this.systemService.getDataGridReturn(cq, true);
@@ -814,4 +835,213 @@ public class RoleController extends BaseController {
             systemService.batchSave(roleUserList);
         }
     }
+
+	@RequestMapping(params = "treeNode")
+	public ModelAndView treeNode(HttpServletRequest request){
+		String node_id = request.getParameter("node_id");
+		request.setAttribute("node_id", node_id);
+		return new ModelAndView("system/tree/readOnlyTree");
+	}
+
+	@RequestMapping(params = "nodePanel")
+	public ModelAndView nodePanel(HttpServletRequest request){
+		String node_id = request.getParameter("node_id");
+		request.setAttribute("node_id", node_id);
+		return new ModelAndView("system/tree/nodePanel");
+	}
+
+	@RequestMapping(params = "treeNode2")
+	public ModelAndView treeNode2(HttpServletRequest request){
+		String node_id = request.getParameter("node_id");
+		request.setAttribute("node_id", node_id);
+		return new ModelAndView("system/tree/roleTree");
+	}
+
+	/**
+	 * 获取 组织机构的角色树
+	 *
+	 * @param request
+	 *            request
+	 * @return 组织机构的角色树
+	 */
+	@RequestMapping(params = "loadRoleTree")
+	@ResponseBody
+	public List<ComboTree> loadRoleTree(HttpServletRequest request) {
+		ComboTreeModel comboTreeModel = new ComboTreeModel("id", "roleName", "");
+		String projectCode = ResourceUtil.getConfigByName("PROJECT_CODE");
+		String orgId = request.getParameter("node_id");
+		List<Map<String,Object>> orgRoleArrList = systemService
+				.findForJdbc(
+                        "select r.* from T_S_Role r, t_form_role_relation ro, t_s_treeInfo_entry o WHERE r.id=ro.role_id AND ro.tree_node_id = o.id AND o.id='" + orgId + "'", 1, 99999999);
+		List<TSRole> orgRoleList = new ArrayList<TSRole>();
+		for (Map<String,Object> roleArr : orgRoleArrList) {
+            TSRole role = new TSRole();
+            role.setId((String) roleArr.get("id"));
+            role.setRoleCode((String) roleArr.get("rolecode"));
+            role.setRoleName((String) roleArr.get("rolename"));
+			orgRoleList.add(role);
+		}
+
+		List<Object> allRoleList = this.systemService.getList(TSRole.class);
+//		List<Object> roleList = new ArrayList<Object>();
+//		for(Object obj : allRoleList){
+//			TSRole role = (TSRole) obj;
+//			Integer pjCode = role.getProjectCode();
+//			if(!projectCode.equals(pjCode+"")){
+//				continue;
+//			}else{
+//				roleList.add(obj);
+//			}
+//		}
+		List<ComboTree> comboTrees = systemService.ComboTree(allRoleList,
+				comboTreeModel, orgRoleList, false);
+
+		return comboTrees;
+	}
+
+	@RequestMapping(params = "loadReadOnlyNodeTree")
+	@ResponseBody
+	public List<ComboTree> loadReadOnlyNodeTree(HttpServletRequest request) {
+		ComboTreeModel comboTreeModel = new ComboTreeModel("id", "roleName", "");
+		String projectCode = ResourceUtil.getConfigByName("PROJECT_CODE");
+		String orgId = request.getParameter("node_id");
+		String sql = "select r.* from T_S_Role r, t_form_role_relation ro, t_s_treeInfo_entry o WHERE r.id=ro.role_id AND ro.tree_node_id = o.id AND o.id='"+orgId+"'";//and r.projectCode = "+projectCode;
+		List<Map<String,Object>> orgRoleArrList = systemService.findForJdbc(sql);
+		List<TSRole> orgRoleList = new ArrayList<TSRole>();
+		for (Map<String,Object> roleArr : orgRoleArrList) {
+			TSRole role = new TSRole();
+			role.setId((String) roleArr.get("id"));
+			role.setRoleCode((String) roleArr.get("rolecode"));
+			role.setRoleName((String) roleArr.get("rolename"));
+			orgRoleList.add(role);
+		}
+		sql += " and ro.is_read = 1";
+		List<Map<String,Object>> readonlyRoleArrList = systemService.findForJdbc(sql);
+		List<TSRole> readonlyRoleList = new ArrayList<TSRole>();
+		for (Map<String,Object> readonlyRoleArr : readonlyRoleArrList) {
+			TSRole role = new TSRole();
+			role.setId((String) readonlyRoleArr.get("id"));
+			role.setRoleCode((String) readonlyRoleArr.get("rolecode"));
+			role.setRoleName((String) readonlyRoleArr.get("rolename"));
+			readonlyRoleList.add(role);
+		}
+		//List<Object> allRoleList = this.systemService.getList(TSRole.class);
+		List<ComboTree> comboTrees = systemService.ComboTree(orgRoleList,
+				comboTreeModel, readonlyRoleList, false);
+
+		return comboTrees;
+	}
+
+
+	@RequestMapping(params = "saveTreeNodeRole")
+	@ResponseBody
+	public AjaxJson saveTreeNodeRole(HttpServletRequest request){
+		AjaxJson j = new AjaxJson();
+		String nodeId = request.getParameter("node_id");
+		String roleIds = request.getParameter("roleIds");
+        j.setSuccess(true);
+        j.setMsg("保存成功");
+		if(!StringUtils.isEmpty(nodeId) && !StringUtils.isEmpty(roleIds)){
+			String delSql = "delete from t_form_role_relation where tree_node_id=?";
+			systemService.executeSql(delSql, nodeId);
+			String[] roleIdsArr = roleIds.split(",");
+            List<TSRoleNode> roleNodes = new ArrayList<TSRoleNode>();
+            for(String roleId : roleIdsArr){
+                TSRoleNode roleNode = new TSRoleNode();
+                roleNode.setRoleId(roleId);
+                roleNode.setTreeNodeId(nodeId);
+                roleNode.setIsRead(0);
+                roleNodes.add(roleNode);
+            }
+            try {
+                this.systemService.batchSave(roleNodes);
+            }catch (Exception e){
+                j.setSuccess(false);
+                j.setMsg(e.getMessage());
+            }
+		}
+		return j;
+	}
+
+
+	@RequestMapping(params = "updateTreeNodeRole")
+	@ResponseBody
+	public AjaxJson updateTreeNodeRole(HttpServletRequest request){
+		AjaxJson j = new AjaxJson();
+		String nodeId = request.getParameter("node_id");
+		String roleIds = request.getParameter("roleIds");
+		j.setSuccess(true);
+		j.setMsg("设置成功");
+		if(!StringUtils.isEmpty(nodeId) && !StringUtils.isEmpty(roleIds)){
+			String updateSql = "update t_form_role_relation set is_read = 0 where tree_node_id=?";
+			systemService.executeSql(updateSql, nodeId);
+			String[] roleIdsArr = roleIds.split(",");
+			List<TSRoleNode> roleNodes = new ArrayList<TSRoleNode>();
+			for(String roleId : roleIdsArr){
+				//StringBuffer update = new StringBuffer();
+				TSRoleNode roleNode = new TSRoleNode();
+				roleNode.setRoleId(roleId);
+				roleNode.setTreeNodeId(nodeId);
+				//roleNode.setIsRead(0);
+				List<TSRoleNode> list = systemService.findByExample(TSRoleNode.class.getName(),roleNode);
+				if(null != list && list.size() > 0){
+					roleNode = list.get(0);
+					roleNode.setIsRead(1);
+					systemService.saveOrUpdate(roleNode);
+				}
+				//roleNodes.add(roleNode);
+			}
+//			try {
+//				this.systemService.batchSave(roleNodes);
+//			}catch (Exception e){
+//				j.setSuccess(false);
+//				j.setMsg(e.getMessage());
+//			}
+		}
+		return j;
+	}
+
+	//获取节点与面板关联数据
+	@RequestMapping(params = "nodePanelGrid")
+	public void nodePanelGrid(TSNodePanel nodePanel, HttpServletRequest request,
+							  HttpServletResponse response, DataGrid dataGrid) {
+		CriteriaQuery cq = new CriteriaQuery(TSNodePanel.class, dataGrid);
+		HqlGenerateUtil.installHql(cq,nodePanel);
+		cq.add();
+		this.systemService.getDataGridReturn(cq, true);
+		TagUtil.datagrid(response, dataGrid);
+	}
+
+	//节点与面板关联数据新增，编辑页面跳转
+	@RequestMapping(params = "addorupdateNodePanel")
+	public ModelAndView addorupdateNodePanel(TSNodePanel nodePanel,HttpServletRequest request){
+		String nodeId = request.getParameter("node_id");
+		ModelAndView view = new ModelAndView("system/tree/panel");
+		TSNodePanel panel = new TSNodePanel();
+		if(null != nodePanel.getId()) {
+			panel = this.systemService.getEntity(TSNodePanel.class, nodePanel.getId());
+		}
+		panel.setNodeId(nodeId);
+		view.addObject("panel", panel);
+		return view;
+	}
+
+	//保存节点面板关联数据
+	@RequestMapping(params = "saveNodePanel")
+	@ResponseBody
+	public AjaxJson saveNodePanel(TSNodePanel nodePanel,HttpServletRequest request){
+		AjaxJson j = new AjaxJson();
+		j.setMsg("保存成功");
+		if(!StringUtils.isEmpty(nodePanel.getId())){
+			j.setMsg("编辑成功");
+		}else{
+			nodePanel.setId(null);
+		}
+		try {
+			this.systemService.saveOrUpdate(nodePanel);
+		}catch (Exception e){
+			j.setMsg(e.getMessage());
+		}
+		return j;
+	}
 }

@@ -30,6 +30,7 @@ import com.qihang.winter.codegenerate.pojo.Columnt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -93,7 +94,7 @@ public class CgformTransController {
 
 	@RequestMapping(params = "transEditor")
 	@ResponseBody
-	public AjaxJson transEditor(HttpServletRequest request, String id)
+	public AjaxJson transEditor(HttpServletRequest request, @RequestParam("id") String id)
 			throws Exception {
 		AjaxJson j = new AjaxJson();
 		String ids[] = id.split(",");

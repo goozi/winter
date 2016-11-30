@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			 xmlns:context="http://www.springframework.org/schema/context"
+			 xmlns:aop="http://www.springframework.org/schema/aop"
+			 xsi:schemaLocation="http://www.springframework.org/schema/beans
       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
        http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-3.0.xsd
-         http://www.springframework.org/schema/mvc
-		http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->
 	<context:component-scan base-package="com.qihang.winter.core.aop" />
+	<bean id="dataSourceAspect" class="com.qihang.winter.core.aop.DataSourceAspect" />
+    <aop:config>
+        <aop:aspect ref="dataSourceAspect">
+            <!-- 拦截所有service方法 -->
+            <aop:pointcut id="dataSourcePointcut" expression="execution(* com.qihang.buss..dao.*(..)) or execution(* com.qihang.winter.web.system.controller.core.DynamicDataSourceController.*(..)) or execution(* com.qihang.buss.sc.sys.controller.TScAccountConfigController.*(..))"/>
+            <aop:before pointcut-ref="dataSourcePointcut" method="intercept" />
+        </aop:aspect>
+    </aop:config>
+  <!--<bean id="enumUtil" class="com.qihang.winter.core.util.EnumUtil"/>-->
 </beans>

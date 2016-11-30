@@ -1,21 +1,14 @@
 package com.qihang.winter.web.cgform.entity.config;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 
 /**   
  * @Title: Entity
@@ -54,6 +47,10 @@ public class CgFormFieldEntity implements java.io.Serializable {
 	private java.lang.String isShow;
 	/**是否在列表上显示*/
 	private java.lang.String isShowList;
+	/**20160623  供应链添加页脚配置 **/
+	/**是否在列表上显示*/
+	private java.lang.String isPageFoot;
+
 	/**显示类型*/
 	private java.lang.String showType;
 	/**是否生产查询字段*/
@@ -547,6 +544,13 @@ public class CgFormFieldEntity implements java.io.Serializable {
 	public void setFieldDefault(java.lang.String fieldDefault) {
 		this.fieldDefault = fieldDefault;
 	}
-	
-	
+
+	@Column(name ="is_page_foot",nullable=true,length=5)
+	public String getIsPageFoot() {
+		return isPageFoot;
+	}
+
+	public void setIsPageFoot(String isPageFoot) {
+		this.isPageFoot = isPageFoot;
+	}
 }

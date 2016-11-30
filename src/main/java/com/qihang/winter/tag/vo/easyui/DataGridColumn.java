@@ -3,7 +3,7 @@ package com.qihang.winter.tag.vo.easyui;
  * 
  * 类描述：列表字段模型
  * 
- * @author:  张代浩
+ * @Author: Zerrion
  * @date： 日期：2012-12-7 时间：上午10:17:45
  * @version 1.0
  */
@@ -37,6 +37,9 @@ public class DataGridColumn {
 	protected String downloadName;//附件下载
 	protected boolean autocomplete;//自动补全
 	protected String extendParams;//扩展参数,easyui有的,但是jeecg没有的参数进行扩展
+  	protected String editor;//编辑器
+	protected boolean mergeCells=false;//是否进行列值相同时合并单元格，true表示合并，false表示不合并,默认不合并
+
 	public String getDownloadName() {
 		return downloadName;
 	}
@@ -259,5 +262,21 @@ public class DataGridColumn {
 	}
 
 
-	
+  public String getEditor() {
+    return editor;
+  }
+
+  public void setEditor(String editor) {
+    this.editor = editor;
+  }
+
+
+
+	public void setMergeCells(boolean mergeCells) {
+		this.mergeCells = mergeCells;
+	}
+
+	public boolean isMergeCells() {
+		return mergeCells;
+	}
 }

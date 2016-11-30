@@ -28,6 +28,8 @@ public class TSTypegroup extends IdEntity implements java.io.Serializable {
 
 	private String typegroupname;
 	private String typegroupcode;
+	private String projectCode;
+	private Integer userCustom;
 	private List<TSType> TSTypes = new ArrayList<TSType>();
 	@Column(name = "typegroupname", length = 50)
 	public String getTypegroupname() {
@@ -56,4 +58,20 @@ public class TSTypegroup extends IdEntity implements java.io.Serializable {
 		this.TSTypes = TSTypes;
 	}
 
+	@Column(name = "projectCode", length = 4)
+	public String getProjectCode() {
+		return projectCode;
+	}
+
+	public void setProjectCode(String projectCode) {
+		this.projectCode = projectCode;
+	}
+	@Column(name = "userCustom", length = 1)
+	public Integer getUserCustom() {
+		return userCustom;
+	}
+
+	public void setUserCustom(Integer userCustom) {
+		this.userCustom = userCustom;
+	}
 }

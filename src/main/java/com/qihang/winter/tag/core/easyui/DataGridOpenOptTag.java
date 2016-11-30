@@ -14,8 +14,8 @@ import javax.servlet.jsp.tagext.TagSupport;
  */
 public class DataGridOpenOptTag extends TagSupport {
 	protected String url;//弹出页面地址
-	protected String width="100%";//弹出窗口宽度
-	protected String height="100%";//弹出窗口高度
+	protected String width="800";//弹出窗口宽度
+	protected String height="600";//弹出窗口高度
 	protected String title;//链接标题
 	private String exp;//判断链接是否显示的表达式
 	private String operationCode;//按钮的操作Code

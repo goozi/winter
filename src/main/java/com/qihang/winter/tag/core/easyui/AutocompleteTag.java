@@ -13,7 +13,7 @@ import com.qihang.winter.core.util.StringUtil;
  * 
  * 自动补全
  * jquery ui Autocomplete
- * @author:  张代浩
+ * @Author: Zerrion
  * @date： 日期：2012-12-7 时间：上午10:17:45
  * @version 1.0
  */

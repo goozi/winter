@@ -47,13 +47,15 @@ public class DataGridColumnTag extends TagSupport {
 	private boolean autocomplete = false;//自动完成
 	private String extendParams;//扩展参数
 	private String langArg;
-	
+	private String editor;//编辑器
+	private boolean mergeCells=false;//是否进行列值相同时合并单元格，true表示合并，false表示不合并,默认不合并
+
 	public int doEndTag() throws JspTagException {
 		title = MutiLangUtil.doMutiLang(title, langArg);
 		
 		Tag t = findAncestorWithClass(this, DataGridTag.class);
 		DataGridTag parent = (DataGridTag) t;
-		parent.setColumn(title,field,width,rowspan,colspan,align,sortable,checkbox,formatter,hidden,replace,treefield,image,imageSize,query,url,funname,arg,queryMode, dictionary,popup,frozenColumn,extend,style,downloadName,autocomplete,extendParams);
+		parent.setColumn(title,field,width,rowspan,colspan,align,sortable,checkbox,formatter,hidden,replace,treefield,image,imageSize,query,url,funname,arg,queryMode, dictionary,popup,frozenColumn,extend,style,downloadName,autocomplete,extendParams,editor,mergeCells);
 		return EVAL_PAGE;
 	}
 	
@@ -191,5 +193,21 @@ public class DataGridColumnTag extends TagSupport {
 
 	public void setLangArg(String langArg) {
 		this.langArg = langArg;
+	}
+
+  public String getEditor() {
+    return editor;
+  }
+
+  public void setEditor(String editor) {
+    this.editor = editor;
+  }
+
+	public boolean isMergeCells() {
+		return mergeCells;
+	}
+
+	public void setMergeCells(boolean mergeCells) {
+		this.mergeCells = mergeCells;
 	}
 }

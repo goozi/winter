@@ -77,7 +77,7 @@ public class CommonController extends BaseController {
 	@RequestMapping(params = "openViewFile")
 	public ModelAndView openViewFile(HttpServletRequest request) {
 		String fileid = request.getParameter("fileid");
-		String subclassname = oConvertUtils.getString(request.getParameter("subclassname"), "TSAttachment");
+		String subclassname = oConvertUtils.getString(request.getParameter("subclassname"), "com.qihang.winter.web.system.pojo.base.TSAttachment");
 		String contentfield = oConvertUtils.getString(request.getParameter("contentfield"));
 		Class fileClass = MyClassLoader.getClassByScn(subclassname);// 附件的实际类
 		Object fileobj = systemService.getEntity(fileClass, fileid);
@@ -110,7 +110,7 @@ public class CommonController extends BaseController {
 	@RequestMapping(params = "viewFile")
 	public void viewFile(HttpServletRequest request, HttpServletResponse response) {
 		String fileid =oConvertUtils.getString(request.getParameter("fileid"));
-		String subclassname = oConvertUtils.getString(request.getParameter("subclassname"), "com.jeecg.base.pojo.TSAttachment");
+		String subclassname = oConvertUtils.getString(request.getParameter("subclassname"), "com.qihang.winter.web.system.pojo.base.TSAttachment");
 		Class fileClass = MyClassLoader.getClassByScn(subclassname);// 附件的实际类
 		Object fileobj = systemService.getEntity(fileClass, fileid);
 		ReflectHelper reflectHelper = new ReflectHelper(fileobj);
@@ -188,7 +188,7 @@ public class CommonController extends BaseController {
 	 * 自动完成请求返回数据
 	 * 
 	 * @param request
-	 * @param responss
+	 * @param response
 	 */
 	@RequestMapping(params = "getAutoList")
 	public void getAutoList(HttpServletRequest request, HttpServletResponse response, Autocomplete autocomplete) {

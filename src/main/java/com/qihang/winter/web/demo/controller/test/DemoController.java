@@ -261,7 +261,7 @@ public class DemoController extends BaseController {
 	/**
 	 * 保存DEMO维护
 	 * 
-	 * @param jeecgDemo
+	 * @param demo
 	 * @param request
 	 * @return
 	 * @throws Exception 

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@page import="com.qihang.winter.core.enums.SysThemesEnum,com.qihang.winter.core.util.SysThemesUtil" %>
-<%@ page import="com.qihang.winter.core.util.BrowserUtils" %>
+<%@page import="com.qihang.winter.core.enums.SysThemesEnum,com.qihang.winter.core.util.BrowserUtils" %>
+<%@ page import="com.qihang.winter.core.util.SysThemesUtil" %>
 <%@include file="/context/mytags.jsp" %>
 <!DOCTYPE html>
 <%
@@ -13,7 +13,7 @@
 <html>
 <head>
   <title></title>
-  <link rel="shortcut icon" href="resources/fc/images/icon/favicon.ico">
+ <%-- <link rel="shortcut icon" href="resources/fc/images/icon/favicon.ico">--%>
   <script src=<%=langurl%> type="text/javascript"></script>
   <!--[if lt IE 9]>
   <script src="plug-in/login/js/html5.js"></script>
@@ -71,6 +71,24 @@
       width: 500px;
       height: 51px;
     }
+
+    <%-- 给input的背景文字提示增加样式 兼容多种浏览器 --%>
+    ::-webkit-input-placeholder{/*WeiKit browsers*/
+      color:#999;
+      font-size: 16px;
+    }
+    :-moz-placeholder{/*Mozilla Firefox 4 to 18*/
+      color:#999;
+      font-size: 16px;
+    }
+    ::-moz-placeholder{/*Mozilla Firefox 19+*/
+      color:#999;
+      font-size: 16px;
+    }
+    :-ms-input-placeholder{/*internet explorer 10+*/
+      color:#999;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
@@ -91,24 +109,24 @@
                value="D1B5CC2FE46C4CC983C073BCA897935608D926CD32992B5900"/>
 
         <div class="tip">
-          <input class="userName" name="userName" type="text" id="userName" title="" iscookie="true"
-                 value="admin" nullmsg=""/>
+          <input class="userName"  placeholder="用户名" name="userName" type="text" id="userName" title="" iscookie="true"
+                 value="" nullmsg=""/>
         </div>
         <div class="tip">
-          <input class="password" name="password" type="password" id="password" title="" value="123456"
+          <input class="password"  placeholder="密码" name="password" type="password" id="password" title="" value=""
                  nullmsg=""/>
         </div>
         <div>
           <div style="float: right; margin-left:-150px; margin-right: 20px;">
             <img id="randCodeImage" src="randCodeImage"/>
           </div>
-          <input class="randCode" name="randCode" type="text" id="randCode" title="" value="" nullmsg=""/>
+          <input class="randCode"  placeholder="验证码" name="randCode" type="text" id="randCode" title="" value="" nullmsg=""/>
         </div>
-        <%--update-end--Author:zhangguoming  Date:20140226 for：添加验证码--%>
+        <%--update-end--Author:Zerrion  Date:20140226 for：添加验证码--%>
 
         <div class="loginButton">
           <div style="float: left; margin-left: -9px;">
-            <input type="checkbox" id="on_off" name="remember" checked="ture" class="on_off_checkbox"
+            <input type="checkbox" id="rememberMe" name="remember" checked="ture" class="on_off_checkbox"
                    value="0"/>
             <span class="f_help"><t:mutiLang langKey="common.remember.user"/></span>
           </div>

@@ -14,7 +14,7 @@
 	<t:dgCol title="手机" field="mobilePhone" query="true"></t:dgCol>
 	<t:dgCol title="操作" field="opt" width="100"></t:dgCol>
 	<t:dgDelOpt title="删除" url="jeecgJdbcController.do?del&id={id}" />
-	<t:dgToolBar title="录入" icon="icon-add" url="jeecgJdbcController.do?addorupdate" funname="add"></t:dgToolBar>
+	<t:dgToolBar title="新增" icon="icon-add" url="jeecgJdbcController.do?addorupdate" funname="add"></t:dgToolBar>
 	<t:dgToolBar title="编辑" icon="icon-edit" url="jeecgJdbcController.do?addorupdate" funname="update"></t:dgToolBar>
 	<t:dgToolBar title="查看" icon="icon-search" url="jeecgJdbcController.do?addorupdate" funname="detail"></t:dgToolBar>
 </t:datagrid></div>

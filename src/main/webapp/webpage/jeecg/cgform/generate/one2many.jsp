@@ -53,7 +53,7 @@ function browseFolder(path) {
 </style>
 </head>
 <body>
-<t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" tiptype="1" action="generateController.do?dogenerateOne2Many">
+<t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" tiptype="1" action="generateController.do?dogenerateOne2Many" windowType="dialog">
 	<input id="id" name="id" type="hidden" value="${cgFormHeadPage.id}">
 	<input id="tableName" name="tableName" type="hidden" value="${cgFormHeadPage.tableName}">
 	<table cellpadding="0" cellspacing="1" class="formtable">
@@ -114,7 +114,7 @@ function browseFolder(path) {
 				<td class="value" colspan="3"><input class="inputxt" id="subTabParamIn[${columIndex.index}].ftlDescription" name="subTabParamIn[${columIndex.index}].ftlDescription" datatype="*"> <span
 					class="Validform_checktip"></span></td>
 
-				<td align="right">子包名((小写)):</td>
+				<td align="right">子包名(小写):</td>
 				<td class="value" colspan="3"><input class="inputxt" id="subTabParamIn[${columIndex.index}].entityPackage" name="subTabParamIn[${columIndex.index}].entityPackage" datatype="*"> <span
 					class="Validform_checktip"></span></td>
 

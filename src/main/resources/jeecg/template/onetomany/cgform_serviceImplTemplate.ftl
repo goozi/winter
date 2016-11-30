@@ -1,29 +1,31 @@
+<#assign entityPackage=entityPackage?replace("/",".")>
+
 <#if packageStyle == "service">
 package ${bussiPackage}.${entityPackage}.service.impl;
 import ${bussiPackage}.${entityPackage}.service.${entityName}ServiceI;
-import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
+import com.qihang.winter.core.common.service.impl.CommonServiceImpl;
 import ${bussiPackage}.${entityPackage}.entity.${entityName}Entity;
 <#list subTab as sub>
-import ${bussiPackage}.${sub.entityPackage}.entity.${sub.entityName}Entity;
+import ${bussiPackage}.${sub.entityPackage?replace("/",".")}.entity.${sub.entityName}Entity;
 </#list>
 <#else>
 package ${bussiPackage}.service.impl.${entityPackage};
 import ${bussiPackage}.service.${entityPackage}.${entityName}ServiceI;
-import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
+import com.qihang.winter.core.common.service.impl.CommonServiceImpl;
 import ${bussiPackage}.entity.${entityPackage}.${entityName}Entity;
 <#list subTab as sub>
-import ${bussiPackage}.entity.${sub.entityPackage}.${sub.entityName}Entity;
+import ${bussiPackage}.entity.${sub.entityPackage?replace("/",".")}.${sub.entityName}Entity;
 </#list>
 </#if>
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import org.jeecgframework.core.common.exception.BusinessException;
-import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
-import org.jeecgframework.core.util.MyBeanUtils;
-import org.jeecgframework.core.util.StringUtil;
-import org.jeecgframework.core.util.oConvertUtils;
+import com.qihang.winter.core.common.exception.BusinessException;
+import com.qihang.winter.core.common.service.impl.CommonServiceImpl;
+import com.qihang.winter.core.util.MyBeanUtils;
+import com.qihang.winter.core.util.StringUtil;
+import com.qihang.winter.core.util.oConvertUtils;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.io.Serializable;
@@ -169,7 +171,7 @@ public class ${entityName}ServiceImpl extends CommonServiceImpl implements ${ent
  	
  	/**
 	 * 默认按钮-sql增强-新增操作
-	 * @param id
+	 * @param t
 	 * @return
 	 */
  	public boolean doAddSql(${entityName}Entity t){
@@ -182,7 +184,7 @@ public class ${entityName}ServiceImpl extends CommonServiceImpl implements ${ent
  	}
  	/**
 	 * 默认按钮-sql增强-更新操作
-	 * @param id
+	 * @param t
 	 * @return
 	 */
  	public boolean doUpdateSql(${entityName}Entity t){
@@ -195,7 +197,7 @@ public class ${entityName}ServiceImpl extends CommonServiceImpl implements ${ent
  	}
  	/**
 	 * 默认按钮-sql增强-删除操作
-	 * @param id
+	 * @param t
 	 * @return
 	 */
  	public boolean doDelSql(${entityName}Entity t){

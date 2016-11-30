@@ -28,7 +28,7 @@ Date.prototype.format = function (format,value) {
 	};
 	
 	if (/(y+)/.test(format)) {
-		format = format.replace(RegExp.$1, strdata.substr(4-RegExp.$1.length,RegExp.$1.length));
+		format = format.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
 	}
 	
 	for (var k in o) {

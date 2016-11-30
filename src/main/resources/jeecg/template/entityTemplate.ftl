@@ -1,3 +1,4 @@
+<#assign entityPackage=entityPackage?replace("/",".")>
 package ${bussiPackage}.entity.${entityPackage};
 
 import java.math.BigDecimal;

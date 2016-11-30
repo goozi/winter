@@ -24,7 +24,7 @@ public class TabTag extends TagSupport {
 	private String icon="icon-default";//图标
 	private String width;//宽度
 	private String heigth;//高度
-	private boolean cache;//是否打开缓冲如为TRUE则切换选项卡会再次发送请求
+	private boolean cache = true;//是否打开缓冲如为TRUE则切换选项卡会再次发送请求
 	private String content;
 	private boolean closable=false;//是否带关闭按钮
 	private String langArg;
@@ -38,6 +38,7 @@ public class TabTag extends TagSupport {
 	public int doEndTag() throws JspTagException {
 		Tag t = findAncestorWithClass(this, TabsTag.class);
 		TabsTag parent = (TabsTag) t;
+    href = ".."+pageContext.getRequest().getServletContext().getContextPath()+"/"+href;
 		parent.setTab( id, title,iframe, href, icon, cache, content, width, heigth,closable);
 		return EVAL_PAGE;
 	}

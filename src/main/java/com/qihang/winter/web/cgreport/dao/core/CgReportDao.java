@@ -3,7 +3,7 @@ package com.qihang.winter.web.cgreport.dao.core;
 import java.util.List;
 import java.util.Map;
 
-import com.qihang.winter.minidao.annotation.Arguments;
+import com.qihang.winter.winterdao.annotation.Arguments;
 import org.springframework.stereotype.Repository;
 
 /**

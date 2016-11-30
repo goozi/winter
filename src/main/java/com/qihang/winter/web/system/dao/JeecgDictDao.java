@@ -15,8 +15,8 @@ package com.qihang.winter.web.system.dao;
 import java.util.List;
 
 import com.qihang.winter.web.system.pojo.base.DictEntity;
-import com.qihang.winter.minidao.annotation.Arguments;
-import com.qihang.winter.minidao.annotation.ResultType;
+import com.qihang.winter.winterdao.annotation.Arguments;
+import com.qihang.winter.winterdao.annotation.ResultType;
 import org.springframework.stereotype.Repository;
 
 /**

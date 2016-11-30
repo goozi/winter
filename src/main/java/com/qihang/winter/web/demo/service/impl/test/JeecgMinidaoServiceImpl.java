@@ -3,7 +3,8 @@ package com.qihang.winter.web.demo.service.impl.test;
 import java.util.List;
 
 import com.qihang.winter.web.demo.service.test.JeecgMinidaoServiceI;
-import com.qihang.winter.web.demo.dao.test.JeecgMinidaoDao;
+import com.qihang.winter.web.demo.dao.test.JeecgMinidaoDao
+		;
 import com.qihang.winter.web.demo.entity.test.JeecgMinidaoEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

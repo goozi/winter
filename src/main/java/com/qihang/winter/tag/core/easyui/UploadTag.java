@@ -32,6 +32,7 @@ public class UploadTag extends TagSupport {
 	protected String onUploadSuccess;//上传成功处理函数
 	protected boolean view=false;//生成查看删除链接
 	protected String formId;//参数名称
+	protected String size="15MB";//
 	
 	public String getFormId() {
 		return formId;
@@ -113,7 +114,7 @@ public class UploadTag extends TagSupport {
 				+"fileTypeDesc:\'文件格式:\'," 
 				+"queueID:\'"+queueID+"\',"
 				+"fileTypeExts:\'"+extend+"\',"
-				+"fileSizeLimit:\'15MB\',"
+				+"fileSizeLimit:\'"+size+"\',"
 				+"swf:\'plug-in/uploadify/uploadify.swf\',	"
 				+"uploader:\'"+getUploader()			
 						+"onUploadStart : function(file) { ");	
@@ -244,7 +245,7 @@ public class UploadTag extends TagSupport {
 	public void setExtend(String extend) {
 		this.extend = extend;
 	}
-
-	 
-	
+	public void setSize(String size) {
+		this.size = size;
+	}
 }

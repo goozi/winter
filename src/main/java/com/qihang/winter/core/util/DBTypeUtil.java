@@ -31,7 +31,8 @@ public class DBTypeUtil {
 				retStr="mysql";
 			}else if (dbdialect.contains("Oracle")) {//oracle有多个版本的方言
 				retStr = "oracle";
-			}else if (dbdialect.equals("org.hibernate.dialect.SQLServerDialect")) {
+			}else if (dbdialect.equals("org.hibernate.dialect.SQLServerDialect")
+					||dbdialect.equals("com.qihang.winter.core.common.hibernate.dialect.QihangSQLServer2005Dialect")) {
 				retStr = "sqlserver";
 			}else if (dbdialect.equals("org.hibernate.dialect.PostgreSQLDialect")) {
 				retStr = "postgres";

@@ -74,7 +74,6 @@
 				success : function(jsondata) {
 					
 					data = eval(jsondata);
-					console.log(data);
 					chart = new Highcharts.Chart({
 						chart : {
 							renderTo : 'containerCol',

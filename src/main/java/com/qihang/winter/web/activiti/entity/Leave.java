@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * @author liujinghua
  */
 @Entity
-@Table(name = "oa_leave")
+@Table(name = "oa_leave", schema = "")
 public class Leave implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -25,6 +25,7 @@ public class Leave implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name ="id",nullable=false)
     public Long getId() {
 		return id;
 	}
@@ -33,7 +34,7 @@ public class Leave implements Serializable {
 		this.id = id;
 	}
 
-	@Column
+	@Column(name = "processInstanceId", length = 255)
     public String getProcessInstanceId() {
         return processInstanceId;
     }
@@ -42,7 +43,7 @@ public class Leave implements Serializable {
         this.processInstanceId = processInstanceId;
     }
 
-    @Column
+    @Column(name = "userId", length = 255)
     public String getUserId() {
         return userId;
     }
@@ -51,7 +52,7 @@ public class Leave implements Serializable {
         this.userId = userId;
     }
 
-    @Column
+    @Column(name = "reason", length = 255)
     public String getReason() {
         return reason;
     }

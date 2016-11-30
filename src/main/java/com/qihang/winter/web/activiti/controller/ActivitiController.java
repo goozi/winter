@@ -1,10 +1,13 @@
 package com.qihang.winter.web.activiti.controller;
 
 import com.qihang.winter.core.common.model.json.AjaxJson;
+import com.qihang.winter.core.util.StringUtil;
+import com.qihang.winter.tag.core.easyui.TagUtil;
 import net.sf.json.JSONObject;
 import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.interceptor.Command;
+import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -117,7 +120,6 @@ public class ActivitiController extends BaseController {
       rows.append("{'id':" + hi.getId() + ",'processDefinitionId':'" + hi.getProcessDefinitionId() + "','processInstanceId':'" + hi.getProcessInstanceId() + "','activityId':'" + hi.getActivityId() + "'},");
     }
 
-
     String rowStr = StringUtils.substringBeforeLast(rows.toString(), ",");
 
     JSONObject jObject = JSONObject.fromObject("{'total':" + list.size() + ",'rows':[" + rowStr + "]}");
@@ -177,8 +179,8 @@ public class ActivitiController extends BaseController {
    * easyui 流程历史页面
    *
    * @param request
-   * @param response
-   * @param dataGrid
+   * @param processInstanceId
+   * @param model
    */
 
   @RequestMapping(params = "viewProcessInstanceHistory")
@@ -246,30 +248,30 @@ public class ActivitiController extends BaseController {
    */
 
   @RequestMapping(params = "datagrid")
-  public void datagrid(HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+  public void datagrid(String key,Integer suspensionState,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 
     ProcessDefinitionQuery query = repositoryService.createProcessDefinitionQuery();
-    List<ProcessDefinition> list = query.list();
-
-    StringBuffer rows = new StringBuffer();
-    int i = 0;
-    for (ProcessDefinition pi : list) {
-      i++;
-      rows.append("{'id':" + i + ",'processDefinitionId':'" + pi.getId() + "','startPage':'" + pi.getDescription() + "','resourceName':'" + pi.getResourceName() + "','deploymentId':'" + pi.getDeploymentId() + "','key':'" + pi.getKey() + "','name':'" + pi.getName() + "','version':'" + pi.getVersion() + "','isSuspended':'" + pi.isSuspended() + "'},");
+    if(StringUtil.isNotEmpty(key)){
+      query = query.processDefinitionKeyLike(key);
     }
-    String rowStr = StringUtils.substringBeforeLast(rows.toString(), ",");
+    if(suspensionState != null) {
+      if (suspensionState==1) {
+        query = query.active();
+      }else {
+        query = query.suspended();
+      }
+    }
+    List<ProcessDefinition> list = query.listPage((dataGrid.getPage()-1)*dataGrid.getRows(),dataGrid.getRows());
 
-    JSONObject jObject = JSONObject.fromObject("{'total':" + query.count() + ",'rows':[" + rowStr + "]}");
-    responseDatagrid(response, jObject);
+    dataGrid.setResults(list);
+    dataGrid.setTotal(Integer.parseInt(String.valueOf(query.count())));
+    TagUtil.datagrid(response, dataGrid);
   }
 
 
   /**
    * easyui 待领任务页面
    *
-   * @param request
-   * @param response
-   * @param dataGrid
    */
   @RequestMapping(params = "waitingClaimTask")
   public ModelAndView waitingClaimTask() {
@@ -304,9 +306,6 @@ public class ActivitiController extends BaseController {
   /**
    * easyui 待办任务页面
    *
-   * @param request
-   * @param response
-   * @param dataGrid
    */
   @RequestMapping(params = "claimedTask")
   public ModelAndView claimedTask() {
@@ -341,9 +340,6 @@ public class ActivitiController extends BaseController {
   /**
    * easyui 已办任务页面
    *
-   * @param request
-   * @param response
-   * @param dataGrid
    */
   @RequestMapping(params = "finishedTask")
   public ModelAndView finishedTask() {

@@ -65,6 +65,16 @@ public class ExcelExportEntity extends ExcelBaseEntity implements Comparable<Exc
      * 后缀
      */
     private String                  suffix;
+
+    public String getDicCode() {
+        return dicCode;
+    }
+
+    public void setDicCode(String dicCode) {
+        this.dicCode = dicCode;
+    }
+
+    private String                  dicCode;
     /**
      * 统计
      */

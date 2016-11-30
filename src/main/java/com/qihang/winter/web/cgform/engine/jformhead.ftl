@@ -160,7 +160,11 @@
 					               <#if po.is_null != 'Y'>datatype="*"</#if>
 					               </#if></#if>>
 						</#if>
-						<span class="Validform_checktip"></span>
+						<span class="Validform_checktip">
+							<#if po.field_valid_type?if_exists?starts_with('*') || (po.field_valid_type?if_exists?html == '' && po.is_null != 'Y')>
+                              *
+							</#if>
+						</span>
 						<label class="Validform_label" style="display: none;">${po.content?if_exists?html}</label>
 					</td>
 				<#if (po_index%2==0)&&(!po_has_next)>
@@ -191,7 +195,11 @@
 				               <#else>
 				               <#if po.is_null != 'Y'>datatype="*"</#if>
 				               </#if>>${data['${tableName}']['${po.field_name}']?if_exists?html}</textarea>
-						<span class="Validform_checktip"></span>
+						<span class="Validform_checktip">
+							<#if po.field_valid_type?if_exists?starts_with('*') || (po.field_valid_type?if_exists?html == '' && po.is_null != 'Y')>
+                              *
+							</#if>
+						</span>
 						<label class="Validform_label" style="display: none;">${po.content?if_exists?html}</label>
 					</td>
 				</tr>

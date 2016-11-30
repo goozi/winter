@@ -121,7 +121,8 @@
 			inputval = $.trim(inputval);
 			return Validform.util.isEmpty.call(obj, inputval) ? "" : inputval;
 		},
-		ajax_check:function(tableName,fieldName,fieldVlaue,param){
+		//ajax_check:function(tableName,fieldName,fieldVlaue,param){
+		ajax_check:function(tableName,fieldName,fieldVlaue,param,paramdbKey){
 			   //获取编辑页面的数据主键
 					var obid = null;
 					if(param!=null){
@@ -129,6 +130,12 @@
 						 obid = obid_id;
 					}else{
 						 obid = $("input[id='id']").val();
+					}
+					var dbKey = null;
+					if (paramdbKey!=null){
+						dbKey = paramdbKey;
+					}else{
+						dbKey = "";
 					}
 					
 					$.ajaxSetup({ async: false});//同步ajax 
@@ -140,7 +147,8 @@
 							tableName : tableName,
 							fieldName : fieldName,
 							fieldVlaue: fieldVlaue,
-							rowObid   : obid
+							rowObid   : obid,
+							dbKey : dbKey
 						},
 						dataType : 'json',
 						success : function(response) {
@@ -680,6 +688,10 @@
 								sweep : settings.tipSweep
 							}, "bycheck");
 					!settings.tipSweep && _this.addClass("Validform_error");
+					//Zerrion 151126 校验提示窗2秒后自动关闭
+					setTimeout(function(){
+						$.Hidemsg();
+					},2000);
 				}
 				return false;
 			}
@@ -689,7 +701,13 @@
 			//if(tipType==null||tipType!=1){
 			if(validType!=null){
 		       var params=validType.split(",");
-		       var  ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val());
+		       //var  ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val());
+				var  ajaxResultValue;
+				if (params.length>3){//有4个参数：表名,字段名,如果是编辑则id,可选第四个参数扩展为db_key
+					ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val(),params[3]);
+				}else{//3个参数
+					ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val());
+				}
 			   var resultParams= new Array(); //定义一数组
                 resultParams=ajaxResultValue.split("+"); //字符分割     
 			   if (resultParams[1] == "false" && tipType == 1) {
@@ -860,7 +878,13 @@
 				   var validType=$(this).attr("validType");
 					if(validType!=null&&$(this).val()!=""){
 				       var params=validType.split(",");
-				       var   ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val());
+				       //var   ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val());
+						var  ajaxResultValue;
+						if (params.length>3){//有4个参数：表名,字段名,如果是编辑则id,可选第四个参数扩展为db_key
+							ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val(),params[3]);
+						}else{//3个参数
+							ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val());
+						}
 					   var resultParams= new Array(); //定义一数组
 		                resultParams=ajaxResultValue.split("+"); //字符分割     
 					  if(resultParams[1]=="false"){
@@ -881,7 +905,13 @@
 				   var validType=$(this).attr("validType");
 					if(validType!=null&&$(this).val()!=""){
 				       var params=validType.split(",");
-				       var  ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val());
+				       //var  ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val());
+						var  ajaxResultValue;
+						if (params.length>3){//有4个参数：表名,字段名,如果是编辑则id,可选第四个参数扩展为db_key
+							ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val(),params[3]);
+						}else{//3个参数
+							ajaxResultValue=Validform.util.ajax_check(params[0],params[1],$(this).val(),$("input[name='"+params[2]+"']").val());
+						}
 					   var resultParams= new Array(); //定义一数组
 		                resultParams=ajaxResultValue.split("+"); //字符分割     
 					  if(resultParams[1]=="false"){

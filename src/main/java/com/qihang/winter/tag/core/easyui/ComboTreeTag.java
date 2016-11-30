@@ -10,7 +10,7 @@ import javax.servlet.jsp.tagext.TagSupport;
  * 
  * 类描述：下拉树形菜单
  * 
- * @author:  张代浩
+ * @Author: Zerrion
  * @date： 日期：2012-12-7 时间：上午10:17:45
  * @version 1.0
  */
@@ -19,6 +19,7 @@ public class ComboTreeTag extends TagSupport {
 	protected String url;// 远程数据
 	protected String name;// 控件名称
 	protected String width;// 宽度
+	protected String panelHeight;//下拉面板高度
 	protected String value;// 控件值
 	private boolean multiple=false;//是否多选
 	public int doStartTag() throws JspTagException {
@@ -43,6 +44,7 @@ public class ComboTreeTag extends TagSupport {
 				+ "$(function() { " + "$(\'#"+id+"\').combotree({		 " 
 				+ "url :\'"+url+"\'," 
 				+ "width :\'"+width+"\'," 
+				+ "panelHeight :\'"+panelHeight+"\',"
 				+ "multiple:"+multiple+""
 				+ "});		" 
 				+ "});	" 
@@ -71,7 +73,9 @@ public class ComboTreeTag extends TagSupport {
 	public void setWidth(String width) {
 		this.width = width;
 	}
-
+	public void setPanelHeight(String panelHeight) {
+		this.panelHeight = panelHeight;
+	}
 	public void setValue(String value) {
 		this.value = value;
 	}

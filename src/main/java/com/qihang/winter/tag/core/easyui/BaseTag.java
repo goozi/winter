@@ -1,17 +1,15 @@
 package com.qihang.winter.tag.core.easyui;
 
-import java.io.IOException;
+import com.qihang.winter.core.enums.SysThemesEnum;
+import com.qihang.winter.core.util.SysThemesUtil;
+import com.qihang.winter.core.util.oConvertUtils;
+import jodd.util.StringUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
-
-import com.qihang.winter.core.util.SysThemesUtil;
-import jodd.util.StringUtil;
-
-import com.qihang.winter.core.enums.SysThemesEnum;
-import com.qihang.winter.core.util.oConvertUtils;
+import java.io.IOException;
 
 
 /**
@@ -68,6 +66,9 @@ public class BaseTag extends TagSupport {
 			
 			//插入多语言脚本
 			String lang = (String)((HttpServletRequest) this.pageContext.getRequest()).getSession().getAttribute("lang");
+			if(lang == null){
+				lang="zh-cn";
+			}
 			String langjs = StringUtil.replace("<script type=\"text/javascript\" src=\"plug-in/mutiLang/{0}.js\"></script>", "{0}", lang);
 			sb.append(langjs);
 			
@@ -77,6 +78,8 @@ public class BaseTag extends TagSupport {
 				sb.append("<script type=\"text/javascript\" src=\"plug-in/jquery/jquery-1.8.3.js\"></script>");
 				sb.append("<script type=\"text/javascript\" src=\"plug-in/jquery/jquery.cookie.js\" ></script>");
 				sb.append("<script type=\"text/javascript\" src=\"plug-in/jquery-plugs/storage/jquery.storageapi.min.js\" ></script>");
+				sb.append("<script type=\"text/javascript\" src=\"plug-in/jquery-plugs/jqprint/jquery.jqprint-0.3.js\" ></script>");
+//				sb.append("<script type=\"text/javascript\" src=\"plug-in/jquery-plugs/livequery/jquery.livequery.min.js\" ></script>");
 			}
 			if (oConvertUtils.isIn("ckeditor", types)) {
 				sb.append("<script type=\"text/javascript\" src=\"plug-in/ckeditor/ckeditor.js\"></script>");
@@ -91,6 +94,7 @@ public class BaseTag extends TagSupport {
 //				sb.append("<link id=\"easyuiTheme\" rel=\"stylesheet\" href=\"plug-in/easyui/themes/"+cssTheme+"/easyui.css\" type=\"text/css\"></link>");
 				sb.append(SysThemesUtil.getEasyUiTheme(sysThemesEnum));
 				sb.append("<link rel=\"stylesheet\" href=\"plug-in/easyui/themes/icon.css\" type=\"text/css\"></link>");
+				sb.append("<link rel=\"stylesheet\" href=\"plug-in/lhgDialog/skins/default.css\" type=\"text/css\"></link>");
 				sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"plug-in/accordion/css/accordion.css\">");
 				sb.append("<script type=\"text/javascript\" src=\"plug-in/easyui/jquery.easyui.min.1.3.2.js\"></script>");
 				sb.append("<script type=\"text/javascript\" src=\"plug-in/easyui/locale/zh-cn.js\"></script>");
@@ -125,7 +129,7 @@ public class BaseTag extends TagSupport {
 				sb.append("<script type=\"text/javascript\" src=\"plug-in/tools/syUtil.js\"></script>");
 				sb.append("<script type=\'text/javascript\' src=\'plug-in/jquery/jquery-autocomplete/lib/jquery.bgiframe.min.js\'></script>");
 				sb.append("<script type=\'text/javascript\' src=\'plug-in/jquery/jquery-autocomplete/lib/jquery.ajaxQueue.js\'></script>");
-				sb.append("<script type=\'text/javascript\' src=\'plug-in/jquery/jquery-autocomplete/jquery.autocomplete.min.js\'></script>");
+				sb.append("<script type=\'text/javascript\' src=\'plug-in/jquery/jquery-autocomplete/jquery.autocomplete.js\'></script>");
 				sb.append("<link href=\"plug-in/designer/designer.css\" type=\"text/css\" rel=\"stylesheet\" />");
 				sb.append("<script src=\"plug-in/designer/draw2d/wz_jsgraphics.js\"></script>");
 				sb.append("<script src=\'plug-in/designer/draw2d/mootools.js\'></script>");
@@ -172,7 +176,7 @@ public class BaseTag extends TagSupport {
 			}
 			if (oConvertUtils.isIn("autocomplete", types)) {
 				sb.append("<link rel=\"stylesheet\" href=\"plug-in/jquery/jquery-autocomplete/jquery.autocomplete.css\" type=\"text/css\"></link>");
-				sb.append("<script type=\"text/javascript\" src=\"plug-in/jquery/jquery-autocomplete/jquery.autocomplete.min.js\"></script>");
+				sb.append("<script type=\"text/javascript\" src=\"plug-in/jquery/jquery-autocomplete/jquery.autocomplete.js\"></script>");
 			}
 			if (oConvertUtils.isIn("jeasyuiextensions", types)) {
 				sb.append("<script src=\"plug-in/jquery-extensions/release/jquery.jdirk.min.js\" type=\"text/javascript\"></script>");

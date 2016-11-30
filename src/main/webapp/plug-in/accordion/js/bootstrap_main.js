@@ -52,11 +52,13 @@ function showContent(subtitle, url){
 	if(url.indexOf('isHref') != -1){
 		
 	}else{
-		$("#wrapper").html( '<iframe  scrolling="no" frameborder="0"  src="'+url+'" style="width:100%;min-height:480px;"></iframe>');
+		$("#wrapper").html( '<iframe  scrolling="no" frameborder="0"  src="'+url+'" style="width:100%;min-height:550px;"></iframe>');
 		$.parser.parse($('#wrapper'));
 		//设置iframe高度自适应
 		$("#wrapper iframe").load(function(){
-			 $(this).contents().find("div:eq(0)").next().attr("style","height:480px;overflow-y: auto;");  
+			var h = $(document.body).height();
+			$(this).height(h-120);
+			 //$(this).contents().find("div:eq(0)").next().attr("style","height:"+h-50+"px;overflow-y: auto;");
 		}); 
 		return;
 	}

@@ -1,10 +1,12 @@
+<#assign entityPackage=entityPackage?replace("/",".")>
+
 package ${bussiPackage}.service.${entityPackage};
 
 import java.util.List;
-import org.jeecgframework.core.common.service.CommonService;
+import com.qihang.winter.core.common.service.CommonService;
 import ${bussiPackage}.entity.${entityPackage}.${entityName}Entity;
 <#list subTab as sub>
-import ${bussiPackage}.entity.${sub.entityPackage}.${sub.entityName}Entity;
+import ${bussiPackage}.entity.${sub.entityPackage?replace("/",".")}.${sub.entityName}Entity;
 </#list>
 
 public interface ${entityName}ServiceI extends CommonService{

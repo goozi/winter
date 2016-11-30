@@ -144,7 +144,7 @@ public class CriteriaQuery implements Serializable {
 		this.curPage = dataTables.getDisplayStart();
 		String[] fieldstring=dataTables.getsColumns().split(",");
 		this.detachedCriteria = DetachedCriteriaUtil
-		.createDetachedCriteria(entityClass, "start", "_table",fieldstring);
+		.createDetachedCriteria(entityClass, "start", "_table", fieldstring);
 		//this.detachedCriteria = DetachedCriteria.forClass(c);
 		this.field=dataTables.getsColumns();
 		this.entityClass=entityClass;
@@ -271,6 +271,17 @@ public class CriteriaQuery implements Serializable {
 	public Criterion and(Criterion c, CriteriaQuery query, int souce) {
 		return Restrictions.and(c, query.getCriterionList().getParas(souce));
 	}
+
+	/**
+	 * 设置条件之间not关系
+	 *
+	 * @param c
+	 *
+	 * @return
+	 */
+	public Criterion not(Criterion c) {
+		return Restrictions.not(c);
+	}
 	
 	/**
 	 *根据CriterionList组合嵌套条件
@@ -363,7 +374,7 @@ public class CriteriaQuery implements Serializable {
 	 *            ：排序字段值（"asc","desc"）
 	 */
 	public void addOrder(String ordername, SortDirection ordervalue) {
-		ordermap.put(ordername,ordervalue);
+		ordermap.put(ordername, ordervalue);
 
 	}
 	/**
@@ -384,7 +395,33 @@ public class CriteriaQuery implements Serializable {
 			}
 		}
 	}
-	
+
+	/**
+	 * 设置order（排序）查询条件
+	 *
+	 * @param ordername
+	 *            ：排序字段名
+	 * @param ordervalue
+	 *            ：排序字段值（"asc","desc"）
+	 */
+	public void setOrder(List<String> orderArray) {
+		for (String  order : orderArray) {
+			String[] orderInfo = order.split("@");
+			judgecreateAlias(orderInfo[0]);
+			if ("asc".equals(orderInfo[1])) {
+				detachedCriteria.addOrder(Order.asc(orderInfo[0]));
+			} else {
+				detachedCriteria.addOrder(Order.desc(orderInfo[0]));
+			}
+		}
+	}
+	/* 按照双从字段排序
+	* @param ordername1 asc
+	* @param ordername2 desc
+	*/
+	public void setOrders(String ordername1 ,String ordername2 ) {
+		detachedCriteria.addOrder(Order.desc(ordername1)).addOrder(Order.asc(ordername2));
+	}
 	/**
 	 * 创建 alias 
 	 * @param entitys
@@ -449,9 +486,16 @@ public class CriteriaQuery implements Serializable {
 	 * @param keyvalue2
 	 */
 	public void like(String keyname, Object keyvalue) {
+//		if (keyvalue != null && keyvalue != "") {
+//			//criterionList.addPara(Restrictions.like(keyname, "%" + keyvalue+ "%"));
+//			criterionList.addPara(Restrictions.like(keyname, keyvalue));
+//			if (flag) {
+//				this.put(keyname, keyvalue);
+//			}
+//			flag = true;
+//		}
 		if (keyvalue != null && keyvalue != "") {
-			//criterionList.addPara(Restrictions.like(keyname, "%" + keyvalue+ "%"));
-			criterionList.addPara(Restrictions.like(keyname, keyvalue));
+			criterionList.addPara(Restrictions.like(keyname, "%" + keyvalue+ "%"));
 			if (flag) {
 				this.put(keyname, keyvalue);
 			}

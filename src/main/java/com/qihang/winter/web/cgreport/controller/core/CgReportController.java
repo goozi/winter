@@ -2,20 +2,18 @@ package com.qihang.winter.web.cgreport.controller.core;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.alibaba.druid.util.StringUtils;
 import com.qihang.winter.core.common.controller.BaseController;
 import com.qihang.winter.core.common.exception.BusinessException;
 import com.qihang.winter.core.enums.SysThemesEnum;
 import com.qihang.winter.core.util.ContextHolderUtils;
+import com.qihang.winter.core.util.ResourceUtil;
 import com.qihang.winter.core.util.StringUtil;
 import com.qihang.winter.core.util.SysThemesUtil;
 import com.qihang.winter.web.cgform.common.CgAutoListConstant;
@@ -72,7 +70,7 @@ public class CgReportController extends BaseController {
 			response.setHeader("Cache-Control", "no-store");
 			PrintWriter writer = response.getWriter();
 			writer.println(html);
-			System.out.println(html);
+//			System.out.println(html);
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -87,6 +85,7 @@ public class CgReportController extends BaseController {
 		sb.append("<script type=\"text/javascript\" src=\"plug-in/jquery/jquery-1.8.3.js\"></script>");
 		sb.append("<script type=\"text/javascript\" src=\"plug-in/tools/dataformat.js\"></script>");
 		sb.append(SysThemesUtil.getEasyUiTheme(sysThemesEnum));
+		sb.append(SysThemesUtil.getEasyUiMainTheme(sysThemesEnum));
 		sb.append("<link rel=\"stylesheet\" href=\"plug-in/easyui/themes/icon.css\" type=\"text/css\"></link>");
 		sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"plug-in/accordion/css/accordion.css\">");
 		sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"plug-in/accordion/css/icons.css\">");
@@ -94,6 +93,8 @@ public class CgReportController extends BaseController {
 		sb.append("<script type=\"text/javascript\" src=\"plug-in/easyui/locale/zh-cn.js\"></script>");
 		sb.append("<script type=\"text/javascript\" src=\"plug-in/tools/syUtil.js\"></script>");
 		sb.append(SysThemesUtil.getLhgdialogTheme(sysThemesEnum));
+		sb.append(SysThemesUtil.getCommonTheme(sysThemesEnum));
+		sb.append("<script type=\"text/javascript\" src=\"plug-in/My97DatePicker/WdatePicker.js\"></script>");
 		sb.append(StringUtil.replace("<script type=\"text/javascript\" src=\"plug-in/tools/curdtools_{0}.js\"></script>", "{0}", lang));
 		sb.append("<script type=\"text/javascript\" src=\"plug-in/tools/easyuiextend.js\"></script>");
 		return sb.toString();
@@ -229,7 +230,7 @@ public class CgReportController extends BaseController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(params = "datagrid")
-	public void datagrid(String configId,String page,String field,String rows, HttpServletRequest request,
+	public void datagrid(String configId,String page,String field,String rows,HttpServletRequest request,
 			HttpServletResponse response) {
 		//step.1 根据id获取该动态报表的配置参数
 		Map<String, Object>  cgReportMap = null;
@@ -256,6 +257,29 @@ public class CgReportController extends BaseController {
 		//step.4 进行查询返回结果
 		int p = page==null?1:Integer.parseInt(page);
 		int r = rows==null?99999:Integer.parseInt(rows);
+        //默认查询条件配置
+        if(querySql.indexOf("#") > -1){
+            String[] info = querySql.split("#");
+            for(String item : info) {
+                String [] info2 = item.split("}");
+                if(info2.length > 1) {
+                    String query = info2[0];
+                    query = query.substring(1,query.length());
+                    String value = ResourceUtil.getUserSystemData(query);
+                    if(!StringUtils.isEmpty(value)){
+                        querySql = querySql.replace("#{" + query + "}", "'" + value+"'");
+                    }
+                }else if(info2[0].indexOf("{") > -1){
+                    String query = info2[0];
+                    query = query.substring(1,query.length());
+                    String value = ResourceUtil.getUserSystemData(query);
+                    if(!StringUtils.isEmpty(value)){
+                        querySql = querySql.replace("#{" + query + "}", "'" + value+"'");
+                    }
+                }
+            }
+        }
+
 		List<Map<String, Object>> result= cgReportService.queryByCgReportSql(querySql, queryparams, p, r);
 		long size = cgReportService.countQueryByCgReportSql(querySql, queryparams);
 		dealDic(result,items);

@@ -54,11 +54,15 @@ public class CgReportExcelServiceImpl extends CommonServiceImpl implements
 			//遍历标题行
 			for(Map titleM : titleList){
 				String titleContent = (String) titleM.get("field_txt");
-				Cell cell = row.createCell(cindex);
-				RichTextString text = new HSSFRichTextString(titleContent);
-				cell.setCellValue(text);
-				cell.setCellStyle(titleStyle);
-				cindex++;
+				String isShow = (String) titleM.get("is_show");
+				String href = (String) titleM.get("field_href");
+				if("Y".equals(isShow) && "".equals(href)) {
+					Cell cell = row.createCell(cindex);
+					RichTextString text = new HSSFRichTextString(titleContent);
+					cell.setCellValue(text);
+					cell.setCellStyle(titleStyle);
+					cindex++;
+				}
 			}
 			HSSFCellStyle bodyStyle = getOneStyle(workbook);
 			//遍历内容
@@ -68,13 +72,23 @@ public class CgReportExcelServiceImpl extends CommonServiceImpl implements
 				row = sheet.createRow(rindex);
 				Map dataM = (Map) itData.next();//获取每一行的内容
 				for(Map titleM : titleList){
-					String field = (String) titleM.get("field_name");
-					String content = dataM.get(field)==null?"":dataM.get(field).toString();
-					Cell cell = row.createCell(cindex);
-					RichTextString text = new HSSFRichTextString(content);
-					cell.setCellStyle(bodyStyle);
-					cell.setCellValue(text);
-					cindex++;
+					String isShow = (String) titleM.get("is_show");
+					String href = (String) titleM.get("field_href");
+					String type = (String) titleM.get("field_type");
+					if("Y".equals(isShow) && "".equals(href)) {
+						String field = (String) titleM.get("field_name");
+						String content = "";
+						if(!type.equals("Date")) {
+							content = dataM.get(field) == null ? "" : dataM.get(field).toString();
+						}else{
+							content = dataM.get(field) == null ? "" : dataM.get(field).toString().substring(0,10);
+						}
+						Cell cell = row.createCell(cindex);
+						RichTextString text = new HSSFRichTextString(content);
+						cell.setCellStyle(bodyStyle);
+						cell.setCellValue(text);
+						cindex++;
+					}
 				}
 			}
 			 for(int i=0; i<titleList.size(); i++){

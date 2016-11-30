@@ -9,7 +9,7 @@
 </script>
 </head>
 <body style="overflow-y: hidden" scroll="no">
-<t:formvalid formid="formobj" layout="div" dialog="true" action="functionController.do?saverule">
+<t:formvalid formid="formobj" layout="div" dialog="true" action="functionController.do?saverule" windowType="dialog">
 	<input name="id" type="hidden" value="${operation.id}">
 	<fieldset class="step">
         <div class="form">

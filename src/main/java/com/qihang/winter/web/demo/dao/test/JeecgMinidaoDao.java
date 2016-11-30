@@ -5,11 +5,11 @@ import java.util.Map;
 
 import com.qihang.winter.web.demo.entity.test.JeecgMinidaoEntity;
 
-import com.qihang.winter.minidao.annotation.Arguments;
-import com.qihang.winter.minidao.annotation.MiniDao;
-import com.qihang.winter.minidao.annotation.ResultType;
-import com.qihang.winter.minidao.annotation.Sql;
-import com.qihang.winter.minidao.hibernate.MiniDaoSupportHiber;
+import com.qihang.winter.winterdao.annotation.Arguments;
+import com.qihang.winter.winterdao.annotation.WinterDao;
+import com.qihang.winter.winterdao.annotation.ResultType;
+import com.qihang.winter.winterdao.annotation.Sql;
+import com.qihang.winter.winterdao.hibernate.WinterDaoSupportHiber;
 
 /**
  * Minidao例子
@@ -17,8 +17,8 @@ import com.qihang.winter.minidao.hibernate.MiniDaoSupportHiber;
  * 
  */
 //@Repository("jeecgMinidaoDao")
-@MiniDao
-public interface JeecgMinidaoDao extends MiniDaoSupportHiber<JeecgMinidaoEntity> {
+@WinterDao
+public interface JeecgMinidaoDao extends WinterDaoSupportHiber<JeecgMinidaoEntity> {
 	@Arguments({"jeecgMinidao", "page", "rows"})
 	public List<Map> getAllEntities(JeecgMinidaoEntity jeecgMinidao, int page, int rows);
 

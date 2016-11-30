@@ -35,7 +35,7 @@ function typeGridTree_UpdateType() {
 }
 </script>
 
-&lt;%&ndash; add-start--Author:zhangguoming  Date:20140807 for：添加字典查询条件 &ndash;%&gt;
+&lt;%&ndash; add-start--Author:Zerrion  Date:20140807 for：添加字典查询条件 &ndash;%&gt;
 <script>
     $(function() {
         var datagrid = $("#typeGridTreetb");
@@ -81,7 +81,7 @@ function typeGridTree_UpdateType() {
         <a href="#" class="easyui-linkbutton l-btn" iconcls="icon-reload" onclick="searchReset2('typeGridTree')"><t:mutiLang langKey="common.reset"/></a>
     </span>
 </div>
-&lt;%&ndash; add-end--Author:zhangguoming  Date:20140807 for：添加字典查询条件 &ndash;%&gt;
+&lt;%&ndash; add-end--Author:Zerrion  Date:20140807 for：添加字典查询条件 &ndash;%&gt;
 
 <t:datagrid name="typeGridTree" title="common.data.dictionary" actionUrl="systemController.do?typeGridTree"
             idField="id" treegrid="true" pagination="false">
@@ -97,20 +97,27 @@ function typeGridTree_UpdateType() {
 <input type="hidden" id="typeGroupId" name="typeGroupId" value="">
 --%>
 
-<%--// add-start--Author:zhangguoming  Date:20140928 for：数据字典修改--%>
+<%--// add-start--Author:Zerrion  Date:20140928 for：数据字典修改--%>
 <div id="main_typegroup_list" class="easyui-layout" fit="true">
+    <input type="hidden" id="userName" value="${sessionScope.user.userName}">
     <div region="center" style="padding: 1px;">
         <t:datagrid name="typeGridTree" title="common.data.dictionary" actionUrl="systemController.do?typeGroupGrid"
-                    idField="id" treegrid="false" pagination="false" onLoadSuccess="loadSuccess">
+                    idField="id" treegrid="false" pagination="false" onLoadSuccess="loadSuccess" queryMode="group">
             <t:dgCol title="common.code" field="id" hidden="true"></t:dgCol>
             <t:dgCol title="dict.name" field="typegroupname" width="100" query="true"></t:dgCol>
             <t:dgCol title="dict.code" field="typegroupcode" width="100" treefield="code"></t:dgCol>
+            <t:dgCol title="项目代码" field="projectCode" width="100" treefield="code" dictionary="PROJECT_CODE"></t:dgCol>
+            <t:dgCol title="是否用户自定义" field="userCustom" width="100" treefield="code" dictionary="sf_01"></t:dgCol>
             <t:dgCol title="common.operation" field="opt" width="100"></t:dgCol>
-            <t:dgDelOpt url="systemController.do?delTypeGroup&id={id}" title="common.delete"></t:dgDelOpt>
+            <c:if test='${sessionScope.user.userName=="programmer"}'>
+            <t:dgDelOpt url="systemController.do?delTypeGroup&id={id}" title="common.delete" ></t:dgDelOpt>
+            </c:if>
             <t:dgFunOpt funname="queryTypeValue(id,typegroupname)" title="common.type.view"></t:dgFunOpt>
-            <t:dgToolBar title="common.add.param" langArg="lang.dictionary.type" icon="icon-add" url="systemController.do?aouTypeGroup" funname="add"></t:dgToolBar>
+            <c:if test='${sessionScope.user.userName=="programmer"}'>
+            <t:dgToolBar title="common.add.param" langArg="lang.dictionary.type" icon="icon-add" url="systemController.do?aouTypeGroup" funname="add" windowType="dialog"></t:dgToolBar>
+            </c:if>
             <%--<t:dgToolBar title="common.add.param" langArg="lang.dictionary.value" icon="icon-add" funname="typeGridTree_AddType"></t:dgToolBar>--%>
-            <t:dgToolBar title="common.edit" icon="icon-edit" url="systemController.do?aouTypeGroup" funname="update"></t:dgToolBar>
+            <t:dgToolBar title="common.edit" icon="icon-edit" url="systemController.do?aouTypeGroup" funname="updateTypeGroup" windowType="dialog"></t:dgToolBar>
         </t:datagrid>
     </div>
 </div>
@@ -148,5 +155,24 @@ function typeGridTree_UpdateType() {
         $('#main_typegroup_list').layout('collapse','east');
         $('#userListpanel').empty();
     }
+    function updateTypeGroup(title,url,id,width,height,windowType){
+//        debugger;
+        var rowsData = $('#' + id).datagrid('getSelections');
+        if (!rowsData || rowsData.length == 0) {
+            tip('请选择编辑项目');
+            return;
+        }
+        if (rowsData.length > 1) {
+            tip('请选择一条记录再编辑');
+            return;
+        }
+        var userCustom = rowsData[0].userCustom;
+        var userName = $("#userName").val();
+        if(userCustom==0 && userName!='programmer'){
+            $.messager.alert('提醒', '非用户自定义字典，不可编辑！');
+        }else{
+            update(title,url,id,width,height,windowType);
+        }
+    }
 </script>
-<%--// add-end--Author:zhangguoming  Date:20140928 for：数据字典修改--%>
+<%--// add-end--Author:Zerrion  Date:20140928 for：数据字典修改--%>

@@ -32,6 +32,8 @@ public class MutiLangSqlCriteriaUtil {
 
         if("*".equals(fieldValue)) {
             fieldValue = "**";
+        }else if(!fieldValue.startsWith("*") && !fieldValue.endsWith("*")){
+            fieldValue = "*"+fieldValue+"*";
         }
         List<String> paramValueList = new ArrayList<String>();
         for (Map.Entry<String, String> entry : fieldLangMap.entrySet()) {

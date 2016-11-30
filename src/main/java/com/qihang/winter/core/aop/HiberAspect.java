@@ -33,6 +33,24 @@ public boolean onSave(Object entity, Serializable id, Object[] state,
 		logger.warn("当前session为空,无法获取用户");
 	}
 	if(currentUser==null){
+		try {
+			//添加数据
+			for (int index=0;index<propertyNames.length;index++)
+			{
+		     /*找到名为"创建时间"的属性*/
+				if (DataBaseConstant.CREATE_DATE.equals(propertyNames[index])
+								||DataBaseConstant.CREATE_TIME.equals(propertyNames[index]))
+				{
+		         /*使用拦截器将对象的"创建时间"属性赋上值*/
+					if(oConvertUtils.isEmpty(state[index])){
+						state[index] = new Date();
+					}
+					continue;
+				}
+			}
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+		}
 		return true;
 	}
 	try {
@@ -94,6 +112,15 @@ public boolean onSave(Object entity, Serializable id, Object[] state,
 		    	 }
 		         continue;
 		     }
+			 /*找到名为"监管单位ID"的属性*/
+//				 else if (DataBaseConstant.SYS_SON_TYPE.equals(propertyNames[index]))
+//				 {
+//		         /*使用拦截器将对象的"监管单位ID"属性赋上值*/
+//					 if(oConvertUtils.isEmpty(state[index])){
+//						 state[index] = ResourceUtil.getUserSystemData(DataBaseConstant.SYS_SON_TYPE);
+//					 }
+//					 continue;
+//				 }
 		 }
 	} catch (RuntimeException e) {
 		e.printStackTrace();
@@ -112,6 +139,18 @@ public boolean onFlushDirty(Object entity, Serializable id,
 		logger.warn("当前session为空,无法获取用户");
 	}
 	if(currentUser==null){
+		//更新数据
+		for (int index=0;index<propertyNames.length;index++)
+		{
+         /*找到名为"修改时间"的属性*/
+			if (DataBaseConstant.UPDATE_DATE.equals(propertyNames[index])
+							||DataBaseConstant.UPDATE_TIME.equals(propertyNames[index]))
+			{
+             /*使用拦截器将对象的"修改时间"属性赋上值*/
+				currentState[index] = new Date();
+				continue;
+			}
+		}
 		return true;
 	}
 	//添加数据

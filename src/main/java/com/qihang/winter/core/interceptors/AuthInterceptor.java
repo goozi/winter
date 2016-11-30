@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.qihang.winter.web.system.util.SysConstant;
 import org.apache.log4j.Logger;
 import com.qihang.winter.core.constant.Globals;
 import com.qihang.winter.core.extend.hqlsearch.SysContextSqlConvert;
@@ -37,7 +38,7 @@ import org.springframework.web.servlet.view.RedirectView;
  * @author  Zerrion
  * 
  */
-public class AuthInterceptor implements HandlerInterceptor {
+public class AuthInterceptor implements HandlerInterceptor,SysConstant {
 	 
 	private static final Logger logger = Logger.getLogger(AuthInterceptor.class);
 	private SystemService systemService;
@@ -88,7 +89,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 			return true;
 		} else {
 			if (client != null && client.getUser()!=null ) {
-				if((!hasMenuAuth(request)) && !client.getUser().getUserName().equals("admin")){
+				if((!hasMenuAuth(request)) && !client.getUser().getUserName().equals("programmer")){
 					 response.sendRedirect("loginController.do?noAuth");
 					//request.getRequestDispatcher("webpage/common/noAuth.jsp").forward(request, response);
 					return false;
@@ -99,7 +100,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 				if(requestPath.equals("cgAutoListController.do?datagrid")) {
 					requestPath += "&configId=" +  request.getParameter("configId");
 				}
-				if(requestPath.equals("cgAutoListController.do?list")) {
+				if(requestPath.startsWith("cgAutoListController.do?list")) {
 					requestPath += "&id=" +  request.getParameter("id");
 				}
 				if(requestPath.equals("cgFormBuildController.do?ftlForm")) {
@@ -110,7 +111,20 @@ public class AuthInterceptor implements HandlerInterceptor {
 				List<TSFunction> functions = systemService.findByProperty(TSFunction.class, "functionUrl", requestPath);
 				
 				if (functions.size()>0){
-					functionId = functions.get(0).getId();
+					if(functions.size()>1){
+						String projectCode = ResourceUtil.getConfigByName("PROJECT_CODE");
+						for(TSFunction tsFunction : functions){
+							if(tsFunction.getTSFunction().getFunctionOrder().startsWith(projectCode)){
+								functionId = tsFunction.getId();
+								break;
+							}else if(tsFunction.getTSFunction().getFunctionOrder().startsWith("99")){
+								functionId = tsFunction.getId();
+								break;
+							}
+						}
+					}else {
+						functionId = functions.get(0).getId();
+					}
 				}
 				
 				//Step.1 第一部分处理页面表单和列表的页面控件权限（页面表单字段+页面按钮等控件）
@@ -167,6 +181,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 				return true;
 			} else {
 				//forword(request);
+				sessionList.remove(session.getId());
 				forward(request, response);
 				return false;
 			}
@@ -222,8 +237,8 @@ public class AuthInterceptor implements HandlerInterceptor {
 	/**
 	 * 转发
 	 * 
-	 * @param user
-	 * @param req
+	 * @param
+	 * @param
 	 * @return
 	 */
 	@RequestMapping(params = "forword")

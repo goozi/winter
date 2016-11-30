@@ -3,7 +3,7 @@
 <t:base type="jquery,easyui,tools,DatePicker"></t:base>
 <div class="easyui-layout" fit="true">
   <div region="center" style="padding:1px;">
-  <t:datagrid name="${entityName?uncap_first}List" checkbox="true" fitColumns="false" title="${ftl_description}" actionUrl="${entityName?uncap_first}Controller.do?datagrid" idField="id" fit="true" queryMode="group">
+  <t:datagrid name="${entityName?uncap_first}List" checkbox="true" fitColumns="false" title="${ftl_description}" actionUrl="${entityName?uncap_first}Controller.do?datagrid" idField="id" fit="true" queryMode="group" onDblClick="dbClickView" tableName="tableName">
   <#list columns as po>
    <t:dgCol title="${po.content}"  field="${po.fieldName}" <#if po.showType?index_of("datetime")!=-1>formatter="yyyy-MM-dd hh:mm:ss"<#else><#if po.showType?index_of("date")!=-1>formatter="yyyy-MM-dd"</#if></#if> <#if po.isShowList?if_exists?html =='N'>hidden="true"<#else></#if> <#if po.isQuery =='Y'>query="true"</#if> <#if po.queryMode =='single'>queryMode="single"<#elseif po.queryMode =='group'>queryMode="group"</#if> <#if po.dictTable?if_exists?html!="">dictionary="${po.dictTable},${po.dictField},${po.dictText}" <#if po.showType=='popup'>popup="true"</#if><#else><#if po.dictTable?if_exists?html=="" && po.dictField?if_exists?html!="">dictionary="${po.dictField}"</#if></#if> width="${po.fieldLength}"></t:dgCol>
   </#list>
@@ -15,7 +15,9 @@
    <t:dgToolBar title="查看" icon="icon-search" url="${entityName?uncap_first}Controller.do?goUpdate" funname="detail"></t:dgToolBar>
    <t:dgToolBar title="导入" icon="icon-put" funname="ImportXls"></t:dgToolBar>
    <t:dgToolBar title="导出" icon="icon-putout" funname="ExportXls"></t:dgToolBar>
-   <t:dgToolBar title="模板下载" icon="icon-putout" funname="ExportXlsByT"></t:dgToolBar>
+   <t:dgToolBar title="模板下载" icon="icon-download" funname="ExportXlsByT"></t:dgToolBar>
+      <t:dgToolBar title="打印" icon="icon-print"
+                   funname="CreateFormPage('${ftl_description}', '#${entityName?uncap_first}List')"></t:dgToolBar>
    <#list buttons as btn>
    <#if btn.buttonStyle =='button' && btn.buttonStatus == '1'>
    	<t:dgToolBar title="${btn.buttonName}" icon="${btn.buttonIcon}" <#if btn.optType=='action'> url="${entityName?uncap_first}Controller.do?do${btn.buttonCode?cap_first}" funname="do${btn.buttonCode?cap_first}"<#else> funname="${btn.buttonCode}"</#if> ></t:dgToolBar>
@@ -26,6 +28,11 @@
  </div>
  <script src = "webpage/${bussiPackage?replace('.','/')}/${entityPackage}/${entityName?uncap_first}List.js"></script>		
  <script type="text/javascript">
+   //双击行事件
+   function dbClickView(rowIndex, rowData) {
+     url = '${entityName?uncap_first}Controller.do?goUpdate&load=detail&tranType=52&id=' + rowData.id;
+     createdetailwindow('查看', url, null, null, 'tab');
+   }
  $(document).ready(function(){
  		//给时间控件加上样式
  		<#list columns as po>

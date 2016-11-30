@@ -1,8 +1,29 @@
 ${config_iframe}
 <script type="text/javascript">
-$(function(){$('#${config_id}List').datagrid(
+$(function(){
+  var myview = $.extend({}, $.fn.datagrid.defaults.view, {
+    onAfterRender: function (target) {
+      $.fn.datagrid.defaults.view.onAfterRender.call(this, target);
+      var opts = $(target).datagrid('options');
+      var vc = $(target).datagrid('getPanel').children('div.datagrid-view');
+      vc.children('div.datagrid-empty').remove();
+      if (!$(target).datagrid('getRows').length) {
+        var d = $('<div class="datagrid-empty"></div>').html(opts.emptyMsg || '暂无数据').appendTo(vc);
+        d.css({
+          position: 'absolute',
+          left: 0,
+          top: 50,
+          width: '100%',
+          textAlign: 'center'
+        });
+      }
+    }
+  });
+  $('#${config_id}List').datagrid(
 	{
 	idField: 'id',
+  view: myview,
+  emptyMsg: '暂无数据',
 	title: '${config_name}',
 	url:'cgReportController.do?datagrid&configId=${config_id}',
 	fit:true,
@@ -18,22 +39,28 @@ $(function(){$('#${config_id}List').datagrid(
 	frozenColumns:[[]],
 	columns:[
 		[			<#if (config_fieldList?size>0)>
-					<#list config_fieldList  as x>  
-					 	<#if x_has_next>
+					<#list config_fieldList  as x>
 						{field:'${x['field_name']}',
 						 title:'${x['field_txt']}',
 					 	 <#if x['field_href'] != "">
 						 	formatter:function(value,rec,index){
 						 		var href='';
-						 		href+=applyHref('字段链接','${x['field_href']}',value,rec,index);
+						 		href+=applyHref(value,'${x['field_href']}',value,rec,index);
 						 		return href;
 						 	},
 					 	 </#if>
+						 <#if x['field_type'] == "Date">
+                             formatter:function(value,rec,index){
+                                 if(value) {
+                                     value = value.substring(0, 10);
+                                 }
+                                 return value;
+                             },
+						 </#if>
 						 <#if x['is_show'] == "N" >hidden:true,</#if>
-						 width:80},
-						<#else>
-						{field:'${x['field_name']}',title:'${x['field_txt']}',width:80}
-					  	</#if>
+						 width:80}
+                        <#if x_has_next>,
+                        </#if>
 					</#list>
 					</#if>
 		]
@@ -98,11 +125,11 @@ $(function(){$('#${config_id}List').datagrid(
 <div name="searchColums">
 	<#list config_queryList  as x>
 		<span style="display:-moz-inline-box;display:inline-block;">
-		<span style="display:-moz-inline-box;display:inline-block;width: 100px;text-align:right;text-align:right;text-overflow:ellipsis;-o-text-overflow:ellipsis; overflow: hidden;white-space:nowrap;" title="${x['field_txt']}">${x['field_txt']}：</span>
+		<span style="vertical-align:middle;display:-moz-inline-box;display:inline-block;width: 100px;text-align:right;text-overflow:ellipsis;-o-text-overflow:ellipsis; overflow: hidden;white-space:nowrap;" title="${x['field_txt']}">${x['field_txt']}：</span>
 		<#if x['search_mode']=="group">
-			<input type="text" name="${x['field_name']}_begin"  style="width: 94px"  <#if x['field_type']=="Date">class="easyui-datebox"</#if> />
+			<input type="text" name="${x['field_name']}_begin"  style="width: 94px"  <#if x['field_type']=="Date">class="Wdate" onclick="WdatePicker()" </#if> />
 			<span style="display:-moz-inline-box;display:inline-block;width: 8px;text-align:right;">~</span>
-			<input type="text" name="${x['field_name']}_end"  style="width: 94px" <#if x['field_type']=="Date">class="easyui-datebox"</#if> />
+			<input type="text" name="${x['field_name']}_end"  style="width: 94px" <#if x['field_type']=="Date">class="Wdate" onclick="WdatePicker()" </#if> />
 		</#if>
 		<#if x['search_mode']=="single">
 				<#if  (x['field_dictlist']?size >0)>
@@ -114,7 +141,7 @@ $(function(){$('#${config_id}List').datagrid(
 				</select>
 			</#if>
 			<#if  (x['field_dictlist']?size <= 0)>
-				<input type="text" name="${x['field_name']}"  style="width: 100px" <#if x['field_type']=="Date">class="easyui-datebox"</#if>  />
+				<input type="text" name="${x['field_name']}"  style="width: 150px" <#if x['field_type']=="Date">class="Wdate" onclick="WdatePicker()" </#if>  />
 			</#if>
 		</#if>
 		</span>	
@@ -123,12 +150,14 @@ $(function(){$('#${config_id}List').datagrid(
 	<div style="height:30px;" class="datagrid-toolbar">
 	<span style="float:left;" >
 	<a href="#" class="easyui-linkbutton" plain="true" icon="icon-putout" onclick="exportXls();">导出excel</a>
+		<a id="print" href="#" class="easyui-linkbutton" plain="true" onclick="CreateFormPage('','#${config_id}List')"
+           icon="icon-print">打印</a>
 	</span>
 	
 <#if  (config_queryList?size >0)>
 		<span style="float:right">
-			<a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="${config_id}Listsearch()">查询</a>
-			<a href="#" class="easyui-linkbutton" iconCls="icon-reload" onclick="searchReset_${config_id}('${config_id}List')">重置</a>
+			<a href="#" class="qh-button icon-query"  onclick="${config_id}Listsearch()"></a>
+      		<a href="#" class="qh-button icon-reset" onclick="searchReset_${config_id}('${config_id}List')"></a>
 		</span>
 </#if>
 	</div>

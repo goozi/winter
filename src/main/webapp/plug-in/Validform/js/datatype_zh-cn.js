@@ -14,12 +14,19 @@ $.Datatype.select1 = function(gets, obj, curform, regxp) {
     var name = obj.attr("name") != undefined ? "name" : "comboname"; // select 或 combotree
     var need = 1, numselected = 0;
     if(name=="comboname"){
-    	var value=$("#"+obj.attr(name)).combotree("getValues");
+		var value;
+		if(obj.hasClass('easyui-combobox')){
+			value=$("#"+obj.attr(name)).combobox("getValues");
+		}else {
+			value = $("#" + obj.attr(name)).combotree("getValues");
+		}
     	if(value!=""){
     		numselected = 1;
     	}
     }else{
-    	numselected = curform.find("select[" + name + "='" + obj.attr(name) + "'] option[selected='selected']").length
+		if(gets) {
+			numselected = curform.find("select[" + name + "='" + obj.attr(name) + "'] option[selected='selected']").length
+		}
     }
     return numselected >= need ? true : "请至少选择" + need + "项！";
 };

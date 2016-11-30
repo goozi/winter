@@ -23,7 +23,7 @@ public class SmsSendTask {
 	@Autowired
 	private TSSmsServiceI tSSmsService;
 	
-	@Scheduled(cron="0 0/1 * * * ?")
+	@Scheduled(cron="0 0 12 * * ?")
 	public void run() {
 		long start = System.currentTimeMillis();
 		LogUtil.info("===================消息中间件定时任务开始===================");

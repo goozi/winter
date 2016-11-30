@@ -229,7 +229,16 @@ public class ImportBaseService {
         return t;
     }
 
-    public void saveThisExcel(com.qihang.winter.poi.excel.entity.ImportParams params, Class<?> pojoClass, boolean isXSSFWorkbook,
+  /**
+   * 对指定isNeedSave()的excel保存并返回路径
+   * @param params
+   * @param pojoClass
+   * @param isXSSFWorkbook
+   * @param book
+   * @return
+   * @throws Exception
+   */
+    public String saveThisExcel(com.qihang.winter.poi.excel.entity.ImportParams params, Class<?> pojoClass, boolean isXSSFWorkbook,
                               Workbook book) throws Exception {
         String path = PoiPublicUtil.getWebRootPath(getSaveExcelUrl(params, pojoClass));
         File savefile = new File(path);
@@ -237,11 +246,13 @@ public class ImportBaseService {
             savefile.mkdirs();
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyMMddHHmmss");
-        FileOutputStream fos = new FileOutputStream(path + "/" + format.format(new Date()) + "_"
-                                                    + Math.round(Math.random() * 100000)
-                                                    + (isXSSFWorkbook == true ? ".xlsx" : ".xls"));
+        String excelName = format.format(new Date()) + "_"
+                + Math.round(Math.random() * 100000)
+                + (isXSSFWorkbook == true ? ".xlsx" : ".xls");
+        FileOutputStream fos = new FileOutputStream(path + "/" +excelName);
         book.write(fos);
         fos.close();
+        return excelName;
     }
 
     /**

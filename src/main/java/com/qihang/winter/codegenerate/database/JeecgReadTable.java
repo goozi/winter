@@ -56,7 +56,7 @@ public class JeecgReadTable {
       }
 
       if (CodeResourceUtil.DATABASE_TYPE.equals("sqlserver")) {
-        this.sql = "select distinct c.name as  table_name from sys.objects c ";
+        this.sql = "select * from sys.objects c where c.type in ('U','V') ";
       }
 
       this.rs = this.stmt.executeQuery(this.sql);
@@ -89,6 +89,13 @@ public class JeecgReadTable {
     return tableNames;
   }
 
+  /**
+   * 读取表中字段信息
+   * @param tableName
+   * @return
+   * @throws Exception
+   * @modify Zerrion 2015-11-11 对sql server加入视图支持
+   */
   public List<com.qihang.winter.codegenerate.pojo.Columnt> readTableColumn(String tableName)
           throws Exception {
     List<com.qihang.winter.codegenerate.pojo.Columnt> columntList = new ArrayList();
@@ -253,7 +260,15 @@ public class JeecgReadTable {
         this.sql = MessageFormat.format("SELECT a.attname AS  field,t.typname AS type,col_description(a.attrelid,a.attnum) as comment,null as column_precision,null as column_scale,null as Char_Length,a.attnotnull  FROM pg_class c,pg_attribute  a,pg_type t  WHERE c.relname = {0} and a.attnum > 0  and a.attrelid = c.oid and a.atttypid = t.oid  ORDER BY a.attnum ", new Object[]{TableConvert.getV(tableName.toLowerCase())});
       }
       if (com.qihang.winter.codegenerate.util.CodeResourceUtil.DATABASE_TYPE.equals("sqlserver")) {
-        this.sql = MessageFormat.format("select cast(a.name as varchar(50)) column_name,  cast(b.name as varchar(50)) data_type,  cast(e.value as varchar(200)) comment,  cast(ColumnProperty(a.object_id,a.Name,'''Precision''') as int) num_precision,  cast(ColumnProperty(a.object_id,a.Name,'''Scale''') as int) num_scale,  a.max_length,  (case when a.is_nullable=1 then '''y''' else '''n''' end) nullable   from sys.columns a left join sys.types b on a.user_type_id=b.user_type_id left join sys.objects c on a.object_id=c.object_id and c.type='''U''' left join sys.extended_properties e on e.major_id=c.object_id and e.minor_id=a.column_id and e.class=1 where c.name={0}", new Object[]{TableConvert.getV(tableName.toLowerCase())});
+        this.sql = MessageFormat.format("select cast(a.name as varchar(50)) column_name,  cast(b.name as" +
+                " varchar(50)) data_type,  cast(e.value as varchar(200)) comment,  " +
+                "cast(ColumnProperty(a.object_id,a.Name,'''Precision''') as int) num_precision, " +
+                " cast(ColumnProperty(a.object_id,a.Name,'''Scale''') as int) num_scale,  a.max_length,  " +
+                "(case when a.is_nullable=1 then '''y''' else '''n''' end) nullable   from sys.columns a " +
+                "left join sys.types b on a.user_type_id=b.user_type_id left join sys.objects c on" +
+                " a.object_id=c.object_id and (c.type='''U''' or c.type='''V''') left join sys.extended_properties e on " +
+                "e.major_id=c.object_id and e.minor_id=a.column_id and e.class=1 where c.name={0}",
+                new Object[]{TableConvert.getV(tableName.toLowerCase())});
       }
 
       this.rs = this.stmt.executeQuery(this.sql);
@@ -369,7 +384,16 @@ public class JeecgReadTable {
                 tempStr.substring(1, tempStr.length());
         field = field + tempStr;
       } else {
-        field = field + strs[m].toLowerCase();
+
+        // 修改代码，直接使用字段名第一个字母改小写
+        String tempStr = strs[m];
+        tempStr = tempStr.substring(0, 1).toLowerCase() +
+                tempStr.substring(1, tempStr.length());
+
+        field = field + tempStr;
+
+        //        field = field + strs[m].toLowerCase();
+
       }
     }
     return field;

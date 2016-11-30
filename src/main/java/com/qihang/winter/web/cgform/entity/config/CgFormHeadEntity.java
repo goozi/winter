@@ -1,20 +1,12 @@
 package com.qihang.winter.web.cgform.entity.config;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OrderBy;
+
+import javax.persistence.*;
+import java.util.List;
 
 /**   
  * @Title: Entity
@@ -83,7 +75,19 @@ public class CgFormHeadEntity implements java.io.Serializable {
 	private java.lang.String treeIdFieldname;
 	/**树形列表 菜单列名*/
 	private java.lang.String treeFieldname;
-	
+	/**
+	 * 新增或编辑窗口的打开方式，tab：标签页；window：弹出窗
+	 */
+	private String windowType="tab";
+
+	/**是否使用工作流*/
+	private Integer isWorkFlow;
+	/**流程id*/
+	private String flowInfo;
+
+  /**列配置信息*/
+  private String colConfig;
+
 	/**
 	 *方法: 取得java.lang.String
 	 *@return: java.lang.String  id
@@ -431,4 +435,40 @@ public class CgFormHeadEntity implements java.io.Serializable {
 	public void setTreeFieldname(java.lang.String treeFieldname) {
 		this.treeFieldname = treeFieldname;
 	}
+
+	@Column(name ="is_work_flow",nullable=true)
+	public Integer getIsWorkFlow() {
+		return isWorkFlow;
+	}
+
+	public void setIsWorkFlow(Integer isWorkFlow) {
+		this.isWorkFlow = isWorkFlow;
+	}
+
+	@Column(name ="flow_info",nullable=true,length=50)
+	public String getFlowInfo() {
+		return flowInfo;
+	}
+
+	public void setFlowInfo(String flowInfo) {
+		this.flowInfo = flowInfo;
+	}
+
+	@Column(name ="window_type",nullable=true,length=10,columnDefinition="VARCHAR default 'tab'")
+	public String getWindowType() {
+		return windowType;
+	}
+
+	public void setWindowType(String windowType) {
+		this.windowType = windowType;
+	}
+
+	@Column(name = "col_config", nullable = true, length = 4000)
+  public String getColConfig() {
+    return colConfig;
+  }
+
+  public void setColConfig(String colConfig) {
+    this.colConfig = colConfig;
+  }
 }

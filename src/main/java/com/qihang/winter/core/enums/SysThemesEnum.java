@@ -10,9 +10,11 @@ import com.qihang.winter.core.util.StringUtil;
 public enum SysThemesEnum {
 	
 	DEFAULT_STYLE("default","main/main","default", "经典风格"),
+	BOOTSTRAP_STYLE("bootstrap","main/bootstrap_main","default", "Bootstrap风格"),
 	SHORTCUT_STYLE("shortcut","main/shortcut_main","default", "ShortCut风格"),
 	SLIDING_STYLE("sliding","main/sliding_main","default", "Sliding云桌面"),
-	ACE_STYLE("ace","main/ace_main","metro", "ACE平面风格");
+	ACE_STYLE("ace","main/ace_main","cupertino", "ACE平面风格"),
+	SCM_STYLE("scm","main/scm_main","gray", "Bootstrap风格");
 
 
     /**

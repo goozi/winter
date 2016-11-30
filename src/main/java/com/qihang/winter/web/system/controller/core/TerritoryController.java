@@ -177,7 +177,6 @@ public class TerritoryController extends BaseController {
   /**
    * 地域删除
    *
-   * @param ids
    * @return
    */
   @RequestMapping(params = "del")

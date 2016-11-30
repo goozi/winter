@@ -192,6 +192,6 @@
 <table width="100%" id="jeecgOrderMainListNoTag" toolbar="#jeecgOrderMainListNoTagtb"></table>
 <div id="jeecgOrderMainListNoTagtb" style="padding: 3px; height: auto">
 <div style="height: 30px;" class="datagrid-toolbar"><span style="float: left;"> <a href="#" class="easyui-linkbutton" plain="true" icon="icon-add"
-	onclick="add('录入(无标签)','jeecgOrderMainNoTagController.do?addorupdateNoTag','jeecgOrderMainListNoTag',1000,400)">录入</a> <a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit"
+	onclick="add('新增(无标签)','jeecgOrderMainNoTagController.do?addorupdateNoTag','jeecgOrderMainListNoTag',1000,400)">新增</a> <a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit"
 	onclick="update('编辑(无标签)','jeecgOrderMainNoTagController.do?addorupdateNoTag','jeecgOrderMainListNoTag',1000,400)">编辑</a> </span></div>
 </div>

@@ -7,12 +7,12 @@
 <t:base type="jquery,easyui,tools,DatePicker"></t:base>
 </head>
 <body style="overflow-y: hidden" scroll="no">
-<t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" action="cgformButtonSqlController.do?save">
+<t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" action="cgformButtonSqlController.do?save" windowType="dialog">
 	<input id="id" name="id" type="hidden" value="${cgformButtonSqlPage.id }">
 	<input id="formId" name="formId" type="hidden" value="${cgformButtonSqlPage.formId }">
 	<table cellpadding="0" cellspacing="1" class="formtable">
 		<tr>
-			<td align="right"><label class="Validform_label"> <t:mutiLang langKey="operate.code"/>: </label></td>
+			<td align="right" width="10%"><label class="Validform_label"> <t:mutiLang langKey="operate.code"/>: </label></td>
 			<td class="value"><select id="buttonCode" name="buttonCode" datatype="*">
 				<option value="add" <c:if test="${cgformButtonSqlPage.buttonCode=='add'}">selected="selected"</c:if>>add</option>
 				<option value="update" <c:if test="${cgformButtonSqlPage.buttonCode=='update'}">selected="selected"</c:if>>update</option>
@@ -28,7 +28,7 @@
 		</tr>
 		<tr>
 			<td align="right"><label class="Validform_label"> <t:mutiLang langKey="enhance.sql"/>: </label></td>
-			<td class="value"><textarea id="cgbSqlStr" name="cgbSqlStr" rows="25" cols="150">${cgformButtonSqlPage.cgbSqlStr }</textarea> <span class="Validform_checktip"></span></td>
+			<td class="value"><textarea id="cgbSqlStr" name="cgbSqlStr" rows="20" cols="100">${cgformButtonSqlPage.cgbSqlStr }</textarea> <span class="Validform_checktip"></span></td>
 		</tr>
 	</table>
 </t:formvalid>

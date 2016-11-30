@@ -1,3 +1,4 @@
+<#assign entityPackage=entityPackage?replace("/",".")>
 <#if packageStyle == "service">
 package ${bussiPackage}.${entityPackage}.entity;
 <#else>
@@ -19,6 +20,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.SequenceGenerator;
+import com.qihang.winter.poi.excel.annotation.Excel;
 
 /**   
  * @Title: Entity
@@ -37,6 +39,9 @@ import javax.persistence.SequenceGenerator;
 public class ${entityName}Entity implements java.io.Serializable {
 	<#list columns as po>
 	/**${po.content}*/
+  <#if po.isShow != 'N'>
+  @Excel(name="${po.content}")
+  </#if>
 	<#if po.type == "javax.xml.soap.Text">
 	private java.lang.String ${po.fieldName};
 	</#if>

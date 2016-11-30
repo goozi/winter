@@ -100,6 +100,10 @@ public @interface Excel {
      */
     public String[] replace() default {};
 
+    /*
+    * */
+    public String dicCode() default "";
+
     /**
      * 导入路径,如果是图片可以填写,默认是upload/className/ IconEntity这个类对应的就是upload/Icon/
      * 

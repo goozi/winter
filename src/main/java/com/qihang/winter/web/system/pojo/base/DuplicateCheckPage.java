@@ -29,6 +29,8 @@ public class DuplicateCheckPage   implements java.io.Serializable {
 	
 	/**编辑数据ID*/
 	private String rowObid;
+	/*要验证的数据所在数据源*/
+	private String dbKey;
 
 	public String getRowObid() {
 		return rowObid;
@@ -62,4 +64,11 @@ public class DuplicateCheckPage   implements java.io.Serializable {
 		this.fieldVlaue = fieldVlaue;
 	}
 
+	public String getDbKey() {
+		return dbKey;
+	}
+
+	public void setDbKey(String dbKey) {
+		this.dbKey = dbKey;
+	}
 }

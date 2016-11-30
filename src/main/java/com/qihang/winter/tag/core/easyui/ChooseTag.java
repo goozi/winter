@@ -15,7 +15,7 @@ import com.qihang.winter.core.util.StringUtil;
  * 
  * 类描述：选择器标签
  * 
- * @author:  张代浩
+ * @Author: Zerrion
  * @date： 日期：2012-12-7 时间：上午10:17:45
  * @version 1.0
  */
@@ -58,9 +58,9 @@ public class ChooseTag extends TagSupport {
 		String cancel = MutiLangUtil.getMutiLangInstance().getLang("common.cancel");
 		String methodname = UUIDGenerator.generate().replaceAll("-", "");
 		StringBuffer sb = new StringBuffer();
-		sb.append("<a href=\"#\" class=\"easyui-linkbutton\" plain=\"true\" icon=\"" + icon + "\" onClick=\"choose_"+methodname+ StringUtil.replace("()\">{0}</a>", "{0}", MutiLangUtil.getMutiLangInstance().getLang("common.select", langArg)));
+		sb.append("<a id=\"choose\" href=\"#\" class=\"easyui-linkbutton\" plain=\"true\" icon=\"" + icon + "\" onClick=\"choose_"+methodname+ StringUtil.replace("()\">{0}</a>", "{0}", MutiLangUtil.getMutiLangInstance().getLang("common.select", langArg)));
 		if (isclear&&StringUtil.isNotEmpty(textname)) {
-			sb.append("<a href=\"#\" class=\"easyui-linkbutton\" plain=\"true\" icon=\"icon-redo\" onClick=\"clearAll_"+methodname+ StringUtil.replace("();\">{0}</a>", "{0}", MutiLangUtil.getMutiLangInstance().getLang("common.clear", langArg)));
+			sb.append("<a id=\"clearAll\" href=\"#\" class=\"easyui-linkbutton\" plain=\"true\" icon=\"icon-redo\" onClick=\"clearAll_"+methodname+ StringUtil.replace("();\">{0}</a>", "{0}", MutiLangUtil.getMutiLangInstance().getLang("common.clear", langArg)));
 		}
 		sb.append("<script type=\"text/javascript\">");
 		sb.append("var windowapi = frameElement.api, W = windowapi.opener;");

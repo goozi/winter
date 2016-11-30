@@ -47,12 +47,12 @@
 </script>
 </head>
 <body style="overflow-y: hidden" scroll="no">
-<t:formvalid formid="formobj" layout="div" dialog="true" refresh="true" action="functionController.do?saveFunction">
+<t:formvalid formid="formobj" layout="div" dialog="true" refresh="true" action="functionController.do?saveFunction" windowType="dialog">
 	<input name="id" type="hidden" value="${function.id}">
 	<fieldset class="step">
 	<div class="form">
         <label class="Validform_label"> <t:mutiLang langKey="menu.name"/>: </label>
-        <input name="functionName" class="inputxt" value="${function.functionName}" datatype="s4-20">
+        <input name="functionName" class="inputxt" value="${function.functionName}" datatype="s2-20">
         <span class="Validform_checktip"> <t:mutiLang langKey="menuname.rang4to15"/> </span>
     </div>
     <div class="form">
@@ -111,8 +111,8 @@
             </c:forEach>
         </select>
     </div>
-    <%--update-end--Author:zhangguoming  Date:20140509 for：云桌面图标管理--%>
-	<div class="form" id="funorder"><label class="Validform_label"> <t:mutiLang langKey="menu.order"/>: </label> <input name="functionOrder" class="inputxt" value="${function.functionOrder}" datatype="n1-3"></div>
+    <%--update-end--Author:Zerrion  Date:20140509 for：云桌面图标管理--%>
+	<div class="form" id="funorder"><label class="Validform_label"> <t:mutiLang langKey="menu.order"/>: </label> <input name="functionOrder" class="inputxt" value="${function.functionOrder}" datatype="n1-4"></div>
 	</fieldset>
 </t:formvalid> 
 </body>

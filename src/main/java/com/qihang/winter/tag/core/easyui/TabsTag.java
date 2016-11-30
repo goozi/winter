@@ -1,15 +1,14 @@
 package com.qihang.winter.tag.core.easyui;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import com.qihang.winter.core.util.oConvertUtils;
+import com.qihang.winter.tag.vo.easyui.Tab;
 
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
-
-import com.qihang.winter.core.util.oConvertUtils;
-import com.qihang.winter.tag.vo.easyui.Tab;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -111,10 +110,10 @@ public class TabsTag extends TagSupport {
 			sb.append("$(function(){");
 			if (tabList.size() > 0) {
 				for (Tab tab : tabList) {
-					sb.append("add" + id + "(\'" + tab.getTitle() + "\',\'" + tab.getHref() + "\',\'" + tab.getId() + "\',\'" + tab.getIcon() + "\',\'" + tab.isClosable() + "\');");
+					sb.append("add" + id + "(\'" + tab.getTitle() + "\',\'" + tab.getHref() + "\',\'" + tab.getId() + "\',\'" + tab.getIcon() + "\',\'" + tab.isClosable() + "\',"+tab.isCache()+");");
 				}
 			}
-			sb.append("function add" + id + "(title,url,id,icon,closable) {");
+			sb.append("function add" + id + "(title,url,id,icon,closable,cache) {");
 			sb.append("$(\'#" + id + "\').tabs(\'add\',{");
 			sb.append("id:id,");
 			sb.append("title:title,");
@@ -124,7 +123,8 @@ public class TabsTag extends TagSupport {
 				sb.append("href:url,");
 			}
 			sb.append("closable:closable=(closable =='false')?false : true,");
-			sb.append("icon:icon");
+			sb.append("icon:icon,");
+			sb.append("cache:cache");
 			sb.append("});");
 			sb.append("}");
 			sb.append("$(\'#" + id + "\').tabs(");
@@ -150,12 +150,13 @@ public class TabsTag extends TagSupport {
 			sb.append("</script>");
 		}
 		if (tabs) {
+
 				//增加width属性，fit属性之前写死，改为由页面设定，不填默认true
 			sb.append("<div id=\"" + id + "\" tabPosition=\"" + tabPosition + "\" border=flase style=\"margin:0px;padding:0px;overflow:hidden;width:"+oConvertUtils.getString(width, "auto")+";\" class=\"easyui-tabs\" fit=\""+fit+"\">");
 			if (!iframe) {
 				for (Tab tab : tabList) {
 					if (tab.getHref() != null) {
-						sb.append("<div title=\"" + tab.getTitle() + "\" href=\"" + tab.getHref() + "\" style=\"margin:0px;padding:0px;overflow:hidden;\"></div>");
+						sb.append("<div title=\"" + tab.getTitle() + "\" href=\"" + tab.getHref() + "\" style=\"margin:0px;padding:0px;overflow:hidden;\" cache=\""+tab.isCache()+"\"></div>");
 					} else {
 						sb.append("<div title=\"" + tab.getTitle() + "\"  style=\"margin:0px;padding:0px;overflow:hidden;\">");
 						sb.append("<iframe id=\"\'"+tab.getId()+"\'\" scrolling=\"no\" frameborder=\"0\"  src=\""+tab.getIframe()+"\" width=\""+oConvertUtils.getString(tab.getWidth(), "100%")+"\" height=\""+oConvertUtils.getString(tab.getHeigth(), "99.5%")+"\"></iframe>\';");
@@ -165,7 +166,41 @@ public class TabsTag extends TagSupport {
 				}
 			}
 			sb.append("</div>");
-			
+			sb.append("<script>\n");
+			sb.append("$(document).ready(function(){\n");
+      sb.append("//轮流打开一对多或一对一表单的标签页，避免标签页未打开导致控件不提交到后台问题\n");
+			sb.append("var t = $('#tt');\n");
+			sb.append("var tabs = t.tabs('tabs');\n");
+			sb.append("var index = tabs.length - 1;\n");
+			sb.append("var timeInterval = setInterval(function () {\n");
+			sb.append("t.tabs('select', tabs[index].panel('options').title);\n");
+			sb.append("index--;\n");
+			sb.append("if (index < 0) {\n");
+			sb.append("clearInterval(timeInterval);\n");
+			sb.append("}\n");
+			sb.append("}, 300);\n");
+			sb.append("});\n");
+      //一对多子表高度自适应
+//			sb.append("debugger;\n");
+      sb.append("  var h;\n");
+      sb.append("  var tabsDiv = $('.formtable').nextAll('div:first');\n");
+//      sb.append("  var footdiv = $('#footdiv');\n");
+      sb.append("  if(windowapi==null){\n");
+      sb.append("    h = $(window).height() - 296;\n");
+      sb.append("  }else{\n");
+      sb.append("    h=264;\n");
+      sb.append("  }\n");
+//      sb.append("  if (footdiv.children().length>0) {\n");
+//      sb.append("    h = h - 70;\n");
+//      sb.append("  }\n");
+      sb.append("  if (tabsDiv.length > 0) {\n");
+      sb.append("    tabsDiv.height(h+36);\n");
+      sb.append("    $('#tt').tabs({\n");
+      sb.append("      width: 'auto',\n");
+      sb.append("      height: $('#tt').parent().height() + 2\n");
+      sb.append("    });\n");
+      sb.append("  }\n");
+      sb.append("</script>\n");
 		}
 		return sb;
 	}

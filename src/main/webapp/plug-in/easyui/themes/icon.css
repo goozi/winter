@@ -1,14 +1,36 @@
+.qh-button {
+	/*border: 1px solid #d1d1d1;*/
+	border-radius: 3px;
+	/*background-color: #f7f7f7;*/
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#f7f7f7),
+	to(#f2f2f2));
+	background: -moz-gradient(linear, 0 0, 0 100%, from(#f7f7f7),
+	to(#f2f2f2));
+	background: -o-gradient(linear, 0 0, 0 100%, from(#f7f7f7), to(#f2f2f2));
+	background: -ms-gradient(linear, 0 0, 0 100%, from(#f7f7f7), to(#f2f2f2));
+	/*filter: progid:DXImageTransform.Microsoft.gradient(startcolorstr=#f7f7f7,
+    endcolorstr=#f2f2f2, gradientType=0);*/
+	/*height: 24px;*/
+	padding: 4px 10px 0 10px;
+	cursor: pointer;
+	line-height: 24px;
+	display: inline-block;
+	color: #666666;
+	margin-right: 10px;
+	width: 50px;
+	height: 20px;
+}
 .icon-blank{
 	background:url('icons/blank.gif') no-repeat center center;
 }
 .icon-add{
-	background:url('icons/edit_add.png') no-repeat center center;
+	background:url('icons/edit_add.png') no-repeat 0 0;
 }
 .icon-edit{
 	background:url('icons/pencil.png') no-repeat center center;
 }
 .icon-remove{
-	background:url('icons/edit_remove.png') no-repeat center center;
+	background:url('icons/edit_remove.png') no-repeat 0 0;
 }
 .icon-save{
 	background:url('icons/filesave.png') no-repeat center center;
@@ -31,8 +53,20 @@
 .icon-search{
 	background:url('icons/search.png') no-repeat center center;
 }
+.icon-query{
+  background:url('icons/query.png') no-repeat center center;
+}
+.icon-reset{
+  background:url('icons/reset.png') no-repeat center center;
+}
 .icon-print{
 	background:url('icons/print.png') no-repeat center center;
+}
+.icon-popup{
+	background:url('icons/popup.png') no-repeat center center;
+}
+.icon-columnConfig{
+	background:url('icons/columnConfig.png') no-repeat center center;
 }
 .icon-help{
 	background:url('icons/help.png') no-repeat center center;
@@ -52,6 +86,10 @@
 .icon-tip{
 	background:url('icons/tip.png') no-repeat center center;
 }
+.icon-filter{
+	background:url('icons/filter.png') no-repeat center center;
+}
+
 
 .icon-mini-add{
 	background:url('icons/mini_add.png') no-repeat center center;
@@ -64,14 +102,159 @@
 }
 
 .icon-put{
-	background:url('icons/basket_put.png') no-repeat center center;
+  background:url('icons/basket_put.png') no-repeat center center;
 }
 .icon-putout{
-	background:url('icons/basket_remove.png') no-repeat center center;
+  background:url('icons/basket_remove.png') no-repeat center center;
+}
+.icon-download{
+  background:url('icons/download.png') no-repeat center center;
 }
 .icon-comturn{
-	background:url('icons/comturn.png') no-repeat center center;
+  background:url('icons/comturn.png') no-repeat center center;
 }
 .icon-exit{
-	background:url('icons/exit.png') no-repeat center center;
+  background:url('icons/exit.png') no-repeat center center;
+}
+.icon-category{
+  background:url('icons/classify_1.png') no-repeat center center;
+}
+
+.icon-large-picture{
+	background:url('icons/large_picture.png') no-repeat center center;
+}
+.icon-type1{
+  background:url('icons/classify_2.png') no-repeat center center;
+}
+.icon-type2{
+  background:url('icons/classify_3.png') no-repeat center center;
+}
+.icon-active{
+	background:url('icons/active.png') no-repeat center center;
+}
+.icon-lock{
+	background:url('icons/lock.png') no-repeat center center;
+}
+.icon-passwordreset{
+	background:url('icons/passwordreset.png') no-repeat center center;
+}
+.icon-large-clipart{
+	background:url('icons/large_clipart.png') no-repeat center center;
+}
+.icon-large-shapes{
+	background:url('icons/large_shapes.png') no-repeat center center;
+}
+.icon-large-smartart{
+	background:url('icons/large_smartart.png') no-repeat center center;
+}
+.icon-large-chart{
+	background:url('icons/large_chart.png') no-repeat center center;
+}
+/**新增*/
+.new-icon-add{
+	background:url('../../scm/icon/add.png') no-repeat center center;
+}
+/**编辑*/
+.new-icon-edit{
+	background:url('../../scm/icon/edit.png') no-repeat center center;
+}
+/**打印*/
+.new-icon-print{
+	background:url('../../scm/icon/print.png') no-repeat center center;
+}
+/**同步*/
+.new-icon-syn{
+	background:url('../../scm/icon/syn.png') no-repeat center center;
+}
+/**审核*/
+.new-icon-audit{
+	background:url('../../scm/icon/audit.png') no-repeat center center;
+}
+/**反审核*/
+.new-icon-unaudit{
+	background:url('../../scm/icon/unaudit.png') no-repeat center center;
+}
+/**作废*/
+.new-icon-cancellation{
+	background:url('../../scm/icon/cancellation.png') no-repeat center center;
+}
+/**反作废*/
+.new-icon-uncancellation{
+	background:url('../../scm/icon/uncancellation.png') no-repeat center center;
+}
+/**查看*/
+.new-icon-view{
+	background:url('../../scm/icon/view.png') no-repeat center center;
+}
+/**导入*/
+.new-icon-excel-in{
+	background:url('../../scm/icon/excel_in.png') no-repeat center center;
+}
+/**导出*/
+.new-icon-excel-out{
+	background:url('../../scm/icon/excel_out.png') no-repeat center center;
+}
+/**保存*/
+.new-icon-save{
+	background:url('../../scm/icon/save.png') no-repeat center center;
+}
+/**关闭*/
+.new-icon-close{
+	background:url('../../scm/icon/close.png') no-repeat center center;
+}
+/**反关闭*/
+.new-icon-unclose{
+	background:url('../../scm/icon/unclosed.png') no-repeat center center;
+}
+/**复制*/
+.new-icon-copy{
+	background:url('../../scm/icon/copy.png') no-repeat center center;
+}
+/**清理*/
+.new-icon-remove{
+	background:url('../../scm/icon/batch_delete.png') no-repeat center center;
+}
+/**删除*/
+.new-icon-delete{
+	background:url('../../scm/icon/delete_h.png') no-repeat center center;
+}
+/**单据草稿*/
+.new-icon-billtemp{
+	background:url('../../scm/icon/billtemp.png') no-repeat center center;
+}
+/**恢复草稿*/
+.new-icon-billtempchoose{
+	background:url('../../scm/icon/billtempchoose.png') no-repeat center center;
+}
+/**自动盘点*/
+.new-icon-chkstockbill{
+	background:url('../../scm/icon/chkstockbill.png') no-repeat center center;
+}
+/**锁定*/
+.new-icon-disable{
+	background:url('../../scm/icon/disable.png') no-repeat center center;
+}
+/**启用*/
+.new-icon-enable{
+	background:url('../../scm/icon/enable.png') no-repeat center center;
+}
+
+/**商品保质期预警*/
+.warm-icon-kfdate{
+	background:url('../../scm/icon/warm_kfdate.png') no-repeat center center;
+}
+
+/**订单收货预警*/
+.warm-icon-jhdate{
+	background:url('../../scm/icon/warm_jhdate.png') no-repeat center center;
+}
+
+/**订单到货预警*/
+.warm-icon-xhdate{
+	background:url('../../scm/icon/warm_xhdate.png') no-repeat center center;
+}
+
+/**未审核数据*/
+.warm-icon-audit{
+	background:url('../../scm/icon/warm_audit.png') no-repeat center center;
 }

@@ -163,8 +163,8 @@ function changeStatus(url, index) {
 		url : url,// 请求的action路径
 		error : function() {// 请求失败处理函数
 		},
-		success : function(data) {
-			var d = $.parseJSON(data);
+		success : function(d) {
+			//var d = $.parseJSON(data);
 			if (d.success) {
 				$.messager.show({
 					title : '提示消息',
@@ -191,8 +191,8 @@ function delSubmit(url, index) {
 		url : url,// 请求的action路径
 		error : function() {// 请求失败处理函数
 		},
-		success : function(data) {
-			var d = $.parseJSON(data);
+		success : function(d) {
+			//var d = $.parseJSON(data);
 			if (d.success) {
 				$.messager.show({
 					title : '提示消息',

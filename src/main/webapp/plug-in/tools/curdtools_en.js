@@ -50,7 +50,8 @@ function update(title,url, id,width,height) {
 		tip('Please one item to edit');
 		return;
 	}
-	
+
+	url += '&load=edit';//告诉编辑表单页面此次是编辑操作
 	url += '&id='+rowsData[0].id;
 	createwindow(title,url,width,height);
 }
@@ -61,8 +62,498 @@ function update(title,url, id,width,height) {
 $(function(){
 	if(location.href.indexOf("load=detail")!=-1){
 		$(":input").attr("disabled","true");
+		setTimeout('$("a").attr("onclick","")', 1000);
+		//20151207 zerrion 查看页面时去除所有必填标志*号
+		$(".Validform_checktip").html('');
+		//hjhadd20160809如果当前账套未开账或已经结账，不允许单据管理操作
+		billbeforeaccount();
 	}
+	//Zerrion 15-11-15--25 页面载入时把所有只读输入框背景设为灰色
+	$(':input[readonly="readonly"]').css('background-color','#e2e2e2');
+	//单据复制时，重置或清空部分初始数据
+	var url = location.href;
+	var urliffcopy = url.indexOf("load=fcopy");
+	if (urliffcopy>=0){
+		billcopy();
+	}
+	//调用控制左边导航快捷桌面的按钮是否可点击
+	navigatebeforeaccount();
 });
+
+/**
+ * 根据导航页面的beforeAccount隐藏域值来控制左边导航快捷桌面的按钮是否可点击
+ *   值为true表示按表示如果当前账套已开账未结账才允许单据操作，
+ *   值为init表示当前账套未开账才允许单据操作（用于初始化的几种单据）
+ *   未设置值（默认为空字符串)即为不需要当前账套检查
+ *   隐藏域属性 exception表示页面内例外不做控制的链接A的class(如初始化导航中结束初始化不做控制)
+ * @author hjh 20160908
+ */
+function navigatebeforeaccount(){
+	var objname = "beforeAccount";
+	if ($("#" + objname).length>0){
+		var beforeAccount = $("#" + objname).val();
+		var exception = $("#" + objname).attr("exception");
+		if (beforeAccount!=null && beforeAccount!=""){
+			var url = "tScAccountConfigController.do?navigatebeforeaccount";
+			var formData = new Object();
+			formData['beforeAccount'] = beforeAccount;
+			$.ajax({
+				url: url,
+				async: false,
+				cache: false,
+				type: 'POST',
+				data: formData,
+				error: function () {// 请求失败处理函数
+				},
+				success: function (data) {
+					if (data.success == false) {//不允许操作
+						var unbindstr = "";
+						$(".navigate").find("a").each(function (i){
+							//$(this).attr("disabled","disabled");
+							if (exception!=null && exception!="" && $(this).attr('class')==exception){
+								//例外不做控制
+							}else {
+								$(this).removeAttr("onclick");//如果有点击属性配置则为空
+								$(this).attr("msg", data.msg);
+								unbindstr += '$(".' + $(this).attr('class') + '").unbind();';
+								$(this).attr("onclick", "tip('" + data.msg + "');");//如果有点击属性配置则为空
+							}
+						});
+						if (unbindstr!="") {
+							//解绑事件
+							setTimeout(unbindstr, 500);
+						}
+					}
+				}
+			});
+		}
+	}
+}
+
+/**
+ * 如果当前账套未开账或已经结账，不允许单据管理操作
+ * @author hjh 20160908
+ */
+function billbeforeaccount(){
+	if (location.href.indexOf("accountIsAllowBillManage=1") != -1) {
+		$("[data-options*=icon-add]").linkbutton("disable"); //旧版录入
+		$("[data-options*=icon-edit]").linkbutton("disable"); //旧版编辑
+		$("[data-options*=new-icon-add]").linkbutton("disable"); //新版录入
+		$("[data-options*=new-icon-edit]").linkbutton("disable"); //新版编辑
+		$("[data-options*=new-icon-cancellation]").linkbutton("disable"); //作废
+		$("[data-options*=new-icon-uncancellation]").linkbutton("disable"); //反作废
+		$("[data-options*=new-icon-audit]").linkbutton("disable"); //审核
+		$("[data-options*=new-icon-unaudit]").linkbutton("disable"); //反审核
+		$("[data-options*=icon-put]").linkbutton("disable"); //旧版导入
+		$("[data-options*=new-icon-put]").linkbutton("disable"); //新版导入
+		$("[data-options*=new-icon-copy]").linkbutton("disable"); //复制
+		$("[data-options*=new-icon-chkstockbill]").linkbutton("disable"); //自动盘点
+		$("[data-options*=new-icon-close]").linkbutton("disable"); //关闭
+		$("[data-options*=new-icon-unclose]").linkbutton("disable"); //反关闭
+		$("[data-options*=new-icon-copy]").linkbutton("disable"); //复制
+		//解绑事件
+		setTimeout('$("#unAuditBtn").unbind();' +
+				'$("#auditBtn").unbind();' +
+				'$("#edit").unbind();' +
+				'$("#closedBtn").unbind();' +
+				'$("#cancelBtn").unbind();' +
+				'$("#unCancelBtn").unbind();'+
+				'$("#copyBtn").unbind();' +
+				'$("#add").unbind();'+
+				'$("#aduitBtn").unbind();'+
+				'$("#unAuditBtn").unbind();', 500);
+	}
+}
+
+//单据复制
+function billcopy() {
+	var tranType = $("#tranType").val();//编辑页面必须要有tranType的表单域，且值为复制源表单的tranType
+	if ($("#tranType").length==0){
+		tranType = $("#trantype").val();
+	}
+	var billDateType = "";//新单据的单据日期的类型，默认是当天，init表示初始化时是用扎帐日期减1天
+	var number = "";//源基础资料的编号
+	var billNo = "";//源单据的单据编号
+	if ($("#billDateType").length > 0) {
+		billDateType = $("#billDateType").val();
+	}
+	if ($("#number").length > 0) {
+		number = $("#number").val();
+	}
+	if ($("#billNo").length > 0) {
+		billNo = $("#billNo").val();
+	}
+	var url = "tScBillController.do?goBillCopy&tranType=" + tranType + "&billDateType=" + billDateType;
+	url += "&billNo=" + billNo + "&number=" + number;
+	$.ajax({
+		url: url,
+		type: 'post',
+		cache: false,
+		success: function (data) {
+			//var d = $.parseJSON(data);
+			var d = data;
+			if (d.success) {
+				var msg = d.msg;
+				if (d.success) {//单据复制成功取到要清除或重置的值
+					//通过js遍历obj对象的所有属性，并给其赋值，即后台把要清空或重置的数据按规则处理好，前台用规则来处理就好了(分为主表和子表，其中子表带小数点开头)。
+					var formobj = $("#formobj");
+					//$(formobj).form("load", d.obj);
+					var jobj = d.obj;
+					for (var fieldname in jobj) {
+						var fieldvalue = jobj[fieldname];
+						if (fieldname=="date"){
+							$("[name='date']").val(fieldvalue);
+						}else if(fieldname=="billNo"){
+							$("[name='billNo']").val(fieldvalue);
+						}
+						if (fieldname.indexOf(":") >= 0) {//footdiv+冒号+要清除内容标题 表示页脚设置的重置字段
+							var fieldnameArray = fieldname.split(":");
+							if (fieldnameArray.length>1){
+								$("#" + fieldnameArray[0]).find(".footlabel").each(function(i){
+									if ($(this).text().indexOf(fieldnameArray[1])>=0){
+										$(this).parent().find("span").text(fieldvalue);
+									}
+								});
+							}else{
+								$(".footlabel").each(function(i){
+									if ($(this).text().indexOf(fieldnameArray[1])>=0){
+										$(this).parent().find("span").text(fieldvalue);
+									}
+								});
+							}
+						}else if (fieldname.indexOf(".") >= 0) {//点号开头表示子表的重置字段
+							//清空子表相关数据：（附表明细）的主表ID、明细表ID，来源单据相关（idSrc、entryIdSrc、idOrder、entryIdOrder、classIdSrc、billNoOrder）
+							//$("input[name$="+fieldname+"]").val(fieldvalue);
+							var iobj = $("input[name$='" + fieldname + "']");
+							if ($(iobj).length > 0) {
+								$(iobj).val(fieldvalue);
+							}
+						} else {
+							//重置为新数据：新单据编号、单据日期、制单人姓名、制单人ID、分支机构ID、分支机构名称、未审核状态、未作废状态，创建人、创建人ID、创建时间、更新人、更新人ID、更新时间
+							//清空主表相关数据：表头主表ID，来源单据相关（classIDSrc、idSrc、billNoSrc）
+							//$("#"+fieldname).val(fieldvalue);
+							var iobj = $("#" + fieldname);
+							if ($(iobj).length > 0) {
+								$(iobj).val(fieldvalue);
+							}
+						}
+					}
+					//清除单据页面自定义的扩展清除属性
+					var clearExt = "";//单据复制清除扩展属性串：多个用逗号间隔，其中主表为属性名，子表为小数点+属性名。
+					if ($("#clearExt").length > 0) {
+						clearExt = $("#clearExt").val();
+						//var clearExtArray = clearExt.split(",");
+						//for (var i = 0; i < clearExtArray.length; i++) {
+						//	var fieldname = clearExtArray[i];
+						//	var fieldvalue = "";
+						//	if (fieldname != "") {
+						//		if (fieldname.indexOf(".") >= 0) {
+						//			//清空子表相关数据
+						//			//$("input[name$="+fieldname+"]").val(fieldvalue);
+						//			var iobj = $("input[name$='" + fieldname + "']");
+						//			if ($(iobj).length > 0) {
+						//				$(iobj).val(fieldvalue);
+						//			}
+						//		} else {
+						//			//清空主表相关数据
+						//			//$("#"+fieldname).val(fieldvalue);
+						//			var iobj = $("#" + fieldname);
+						//			if ($(iobj).length > 0) {
+						//				$(iobj).val(fieldvalue);
+						//			}
+						//		}
+						//	}
+						//}
+						//更正声明：单据复制已经默认部分字段的设置，原约定在编辑页面增加id为clearExt的隐藏域为要扩展清除属性，现更正为当前单据需要调用扩展的重置函数。如应收初始化单据需要在单据复制后实现“应收日期要重置为当天的日期”，则在此表单域的值为其自定义的函数名，并在编辑页面内编写实现其功能的自定义函数。
+						if (clearExt!=""){
+							eval(clearExt+"()");//调用单据复制的扩展数据重置函数
+						}
+					}
+					//根据单据日期更新单据日期选择框值
+					if ($("[name='date']").length > 0) {
+						var billDate = $("[name='date']").val();
+						billDate = billDate.replace(/-/g, "/");
+						var billDateArray = billDate.split(" ");
+						if (billDateArray.length > 1) {//去掉日期后面的时间
+							billDate = billDateArray[0];
+						}
+						var newdate = new Date(billDate);
+						var year = newdate.getFullYear();
+						var month = (newdate.getMonth() + 1) < 10 ? "0" + (newdate.getMonth() + 1) : (newdate.getMonth() + 1);
+						var date = newdate.getDate() < 10 ? "0" + newdate.getDate() : newdate.getDate();
+						$("#date").val(year + "-" + month + "-" + date);
+					}
+					//重置form url为新增doAdd
+					var url = $(formobj).attr("action");
+					url = url.replace("?doUpdate", "?doAdd");
+					$(formobj).attr("action", url);
+				}
+				//tip(msg);//20190831婷婷:去掉单据复制提示
+				//reloadTable();
+				//$("#" + gname).datagrid('unselectAll');
+				ids = '';
+			}
+		}
+	});
+}
+
+//单据保存草稿
+function doTemp(formid, tranType) {
+	var formData = $("#" + formid).serializeArray();//自动将form表单封装成json
+	var url = "tScBillTempController.do?doAddJson";
+	var d = {};
+	var d_form = {};
+	var d_combobox = {};
+	var d_combobox_itemid = {};
+	var d_wdate = {};
+	var d_ckeditor = {};
+	var d_tt_tab = {};
+	$.each(formData, function () {
+		d_form[this.name] = this.value;
+	});
+	//手动下拉框、日期框、复文本框要单独取值，并放到json串里
+	$("input.easyui-combobox,input.combobox-f").each(function (i) {
+		var fieldname = this.name ? this.name : this.id;//$(this).attr("comboname")?$(this).attr("comboname"):this.id;
+		d_combobox[fieldname] = $(this).combobox('getValues');
+		var itemIdobj = $(this).attr("comboname");//fieldname;//this.name ? this.name : this.id;
+		itemIdobj = itemIdobj.replace(".unitiD",".unitId").replace(".unitid",".unitId").replace(".unitID",".unitId");//兼容单位id(支持unitId,unitID,unitid,unitiD)
+		itemIdobj = itemIdobj.replace(".unitId",".itemId");
+		var itemId = "";
+		if ($("input[name='" + itemIdobj + "']").length>0){
+			itemId = $("input[name='" + itemIdobj + "']").val();
+		}else{
+			itemIdobj = itemIdobj.replace(".itemId", ".itemID");
+			if ($("input[name='" + itemIdobj + "']").length>0){
+				itemId = $("input[name='" + itemIdobj + "']").val();
+			}else{
+				itemIdobj = itemIdobj.replace(".itemID", ".itemiD");
+				if ($("input[name='" + itemIdobj + "']").length>0){
+					itemId = $("input[name='" + itemIdobj + "']").val();
+				}else{
+					itemIdobj = itemIdobj.replace(".itemiD", ".itemid");
+					itemId = $("input[name='" + itemIdobj + "']").val();
+				}
+			}
+		}
+		//d_combobox_itemid[this.name ? this.name : this.id] = itemId;
+		d_combobox_itemid[fieldname] = itemId;
+	});
+	$("input.Wdate").each(function (i) {
+		d_wdate[this.name ? this.name : this.id] = this.value;//日期以id为key
+	});
+	$("textarea").each(function (i) {
+		if ($("#cke_" + this.id).length > 0) {
+			d_ckeditor[this.name] = CHEDITOR.instance[this.name].getData();
+		}
+	});
+	//todo:手动获得有多少个附表，每个附表有多少行，目前只考虑 tab模式的附表
+	//$("[id=tt]").find("tbody[id$='_table']").each(function(i){
+	$("tbody[id$='_table']").each(function(i){
+		d_tt_tab[this.id] = $(this).find("tr").length;
+	});
+	//存放到大json对象d中
+	d["d_form"] = d_form;
+	d["d_combobox"] = d_combobox;
+	d["d_wdate"] = d_wdate;
+	d["d_ckeditor"] = d_ckeditor;
+	d["d_tt_tab"] = d_tt_tab;
+	d["d_combobox_itemid"] = d_combobox_itemid;
+	$.ajax({
+		type: "post",
+		contentType: "application/json",
+		url: url,
+		data: "str=" + JSON.stringify(d),//{json: JSON.stringify(formData)},
+		//data:"str="+json.stringify(formdata),
+		dataType: 'json',
+		success: function (result) {//回调函数
+			alertTip("Draft document saved successfully.");//单据保存草稿成功
+			var preTitle = window.top.$('.tabs-selected:first').text();
+			setTimeout("closetab('"+preTitle+"');",1000);
+		}
+	});
+}
+//选择恢复单据草稿
+function doTempChooseDialog(formid, tranType) {
+	//var itemName = $("#stockName").val();
+	//debugger;
+	var tranType = $("#tranType").val();
+	if ($("#tranType").length==0){
+		tranType = $("#trantype").val();
+	}
+	var url = 'vScBillTempController.do?goSelectDialog&tranType=' + tranType;
+	var width = 1000;
+	var height = 500;
+	var title = "单据草稿";
+	$.dialog({
+		content: 'url:' + url,
+		title: title,
+		lock: true,
+		zIndex: 600,
+		height: height,
+		cache: false,
+		width: width,
+		opacity: 0.3,
+		button: [{
+			name: '确定',
+			callback: function () {
+				iframe = this.iframe.contentWindow;
+				var item = iframe.getSelectionData();
+				var content = eval("(" + item.content + ")");
+				//todo:判断每个附表的行数是否达到保存草稿里的行号要求，不够的先加行号，再来给表单域赋值
+				var content_tt_tab = content["d_tt_tab"];
+				for (fieldname in content_tt_tab) {
+					var fieldvalue = content_tt_tab[fieldname];
+					var nextTrLength = $("#"+fieldname).find("tr").length;
+					var itemLength = parseInt(fieldvalue);
+					var newLength = itemLength - nextTrLength;// - 1;
+					//先加不够的空行
+					for (var j = 0; j < newLength; j++) {
+						var newfunname = fieldname.replace("add_","").replace("_table","");
+						newfunname = "clickAdd"+newfunname.substring(0,1).toUpperCase()+newfunname.substring(1)+"Btn("+j+")";//Add后跟的附表ID首字母大写
+						var f0 = eval("(" + newfunname + ")");//clickAddTScIcInitialentryBtn(j);
+					}
+				}
+				//将草稿数据通过form的load方法快速赋值
+				var content_form = content["d_form"];
+				$("#"+formid).form("load", content_form);
+				//将隐藏域的单据编号赋值到显示的单据编号中
+				$("#billNoStr").val($("#billNo").val());
+				//手动从json中获取下拉框、日期框、复文本框取值并赋值
+				var content_combobox = content["d_combobox"];
+				var d_combobox_itemid = content["d_combobox_itemid"];
+				for (fieldname in content_combobox) {
+					var fieldvalue = content_combobox[fieldname];
+					fieldname = "'" + fieldname + "'";
+					if ($("input[id=" + fieldname + "]").length > 0) {
+						var comobj = fieldname.replace("'", "").replace("'", "").replace("[", "\\[").replace("]", "\\]");//$("input[id=" + fieldname + "]").attr("id");
+						var itemId = d_combobox_itemid[fieldname.replace("'", "").replace("'", "")];
+						//$("#" + comobj).combobox("reload", "tScIcitemController.do?loadItemUnit&id=" + itemId);
+						$("input[id=" + fieldname + "]").combobox("reload", "tScIcitemController.do?loadItemUnit&id=" + itemId);
+						$("input[id=" + fieldname + "]").combobox("setValue", fieldvalue);
+					} else {
+						//debugger;
+						var comobj = $("input[name=" + fieldname + "]").attr("id");
+						var itemId = d_combobox_itemid[fieldname];
+						$("#" + comobj).combobox("reload", "tScIcitemController.do?loadItemUnit&id=" + itemId);
+						//$("#unitId\\[" + rowIndex + "\\]").combobox("reload", "tScIcitemController.do?loadItemUnit&id=" + itemId + "&timestamp=" + new Date().getTime());
+						$("input[name=" + fieldname + "]").combobox("setValue", fieldvalue);
+					}
+				}
+				var strobjnames = '#qty, #basicQty, #secQty, #coefficient, #secCoefficient, #price, #amount, #discountRate, #discountPrice, #discountAmount, #taxRate, #taxPriceEx, #taxAmountEx, #taxPrice, #inTaxAmount, #taxAmount, #itemWeight';
+				if ($(strobjnames).length>0) {
+					//如果存在数量、基本数量、单价、金额等表单域时，在模拟输入框值改变事件前初始主表计算js金额相关工具类
+					initComputingTools();
+				}
+				//重新对每个子表进行计算js金额初始化动作
+				var content_tt_tab = content["d_tt_tab"];
+				for (fieldname in content_tt_tab) {
+					var tableobj = $("#" + fieldname);//内容表格
+					var nextTrLength = $(tableobj).find("tr").length;
+					var configName =fieldname.replace("add_", "").replace("_table", "") + "List"; //如 ，tPoOrderentryList
+					var isExists = false;
+					var arrobjnames = strobjnames.split(",");
+					for(var i=0;i<arrobjnames.length;i++){
+						if (arrobjnames[i]!=""){
+							if ($("[name='" + configName+"[0]." + arrobjnames[i].replace("#","") + "']").length>0){
+								isExists = true;
+							}
+						}
+					}
+					if (isExists){
+						for (var i=0;i<nextTrLength;i++){
+							//子表函数计算
+							try{//如买一赠一有数量，但没有计算需求，就会报错，这里抛弃异常
+								setFunctionInfo(i, configName);
+							}catch(e){
+
+							}
+						}
+					}
+				}
+				//判断每个附表的的标题列是否有total属性且值为true，如果有的话，对其列下所有单元格模拟change事件
+				var content_tt_tab = content["d_tt_tab"];
+				for (fieldname in content_tt_tab) {
+					var tableobj = $("#" + fieldname);//内容表格
+					var tablehead = $("#" + fieldname.replace("add_", "") + "scrolldivHead");//标题表格
+					var nextTrLength = $(tableobj).find("tr").length;
+					$(tablehead).find("td").each(function (i){
+						if ($(this).attr("total")!=null && $(this).attr("total").toLowerCase()=="true") {
+							//debugger;
+							//对其列下所有单元格模拟input事件
+							for (var j = 0; j < nextTrLength; j++) {
+								var inputobj = $(tableobj).find("tr").eq(j).children("td:eq(" + i + ")").find("input");
+								if (inputobj.length>0){
+									$(inputobj).trigger('input');//数量乘以单价算金额等
+									$(inputobj).trigger('change');//数量乘以单价算金额等
+									//$(inputobj).trigger('propertychange input change');//合计行
+								}
+							}
+						}
+					});
+				}
+				var content_wdate = content["d_wdate"];
+				for (fieldname in content_wdate) {
+					var fieldvalue = content_wdate[fieldname];
+					var dateValue = "";
+					fieldname = "'" + fieldname + "'";
+					if (fieldvalue!="") {
+						var dateValue = new Date(fieldvalue);
+						var year = dateValue.getFullYear();
+						var month = (dateValue.getMonth() + 1) < 10 ? "0" + (dateValue.getMonth() + 1) : (dateValue.getMonth() + 1);
+						var date = dateValue.getDate() < 10 ? "0" + dateValue.getDate() : dateValue.getDate();
+						dateValue = year + "-" + month + "-" + date;
+					}
+					if ($("input[name=" + fieldname + "]").length > 0) {
+						$("input[name=" + fieldname + "]").val(dateValue);
+					}
+					if ($("input[id=" + fieldname + "]").length > 0) {
+						$("input[id=" + fieldname + "]").val(dateValue);
+					}
+				}
+				var content_ckeditor = content["d_ckeditor"];
+				for (fieldname in content_ckeditor) {
+					var fieldvalue = content_ckeditor[fieldname];
+					CHEDITOR.instance[this.name].setData(fieldvalue);
+				}
+				//发送ajax到controller,删除被选中的单据草稿
+				var url = "tScBillTempController.do?doBatchDel";
+				$.ajax({
+					url: url,
+					type: 'post',
+					data: {
+						ids: item.id//单据草稿ID
+					},
+					cache: false,
+					success: function (data) {
+						//var d = $.parseJSON(data);
+						var d = data;
+						if (d.success) {
+							var msg = d.msg;
+							//tip(msg);
+							//reloadTable();
+							//$("#" + gname).datagrid('unselectAll');
+							var tempRecoveryExt = "";//恢复草稿后留一个自定义函数来供各单据恢复后自定义脚本
+							if ($("#tempRecoveryExt").length > 0) {
+								tempRecoveryExt = $("#tempRecoveryExt").val();
+								if (tempRecoveryExt != "") {
+									eval(tempRecoveryExt + "()");//调用单据恢复后的扩展函数
+								}
+							}
+							tip("Draft document recovery successfully.");//单据恢复草稿成功
+							ids = '';
+						}
+					}
+				});
+
+			},
+			focus: true
+		}, {
+			name: '取消',
+			callback: function () {
+			}
+		}]
+	}).zindex();
+}
 
 /**
  * 查看详细事件打开窗口
@@ -82,6 +573,27 @@ function detail(title,url, id,width,height) {
 		return;
 	}
     url += '&load=detail&id='+rowsData[0].id;
+	createdetailwindow(title,url,width,height);
+}
+
+/**
+ * 单据复制事件打开窗口
+ * @param title 查看框标题
+ * @param addurl//目标页面地址
+ * @param id//主键字段
+ */
+function fcopy(title,url, id,width,height) {
+	var rowsData = $('#'+id).datagrid('getSelections');
+
+	if (!rowsData || rowsData.length == 0) {
+		tip('Please select view item');
+		return;
+	}
+	if (rowsData.length > 1) {
+		tip('Please select an item to view');
+		return;
+	}
+	url += '&load=fcopy&id='+rowsData[0].id;
 	createdetailwindow(title,url,width,height);
 }
 
@@ -135,6 +647,14 @@ function deleteALLSelect(title,url,gname) {
  * @param saveurl
  */
 function createdetailwindow(title, addurl,width,height) {
+	//查看页面url多传递（从左datagrid隐藏域）是否账套未开账或已结账，来控制查看页面的按钮是否显示
+	addurl += '&accountIsAllowBillManage=' + $("#accountIsAllowBillManage").val();
+	//debugger;
+	var fcopyobj = $("[onclick^='fcopy(']");
+	if (fcopyobj!=null && fcopyobj.length>0){//判断列表页面是否有复制按钮
+		addurl += '&iscopy=true';
+	}
+	title = title.replace("复制","新增");
 	width = width?width:700;
 	height = height?height:400;
 	if(width=="100%" || height=="100%"){
@@ -186,6 +706,7 @@ function editfs(title,url) {
 }
 // 删除调用函数
 function delObj(url,name) {
+	url = encodeURI(url);
 	gridname=name;
 	createdialog('Delete Confirm ', 'Delete this record, Confirm ?', url,name);
 }
@@ -286,7 +807,7 @@ function createwindow(title, addurl,width,height) {
 		width = window.top.document.body.offsetWidth;
 		height =window.top.document.body.offsetHeight-100;
 	}
-    //--author：JueYue---------date：20140427---------for：弹出bug修改,设置了zindex()函数
+    //--author：Zerrion---------date：20140427---------for：弹出bug修改,设置了zindex()函数
 	if(typeof(windowapi) == 'undefined'){
 		$.dialog({
 			content: 'url:'+addurl,
@@ -326,7 +847,7 @@ function createwindow(title, addurl,width,height) {
 		    cancel: true /*为true等价于function(){}*/
 		}).zindex();
 	}
-    //--author：JueYue---------date：20140427---------for：弹出bug修改,设置了zindex()函数
+    //--author：Zerrion---------date：20140427---------for：弹出bug修改,设置了zindex()函数
 	
 }
 /**
@@ -517,6 +1038,23 @@ function createdialog(title, content, url,name) {
  * @param gridname
  */
 function saveObj() {
+	//保存前，如果有单据日期对象，则要验证当前单据日期的值是否超过当期月份即表单域对象的stageDate属性；如果验证失败则弹出提示并不进行表单提交
+	if ($("#date").length>0){
+		var stageDate = $("#date").attr("stageDate");
+		var date = $("#date").val();
+		var tranType = $("#tranType").val();
+		if (tranType=="1032" || tranType=="1031" || tranType=="1030" || tranType=="1020"){//初始化单据必须早于开账月份
+			if (date>stageDate){
+				tip("单据日期必须早于开账年月[" + stageDate + "]");
+				return false;
+			}
+		}else{//普通单据必须晚于当前期间月份
+			if (date<stageDate){
+				tip("单据日期必须晚于当前期间年月[" + stageDate + "]");
+				return false;
+			}
+		}
+	}
 	$('#btn_sub', iframe.document).click();
 }
 
@@ -558,7 +1096,7 @@ function search() {
  */
 function doSubmit(url,name,data) {
 	gridname=name;
-	//--author：JueYue ---------date：20140227---------for：把URL转换成POST参数防止URL参数超出范围的问题
+	//--author：Zerrion ---------date：20140227---------for：把URL转换成POST参数防止URL参数超出范围的问题
 	var paramsData = data;
 	if(!paramsData){
 		paramsData = new Object();
@@ -571,7 +1109,7 @@ function doSubmit(url,name,data) {
 			}
 		}      
 	}
-	//--author：JueYue ---------date：20140227---------for：把URL转换成POST参数防止URL参数超出范围的问题
+	//--author：Zerrion ---------date：20140227---------for：把URL转换成POST参数防止URL参数超出范围的问题
 	$.ajax({
 		async : false,
 		cache : false,

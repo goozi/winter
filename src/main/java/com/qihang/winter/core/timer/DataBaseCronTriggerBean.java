@@ -6,6 +6,8 @@ import com.qihang.winter.web.system.service.TimeTaskServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.CronTriggerBean;
 
+import java.text.ParseException;
+
 /**
  * 在原有功能的基础上面增加数据库的读取
  * @author Zerrion
@@ -21,13 +23,17 @@ public class DataBaseCronTriggerBean extends CronTriggerBean{
 	/**
 	 * 读取数据库更新文件
 	 */
-	public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet()  {
 		super.afterPropertiesSet();
 		TSTimeTaskEntity task = timeTaskService.findUniqueByProperty
 				(TSTimeTaskEntity.class,"taskId",this.getName());
 		if(task!=null&&task.getIsEffect().equals("1")
 				&&!task.getCronExpression().equals(this.getCronExpression())){
-			this.setCronExpression(task.getCronExpression());
+			try {
+				this.setCronExpression(task.getCronExpression());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 			DynamicTask.updateSpringMvcTaskXML(this,task.getCronExpression());
 		}
 	}

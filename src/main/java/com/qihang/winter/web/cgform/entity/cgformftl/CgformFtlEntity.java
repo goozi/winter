@@ -47,7 +47,7 @@ public class CgformFtlEntity implements java.io.Serializable {
 	private java.lang.String updateName;
 	/**修改时间*/
 	private java.util.Date updateDate;
-	/**模板类型 01 ckeditor 02 自定义 03 */
+	/** 模板类型 01 ckeditor 02 自定义 03 打印模板 04*/
 	private java.lang.String editorType;
 	@Column(name ="EDITOR_TYPE",nullable=false,length=32)
 	public java.lang.String getEditorType() {

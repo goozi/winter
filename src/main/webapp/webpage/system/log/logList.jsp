@@ -33,17 +33,17 @@
             <option value="6"><t:mutiLang langKey="common.upload"/></option>
             <option value="7"><t:mutiLang langKey="common.other"/></option>
         </select>
-       <%--add-begin--Author:zhangguoming  Date:20140427 for：添加查询条件  操作时间--%>
+       <%--add-begin--Author:Zerrion  Date:20140427 for：添加查询条件  操作时间--%>
         <span>
             <span style="vertical-align:middle;display:-moz-inline-box;display:inline-block;width: 80px;text-align:right;" title="操作时间 "><t:mutiLang langKey="operate.time"/>: </span>
             <input type="text" name="operatetime_begin" style="width: 100px; height: 24px;">~
             <input type="text" name="operatetime_end" style="width: 100px; height: 24px; margin-right: 20px;">
         </span>
-        <%--add-end--Author:zhangguoming  Date:20140427 for：添加查询条件  操作时间--%>
+        <%--add-end--Author:Zerrion  Date:20140427 for：添加查询条件  操作时间--%>
         <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="logListsearch();"><t:mutiLang langKey="common.query"/></a>
     </div>
 </div>
-<%--add-begin--Author:zhangguoming  Date:20140427 for：添加查询条件  操作时间--%>
+<%--add-begin--Author:Zerrion  Date:20140427 for：添加查询条件  操作时间--%>
 <script type="text/javascript">
     $(document).ready(function(){
         $("input[name='operatetime_begin']").attr("class","Wdate").attr("style","height:20px;width:140px;").click(function(){WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss '});});
@@ -52,4 +52,4 @@
         $("input").css("height", "24px");
     });
 </script>
-<%--add-end--Author:zhangguoming  Date:20140427 for：添加查询条件  操作时间--%>
+<%--add-end--Author:Zerrion  Date:20140427 for：添加查询条件  操作时间--%>

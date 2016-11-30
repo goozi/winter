@@ -27,7 +27,7 @@
 
     <bean id="taskDemoServiceTaskCronTrigger" class="com.qihang.winter.core.timer.DataBaseCronTriggerBean">
         <property name="jobDetail" ref="taskDemoServiceTaskJob"/>
-        <property name="cronExpression" value="0 0/1 * * * ?"/>
+        <property name="cronExpression" value="0 0 12 * * ?"/>
     </bean>
 
 
@@ -41,7 +41,7 @@
 
     <bean id="smsSendTaskCronTrigger" class="com.qihang.winter.core.timer.DataBaseCronTriggerBean">
         <property name="jobDetail" ref="smsSendTaskJob"/>
-        <property name="cronExpression" value="0 0/1 * * * ?"/>
+        <property name="cronExpression" value="0 0 12 * * ?"/>
     </bean>
 
     <!-- 定时任务调度器 -->

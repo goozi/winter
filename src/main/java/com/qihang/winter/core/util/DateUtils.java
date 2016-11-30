@@ -15,7 +15,7 @@ import org.springframework.util.StringUtils;
  * 
  * 类描述：时间操作定义类
  * 
- * @author:  张代浩
+ * @Author: Zerrion
  * @date： 日期：2012-12-8 时间：下午12:15:03
  * @version 1.0
  */
@@ -33,6 +33,8 @@ public class DateUtils extends PropertyEditorSupport {
 			"yyyy-MM-dd HH:mm");
 	public static final SimpleDateFormat yyyymmddhhmmss = new SimpleDateFormat(
 	"yyyyMMddHHmmss");
+	public static final SimpleDateFormat yyyymmddhhmmssSSS = new SimpleDateFormat(
+			"yyyyMMddHHmmssSSS");//显示到3位数的毫秒
 	public static final SimpleDateFormat short_time_sdf = new SimpleDateFormat(
 			"HH:mm");
 	public static final  SimpleDateFormat datetimeFormat = new SimpleDateFormat(
@@ -355,6 +357,17 @@ public class DateUtils extends PropertyEditorSupport {
 	}
 
 	/**
+	 * 指定日期的默认显示，具体格式：年-月-日 时:分:秒
+	 *
+	 * @param date
+	 *            指定的日期
+	 * @return 指定日期按“年-月-日 时:分:秒“格式显示
+	 */
+	public static String formatDatetime(Date date) {
+		return datetimeFormat.format(date);
+	}
+
+	/**
 	 * 指定毫秒数表示日期的默认显示，具体格式：年-月-日
 	 * 
 	 * @param millis
@@ -545,6 +558,38 @@ public class DateUtils extends PropertyEditorSupport {
 		Calendar cal;
 		cal = parseCalendar(src, pattern);
 		cal.add(Calendar.DATE, amount);
+		return formatDate(cal);
+	}
+
+	/**
+	 * 日期加n个月
+	 * @param src
+	 * @param pattern
+	 * @param amount
+	 * @return
+	 * @throws ParseException
+     */
+	public static String formatAddMonth(String src, String pattern, int amount)
+			throws ParseException {
+		Calendar cal;
+		cal = parseCalendar(src, pattern);
+		cal.add(Calendar.MONTH, amount);
+		return formatDate(cal);
+	}
+
+	/**
+	 * 日期加n个年
+	 * @param src
+	 * @param pattern
+	 * @param amount
+	 * @return
+	 * @throws ParseException
+	 */
+	public static String formatAddYear(String src, String pattern, int amount)
+			throws ParseException {
+		Calendar cal;
+		cal = parseCalendar(src, pattern);
+		cal.add(Calendar.YEAR, amount);
 		return formatDate(cal);
 	}
 

@@ -14,7 +14,7 @@
 	<t:dgConfOpt title="激活" url="cgformFtlController.do?active&id={id}&formId=${formid}" message="确认激活模板" exp="ftlStatus#eq#0"/>
 	<t:dgConfOpt title="取消激活" url="cgformFtlController.do?cancleActive&id={id}&formId=${formid}" message="确认取消激活" exp="ftlStatus#eq#1"/>
 	<t:dgFunOpt funname="preview(id,cgformName)" title="模板预览"></t:dgFunOpt>
-	<t:dgToolBar title="Word模板上传" icon="icon-add" funname="add" url="cgformFtlController.do?addorupdate&editorType=03&cgformId=${formid}"></t:dgToolBar>
+	<t:dgToolBar title="Word模板上传" icon="icon-add" funname="add" url="cgformFtlController.do?addorupdate&editorType=03&cgformId=${formid}" windowType="dialog"></t:dgToolBar>
 	<t:dgToolBar title="自定义FCK模板" icon="icon-add" funname="add" width="100%" url="cgformFtlController.do?addorupdate&cgformId=${formid}" height="100%"></t:dgToolBar>
 	<t:dgToolBar title="自定义布局模板" icon="icon-add" funname="add" url="cgformFtlController.do?addorupdate&editorType=02&cgformId=${formid}" width="100%" height="100%"></t:dgToolBar>
 	<t:dgToolBar title="模板编辑" icon="icon-edit" funname="update" url="cgformFtlController.do?addorupdate&cgformId=${formid}" width="100%" height="100%"></t:dgToolBar>

@@ -136,16 +136,24 @@ public class CgformCodeGenerate
         fieldMeta.put(fieldNameV, fieldName.toUpperCase());
       }
       List<CgFormFieldEntity> pageColumns = new ArrayList();
+      /** 20160628过滤出页脚字段 **/
+      List<CgFormFieldEntity> columnsfoot = new ArrayList();
       for (CgFormFieldEntity cf : columns) {
-        if ((StringUtils.isNotEmpty(cf.getIsShow())) && ("Y".equalsIgnoreCase(cf.getIsShow()))) {
-          pageColumns.add(cf);
+        if(!"Y".equals(cf.getIsPageFoot())){
+          if ((StringUtils.isNotEmpty(cf.getIsShow())) && ("Y".equalsIgnoreCase(cf.getIsShow()))) {
+            pageColumns.add(cf);
+          }
+        } else {
+          columnsfoot.add(cf);
         }
+
       }
 
       data.put("cgformConfig", this.cgformConfig);
       data.put("fieldMeta", fieldMeta);
       data.put("columns", columns);
       data.put("pageColumns", pageColumns);
+      data.put("columnsfoot", columnsfoot);
       data.put("buttons", this.cgformConfig.getButtons() == null ? new ArrayList(0) : this.cgformConfig.getButtons());
       data.put("buttonSqlMap", this.cgformConfig.getButtonSqlMap() == null ? new HashMap(0) : this.cgformConfig.getButtonSqlMap());
       data.put("packageStyle", this.cgformConfig.getPackageStyle());

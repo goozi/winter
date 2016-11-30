@@ -21,6 +21,7 @@ public class DataGridFunOptTag extends TagSupport {
 	private String funname;//自定义函数名称
 	private String operationCode;//按钮的操作Code
 	private String langArg;//按钮的操作Code
+	private String icon;//按钮图标
 	
 	
 	public int doStartTag() throws JspTagException {
@@ -31,7 +32,7 @@ public class DataGridFunOptTag extends TagSupport {
 		
 		Tag t = findAncestorWithClass(this, DataGridTag.class);
 		DataGridTag parent = (DataGridTag) t;
-		parent.setFunUrl(title,exp,funname,operationCode);
+		parent.setFunUrl(title,exp,funname,operationCode,icon);
 		return EVAL_PAGE;
 	}
 	public void setFunname(String funname) {
@@ -51,4 +52,7 @@ public class DataGridFunOptTag extends TagSupport {
 		this.langArg = langArg;
 	}
 
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
 }

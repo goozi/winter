@@ -43,14 +43,14 @@
 					name="ck" /></td>
 				<td align="left">
 					<input style="width: 120px;" type="text" name="columns[#index#].fieldName" nullmsg="pleaseinputfilename"
-					datatype="s1-30,/^[a-z\d_]+$/" errormsg="filenamecannotuppercase" class="fieldNameInput" />
+					datatype="s1-30,/^[a-zA-Z\d_]+$/" errormsg="字段名必须是大小写字母、数字或下划线" class="fieldNameInput" />
 					
 					<input style="width: 120px;" type="hidden" name="columns[#index#].oldFieldName"  />
 				</td>
 				<td align="left">
 					
 					<input style="width: 120px;" type="text" name="columns[#index#].content" nullmsg="pleaseinputfilecomment" 
-					datatype="s2-14" errormsg="fieldcommentfromtwotofourteen" class="contentInput" />
+					datatype="*2-24" errormsg="fieldcommentfromtwotofourteen" class="contentInput" />
 				</td>
 				
 				<td align="left">

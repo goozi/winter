@@ -1,6 +1,7 @@
 package com.qihang.winter.core.common.model.json;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(value = { "hibernateLazyInitializer" })
 public class ProjectInfo {

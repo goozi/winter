@@ -5,6 +5,129 @@
     font-family: Tahoma, Verdana, 新宋体
   }
 </style>
+
+<style>
+  * {
+    font-size: 12px;
+    font-family: Tahoma, Verdana, 新宋体
+  }
+  .navigate{
+    float:left;
+    margin-left: 5px;
+  }
+
+  .row{
+    margin-top:5%;
+    margin-left:20%;
+    text-align: center;
+    float: left;
+    width: 80%
+  }
+
+  .arrow{
+    margin-top:30px;
+    margin-right: 10px;
+  }
+
+  .navigate a{
+    vertical-align: middle;
+    display: block;
+    line-height: 82px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    width: 82px;
+    height: 82px;
+
+  }
+  a.one{
+    background: url('plug-in/buss/scm/home/u121.png') no-repeat;
+  }
+  a.one:hover{
+    background: url('plug-in/buss/scm/home/u121_mouseOver.png');
+  }
+  a.two{
+    background: url('plug-in/buss/scm/home/u131.png') no-repeat;
+  }
+  a.two:hover{
+    background: url('plug-in/buss/scm/home/u131_mouseOver.png');
+  }
+  a.three{
+    background: url('plug-in/buss/scm/home/u119.png') no-repeat;
+  }
+  a.three:hover{
+    background: url('plug-in/buss/scm/home/u119_mouseOver.png');
+  }
+  a.four{
+    background: url('plug-in/buss/scm/home/u123.png') no-repeat;
+  }
+  a.four:hover{
+    background: url('plug-in/buss/scm/home/u123_mouseOver.png');
+  }
+  a.five{
+    background: url('plug-in/buss/scm/home/u119.png') no-repeat;
+  }
+  a.five:hover{
+    background: url('plug-in/buss/scm/home/u119_mouseOver.png');
+  }
+  a.six{
+    background: url('plug-in/buss/scm/home/u123.png') no-repeat;
+  }
+  a.six:hover{
+    background: url('plug-in/buss/scm/home/u123_mouseOver.png');
+  }
+  a.seven{
+    background: url('plug-in/buss/scm/home/u121.png') no-repeat;
+  }
+  a.seven:hover{
+    background: url('plug-in/buss/scm/home/u121_mouseOver.png');
+  }
+
+
+  .navigate img{
+    margin-top:19%;
+
+
+
+  }
+  .navigate span {
+    margin-top:18px;
+    display: block;
+    text-align: center;
+    font-family:'Arial Normal', 'Arial';
+    font-weight:400;
+    font-style:normal;
+    font-size:13px;
+    color:#333333;
+    line-height:normal;
+    padding-right: 10px;
+  }
+</style>
+
+
+
+<div class="row" style="margin-top:8%;">
+
+  <div class="navigate" ><a class="one"><img src="plug-in/buss/scm/fresh_navi/u137.png"></a><span >期初建账</span></div>
+  <div class="navigate arrow" ><img src="plug-in/buss/scm/fresh_navi/u151.png" ></div>
+  <div class="navigate" ><a class="two"><img src="plug-in/buss/scm/fresh_navi/u139.png"></a><span >期初数据完成</span></div>
+  <div class="navigate arrow"><img src="plug-in/buss/scm/fresh_navi/u151.png"></div>
+  <div class="navigate" ><a class="three"><img src="plug-in/buss/scm/fresh_navi/u141.png" style="padding-top: 5px"></a><span >进货业务</span></div>
+  <div class="navigate arrow"><img src="plug-in/buss/scm/fresh_navi/u151.png"></div>
+  <div class="navigate" ><a class="four"><img src="plug-in/buss/scm/fresh_navi/u143.png"></a><span >销售业务</span></div>
+
+</div>
+
+<div class="row">
+  <div class="navigate" ><a class="five"><img src="plug-in/buss/scm/fresh_navi/u149.png"></a><span >月结存</span></div>
+  <div class="navigate arrow" ><img src="plug-in/buss/scm/fresh_navi/u161.png"></div>
+  <div class="navigate" ><a class="six"> <img src="plug-in/buss/scm/fresh_navi/u147.png"></a><span >财务管理</span></div>
+  <div class="navigate arrow" ><img src="plug-in/buss/scm/fresh_navi/u161.png"></div>
+  <div class="navigate" ><a class="seven"><img src="plug-in/buss/scm/fresh_navi/u145.png"></a><span >库存管理</span></div>
+  <div class="navigate arrow" ><img src="plug-in/buss/scm/fresh_navi/u161.png"></div>
+</div>
+
+
+<!--
 <div style="margin-top: 14px;">
   <h3>简介</h3>
 
@@ -45,3 +168,4 @@
     <li>网址 ：<a href="http://www.qihang.com">www.qihang.com</a></li>
   </ul>
 </div>
+-->

@@ -15,7 +15,7 @@
 	<t:dgCol title="支出科目" field="expenseaccount"></t:dgCol>
 	<t:dgCol title="操作" field="opt"></t:dgCol>
 	<t:dgDelOpt title="删除" url="tFinanceController.do?del&id={id}" />
-	<t:dgToolBar title="录入" icon="icon-add" url="tFinanceController.do?addorupdate" funname="add"></t:dgToolBar>
+	<t:dgToolBar title="新增" icon="icon-add" url="tFinanceController.do?addorupdate" funname="add"></t:dgToolBar>
 	<t:dgToolBar title="编辑" icon="icon-edit" url="tFinanceController.do?addorupdate" funname="update"></t:dgToolBar>
 	<t:dgToolBar title="查看" icon="icon-search" url="tFinanceController.do?addorupdate" funname="detail"></t:dgToolBar>
 </t:datagrid>

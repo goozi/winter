@@ -7,12 +7,12 @@
 <t:base type="jquery,easyui,tools,DatePicker"></t:base>
 </head>
 <body style="overflow-y: hidden" scroll="no">
-<t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" action="cgformEnhanceJsController.do?save">
+<t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" action="cgformEnhanceJsController.do?save" windowType="dialog">
 	<input id="id" name="id" type="hidden" value="${cgformenhanceJsPage.id }">
 	<input id="formId" name="formId" type="hidden" value="${cgformenhanceJsPage.formId }">
 	<table cellpadding="0" cellspacing="1" class="formtable">
 		<tr>
-			<td align="right"><label class="Validform_label"> <t:mutiLang langKey="enhance.type"/>: </label></td>
+			<td align="right" width="7%"><label class="Validform_label"> <t:mutiLang langKey="enhance.type"/>: </label></td>
 			<td class="value"><select name="cgJsType" id="cgJsType">
 				<option value="form" <c:if test="${cgformenhanceJsPage.cgJsType=='form'}">selected="selected"</c:if>>form</option>
 				<option value="list" <c:if test="${cgformenhanceJsPage.cgJsType=='list'}">selected="selected"</c:if>>list</option>
@@ -20,7 +20,7 @@
 		</tr>
 		<tr>
 			<td align="right"><label class="Validform_label"> <t:mutiLang langKey="enhance.js"/>: </label></td>
-			<td class="value"><textarea id="cgJsStr" name="cgJsStr" cols="150" rows="30">${cgformenhanceJsPage.cgJsStr}</textarea> <span class="Validform_checktip"></span></td>
+			<td class="value"><textarea id="cgJsStr" name="cgJsStr" cols="130" rows="30">${cgformenhanceJsPage.cgJsStr}</textarea> <span class="Validform_checktip"></span></td>
 		</tr>
 	</table>
 </t:formvalid>

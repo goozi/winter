@@ -67,6 +67,7 @@
 			<rtexprvalue>true</rtexprvalue>
 			<description>分页提交的路径</description>
 		</attribute>
+
 		<attribute>
 			<name>pagination</name>
 			<rtexprvalue>true</rtexprvalue>
@@ -76,6 +77,10 @@
 			<name>title</name>
 			<rtexprvalue>true</rtexprvalue>
 			<description>表格标题</description>
+		</attribute>
+		<attribute>
+			<name>checkOnSelect</name>
+			<description>点击行时同时选中复选框</description>
 		</attribute>
 		<attribute>
 			<name>idField</name>
@@ -194,6 +199,48 @@
 			<rtexprvalue>true</rtexprvalue>
 			<description>是否使用高级查询器true,false</description>
 		</attribute>
+		<attribute>
+			<name>tranType</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>单据类型</description>
+		</attribute>
+		<attribute>
+			<name>tableName</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>单据表名</description>
+		</attribute>
+		<attribute>
+			<name>beforeAccount</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>是否进行账套检查，默认为false不需要，true表示需要（即如果当前账套为未开账或已结账则不允许做单据管理操作，已开账未结账才允许单据操作）</description>
+		</attribute>
+		<attribute>
+			<name>scrollview</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>是否滚动自动载入</description>
+		</attribute>
+		<attribute>
+    <name>isSon</name>
+    <required>false</required>
+    <rtexprvalue>false</rtexprvalue>
+    <description>是否查询分支机构</description>
+  </attribute>
+    <attribute>
+      <name>colConfig</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>是否启用列配置</description>
+    </attribute>
+    <attribute>
+    <name>excludeCol</name>
+    <required>false</required>
+    <rtexprvalue>false</rtexprvalue>
+    <description>列配置中排除的字段</description>
+  </attribute>
 	</tag>
 	<tag>
 		<name>dgCol</name>
@@ -220,6 +267,18 @@
 			<rtexprvalue>true</rtexprvalue>
 			<description>字段值</description>
 		</attribute>
+		<attribute>
+			<name>mergeCells</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>是否进行列值相同时合并单元格，true表示合并，false表示不合并,默认不合并</description>
+		</attribute>
+    <attribute>
+      <name>editor</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>编辑器</description>
+    </attribute>
 		<attribute>
 			<name>width</name>
 			<rtexprvalue>true</rtexprvalue>
@@ -393,6 +452,11 @@
 			<rtexprvalue>true</rtexprvalue>
 			<description>按钮操作Code</description>
 		</attribute>
+		<attribute>
+			<name>icon</name>
+			<rtexprvalue>true</rtexprvalue>
+			<description>按钮图标</description>
+		</attribute>
 	</tag>
 	<tag>
 		<name>dgDefOpt</name>
@@ -503,12 +567,23 @@
 			<rtexprvalue>true</rtexprvalue>
 			<description>按钮操作Code</description>
 		</attribute>
+		<attribute>
+			<name>icon</name>
+			<rtexprvalue>true</rtexprvalue>
+			<description>按钮图标</description>
+		</attribute>
 	</tag>
 	<tag>
 		<name>dgToolBar</name>
 		<tag-class>com.qihang.winter.tag.core.easyui.DataGridToolBarTag</tag-class>
 		<body-content>JSP</body-content>
 		<description>列表工具条标签</description>
+		<attribute>
+			<name>exp</name>
+			<rtexprvalue>true</rtexprvalue>
+			<description>是否显示改链接的表达式,例 字段名#表达式符号#字段值(name#eq#admin)
+				表达式类型支持eq,ne,empty</description>
+		</attribute>
 		<attribute>
 			<name>url</name>
 			<rtexprvalue>true</rtexprvalue>
@@ -558,6 +633,11 @@
 			<name>operationCode</name>
 			<rtexprvalue>true</rtexprvalue>
 			<description>按钮操作Code</description>
+		</attribute>
+		<attribute>
+			<name>windowType</name>
+			<rtexprvalue>true</rtexprvalue>
+			<description>窗口类型：dialog对话框，tab标签页方式打开</description>
 		</attribute>
 	</tag>
 	<tag>
@@ -667,6 +747,11 @@
 			<name>width</name>
 			<rtexprvalue>true</rtexprvalue>
 			<description>width对应字段</description>
+		</attribute>
+		<attribute>
+			<name>panelHeight</name>
+			<rtexprvalue>true</rtexprvalue>
+			<description>下拉面板高度</description>
 		</attribute>
 		<attribute>
 			<name>value</name>
@@ -793,6 +878,11 @@
 			<rtexprvalue>true</rtexprvalue>
 			<description>选项卡是否带关闭按钮</description>
 		</attribute>
+		<attribute>
+			<name>cache</name>
+			<rtexprvalue>true</rtexprvalue>
+			<description>缓存</description>
+		</attribute>
 	</tag>
 	<tag>
 		<name>upload</name>
@@ -876,6 +966,11 @@
 			<name>formId</name>
 			<rtexprvalue>true</rtexprvalue>
 			<description>后台接受表单id, 不可与formData同时使用</description>
+		</attribute>
+		<attribute>
+			<name>size</name>
+			<rtexprvalue>false</rtexprvalue>
+			<description>后台接受文件上传大小, 不传默认15MB</description>
 		</attribute>
 	</tag>
 	<tag>
@@ -1030,6 +1125,54 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<description>formdiv.css主题目录</description>
+		</attribute>
+		<attribute>
+			<name>windowType</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>窗口类型：dialog对话框，tab标签页方式打开</description>
+		</attribute>
+		<attribute>
+			<name>tipSweep</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>是否只提交时验证</description>
+		</attribute>
+		<attribute>
+			<name>tranType</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>单据类型</description>
+		</attribute>
+		<attribute>
+			<name>tableName</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>单据表名</description>
+		</attribute>
+		<attribute>
+			<name>title</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>单据标题</description>
+		</attribute>
+		<attribute>
+			<name>saveTemp</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>表单是否提供保存草稿、恢复草稿功能，默认false不需要,true不需要</description>
+		</attribute>
+		<attribute>
+			<name>isCancel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>是否启用作废功能</description>
+		</attribute>
+		<attribute>
+			<name>isPrint</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>是否启用单据打印功能</description>
 		</attribute>
 	</tag>
 	<!-- 自定义的选中操作 -->
@@ -1312,6 +1455,12 @@
 			<description>扩展参数(json格式)</description>
 		</attribute>
 		<attribute>
+			<name>width</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>宽度</description>
+		</attribute>
+		<attribute>
 			<name>id</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -1322,6 +1471,12 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<description>默认选择的Value</description>
+		</attribute>
+		<attribute>
+			<name>showDefaultOption</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>是否显示请选择项</description>
 		</attribute>
 		<attribute>
 			<name>divClass</name>

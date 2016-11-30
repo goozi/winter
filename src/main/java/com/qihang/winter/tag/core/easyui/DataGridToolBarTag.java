@@ -21,7 +21,7 @@ public class DataGridToolBarTag extends TagSupport {
 	private String height;
 	private String operationCode;//按钮的操作Code
 	private String langArg;//按钮的操作Code
-	
+	private String windowType="tab";//窗口类型：dialog对话框，tab标签页方式打开
 	
 	public int doStartTag() throws JspTagException {
 		return EVAL_PAGE;
@@ -31,7 +31,7 @@ public class DataGridToolBarTag extends TagSupport {
 		
 		Tag t = findAncestorWithClass(this, DataGridTag.class);
 		DataGridTag parent = (DataGridTag) t;
-		parent.setToolbar(url, title, icon, exp,onclick, funname,operationCode,width,height);
+		parent.setToolbar(url, title, icon, exp,onclick, funname,operationCode,width,height,windowType);
 		return EVAL_PAGE;
 	}
 	
@@ -70,5 +70,13 @@ public class DataGridToolBarTag extends TagSupport {
 	}
 	public void setLangArg(String langArg) {
 		this.langArg = langArg;
+	}
+
+	public String getWindowType() {
+		return windowType;
+	}
+
+	public void setWindowType(String windowType) {
+		this.windowType = windowType;
 	}
 }

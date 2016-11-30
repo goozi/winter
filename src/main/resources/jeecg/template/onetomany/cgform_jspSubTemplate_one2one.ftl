@@ -5,6 +5,26 @@ $(document).ready(function(){
     	if(location.href.indexOf("load=detail")!=-1){
 			$(":input").attr("disabled","true");
 		}
+    //解决一对多页面中列表页输入框tip属性失效问题
+    $('table').find("[tip]").each(function () {
+        var defaultvalue = $(this).attr("tip");
+        var altercss = $(this).attr("altercss");
+        $(this).focus(function () {
+            if ($(this).val() == defaultvalue) {
+                $(this).val('');
+                if (altercss) {
+                    $(this).removeClass(altercss);
+                }
+            }
+        }).blur(function () {
+            if ($.trim($(this).val()) === '') {
+                $(this).val(defaultvalue);
+                if (altercss) {
+                    $(this).addClass(altercss);
+                }
+            }
+        });
+    });
     });
 </script>
 <div style="width: auto;height: 300px;overflow-y:auto;overflow-x:auto;">

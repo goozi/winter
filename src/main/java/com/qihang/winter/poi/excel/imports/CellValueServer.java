@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.qihang.winter.core.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import com.qihang.winter.poi.excel.entity.params.ExcelImportEntity;
@@ -189,16 +190,16 @@ public class CellValueServer {
                 return Boolean.valueOf(String.valueOf(result));
             }
             if ("class java.lang.Double".equals(xclass) || "double".equals(xclass)) {
-                return Double.valueOf(String.valueOf(result));
+                return result==null||result.equals("")?null:Double.valueOf(String.valueOf(result));
             }
             if ("class java.lang.Long".equals(xclass) || "long".equals(xclass)) {
-                return Long.valueOf(String.valueOf(result));
+                return result==null||result.equals("")?null:Long.valueOf(String.valueOf(result));
             }
             if ("class java.lang.Float".equals(xclass) || "float".equals(xclass)) {
-                return Float.valueOf(String.valueOf(result));
+                return result==null||result.equals("")?null:Float.valueOf(String.valueOf(result));
             }
             if ("class java.lang.Integer".equals(xclass) || "int".equals(xclass)) {
-                return Integer.valueOf(String.valueOf(result));
+                return result==null||result.equals("")?null:Integer.valueOf(String.valueOf(result));
             }
             if ("class java.math.BigDecimal".equals(xclass)) {
                 return new BigDecimal(String.valueOf(result));
@@ -253,15 +254,17 @@ public class CellValueServer {
      * @return
      */
     private Object replaceValue(String[] replace, Object result) {
-        if (replace != null && replace.length > 0) {
+        if(StringUtil.isNotEmpty(result)) {
+          if (replace != null && replace.length > 0) {
             String temp = String.valueOf(result);
             String[] tempArr;
             for (int i = 0; i < replace.length; i++) {
-                tempArr = replace[i].split("_");
-                if (temp.equals(tempArr[0])) {
-                    return tempArr[1];
-                }
+              tempArr = replace[i].split("_");
+              if (temp.equals(tempArr[0])) {
+                return tempArr[1];
+              }
             }
+          }
         }
         return result;
     }

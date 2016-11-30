@@ -19,6 +19,8 @@
 	padding: 2px 5px;
 	cursor: default;
 	display: block;
+	overflow:hidden;
+	position:relative;
 	/* 
 	if width will be 100% horizontal scrollbar will apear 
 	when scroll mode will be used
@@ -34,6 +36,8 @@
 	overflow: hidden;
 }
 
+.ac_results li span{ font-size:12px; display:block; float:left; width:80px;}
+.ac_results li b{ font-size:12px; display:block; float:left;}
 .ac_loading {
 	background: white url('indicator.gif') right center no-repeat;
 }

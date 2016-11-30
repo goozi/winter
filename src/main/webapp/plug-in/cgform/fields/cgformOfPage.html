@@ -11,6 +11,7 @@
 	var langurl = parentObj.document.getElementById("langurl").value;
 	var mutiLangScript = "<script type='text/javascript' src='" + langurl + "'><\/script>";
 	document.write(mutiLangScript);
+
 </script>
 
 </head>
@@ -26,6 +27,8 @@
 				<th align="center" bgcolor="#EEEEEE" mutiLang_id="controltype">控件类型</th>
 				<th align="center" bgcolor="#EEEEEE" mutiLang_id="controllength">控件长度</th>
 				<th align="center" bgcolor="#EEEEEE" mutiLang_id="isquery">是否查询</th>
+				<!-- 添加页脚选项 -->
+				<th align="center" bgcolor="#EEEEEE" mutiLang_id="ispagefoot" class="footcolumn">是否页脚</th>
 				<th align="center" bgcolor="#EEEEEE" mutiLang_id="querytype">查询类型</th>
 			</tr>
 		</tbody>
@@ -57,6 +60,8 @@
 					value="120" type="text" style="width: 60px;"></td>
 				<td align="left"><input type="checkbox"
 					name="columns[#index#].isQuery" style="width: 50px;"></td>
+				<td align="left" class="footcolumn"><input type="checkbox"
+					name="columns[#index#].isPageFoot" style="width: 50px;"></td>
 				<td align="left"><select name="columns[#index#].queryMode">
 						<option value="single">single</option>
 						<option value="group">group</option>

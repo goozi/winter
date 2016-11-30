@@ -5,6 +5,8 @@
 <head>
   <title><t:mutiLang langKey="jeect.platform"/></title>
   <t:base type="jquery,easyui,tools,DatePicker,autocomplete"></t:base>
+  <script type="text/javascript" src="plug-in/accordion/js/leftmenu.js"></script>
+  <link rel="stylesheet" href="plug-in/ace/css/qh-newstyle.css">
   <link rel="shortcut icon" href="images/favicon.ico">
   <style type="text/css">
     a {
@@ -17,12 +19,12 @@
       text-decoration: none;
     }
 
-    /*update-start--Author:zhangguoming  Date:20140622 for：左侧树调整：加大宽度、更换节点图标、修改选中颜色*/
+    /*update-start--Author:Zerrion  Date:20140622 for：左侧树调整：加大宽度、更换节点图标、修改选中颜色*/
     .tree-node-selected {
       background: #eaf2ff;
     }
 
-    /*update-end--Author:zhangguoming  Date:20140622 for：左侧树调整：加大宽度、更换节点图标、修改选中颜色*/
+    /*update-end--Author:Zerrion  Date:20140622 for：左侧树调整：加大宽度、更换节点图标、修改选中颜色*/
   </style>
   <SCRIPT type="text/javascript">
 
@@ -175,10 +177,10 @@
                       <t:mutiLang langKey="common.change.password"/>
                     </div>
                     <div class="menu-sep"></div>
-                    <%--<div onclick="add('<t:mutiLang--%>
-                            <%--langKey="common.change.style"/>','userController.do?changestyle','',550,200)">--%>
-                      <%--<t:mutiLang langKey="common.change.style"/>--%>
-                    <%--</div>--%>
+                    <div onclick="add('<t:mutiLang
+                            langKey="common.change.style"/>','userController.do?changestyle','',550,200)">
+                      <t:mutiLang langKey="common.change.style"/>
+                    </div>
                     <div onclick="clearLocalstorage()">
                       <t:mutiLang langKey="common.clear.localstorage"/>
                     </div>

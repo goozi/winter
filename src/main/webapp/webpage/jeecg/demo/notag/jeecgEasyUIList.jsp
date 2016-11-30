@@ -20,7 +20,7 @@
 </table>
 <div id="tb2" style="height: 30px;" class="datagrid-toolbar"><span style="float: left;"> 
 <a href="#" id='add' class="easyui-linkbutton" plain="true" icon="icon-add"
-	onclick="add('录入','jeecgEasyUIController.do?addorupdate','jeecgEasyUIList')" id="">录入</a> 
+	onclick="add('新增','jeecgEasyUIController.do?addorupdate','jeecgEasyUIList')" id="">新增</a>
 	<a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit"
 	onclick="update('编辑','jeecgEasyUIController.do?addorupdate','jeecgEasyUIList')" id="">编辑</a> 
 	<a href="#" class="easyui-linkbutton" plain="true" icon="icon-search"

@@ -1,15 +1,16 @@
+<#assign entityPackage=entityPackage?replace("/",".")>
 
 <#if packageStyle == "service">
 package ${bussiPackage}.${entityPackage}.page;
 import ${bussiPackage}.${entityPackage}.entity.${entityName}Entity;
 <#list subTab as sub>
-import ${bussiPackage}.${sub.entityPackage}.entity.${sub.entityName}Entity;
+import ${bussiPackage}.${sub.entityPackage?replace("/",".")}.entity.${sub.entityName}Entity;
 </#list>
 <#else>
 package ${bussiPackage}.page.${entityPackage};
 import ${bussiPackage}.entity.${entityPackage}.${entityName}Entity;
 <#list subTab as sub>
-import ${bussiPackage}.entity.${sub.entityPackage}.${sub.entityName}Entity;
+import ${bussiPackage}.entity.${sub.entityPackage?replace("/",".")}.${sub.entityName}Entity;
 </#list>
 </#if>
 

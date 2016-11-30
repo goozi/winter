@@ -17,6 +17,29 @@
 	$(".tabs-wrap").css('width','100%');
   });
  </script>
+
+   <style >
+     /**20160629  页脚样式 **/
+     body{
+       position: absolute;
+       width: 100%;
+       height: 100%;
+     }
+     .footlabel{
+       float: left;
+       margin-left: 15px;
+     }
+
+     .footspan{
+       float: left;
+       margin-left: 5px;
+       margin-right: 5px;
+       font-weight: bold;
+       color: grey;
+       margin-bottom: 5px;
+       text-decoration: underline;
+     }
+     </style>
  </head>
  <body style="overflow-x: hidden;">
   <t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" tiptype="1" action="${entityName?uncap_first}Controller.do?doUpdate">
@@ -102,7 +125,11 @@
 					               </#if>
 					               </#if> value='${'$'}{${entityName?uncap_first}Page.${po.fieldName}}'>
 				</#if>
-				<span class="Validform_checktip"></span>
+				<span class="Validform_checktip">
+					<#if po.fieldValidType?if_exists?starts_with('*') || (po.fieldValidType?if_exists?html == '' && po.isNull != 'Y')>
+                      *
+					</#if>
+				</span>
 				<label class="Validform_label" style="display: none;">${po.content?if_exists?html}</label>
 			</td>
 		<#if (po_index+1)%2==0>
@@ -129,8 +156,15 @@
 		<#list subTab as sub>
 		<tbody id="add_${sub.entityName?uncap_first}_table_template">
 			<tr>
-			 <td align="center"><div style="width: 25px;" name="xh"></div></td>
-			 <td align="center"><input style="width:20px;" type="checkbox" name="ck"/></td>
+			 <td align="center" bgcolor="white">
+				 <div style="width: 30px;" name="xh"></div>
+			 </td>
+			 <td align="center" bgcolor="white">
+         <div style="width: 80px;">
+           <a name="add${sub.entityName}Btn[#index#]" id="add${sub.entityName}Btn[#index#]" href="#"  onclick="clickAdd${sub.entityName}Btn('#index#');"></a>
+           <a name="del${sub.entityName}Btn[#index#]" id="del${sub.entityName}Btn[#index#]" href="#"  onclick="clickDel${sub.entityName}Btn('#index#');"></a>
+         </div>
+       </td>
 			 <#list subPageColumnsMap[sub.tableName] as po>
 				 <#assign check = 0 >
 				  <#list sub.foreignKeys as key>
@@ -140,54 +174,22 @@
 				  </#if>
 				  </#list>
 				  <#if check==0>
-				  <td align="left">
+				  <td align="left" bgcolor="white">
 					  <#if po.showType == "text">
 					  	<input name="${sub.entityName?uncap_first}List[#index#].${po.fieldName}" maxlength="${po.length?c}" 
-					  		type="text" class="inputxt"  style="width:120px;"
-					  		<#if po.fieldValidType?if_exists?html != ''>
-					               datatype="${po.fieldValidType?if_exists?html}"
-					               <#else>
-					               <#if po.type == 'int'>
-					               datatype="n" 
-					               <#elseif po.type=='double'>
-					               datatype="/^(-?\d+)(\.\d+)?$/" 
-					               <#else>
-					               <#if po.isNull != 'Y'>datatype="*"</#if>
-					               </#if>
-					               </#if>>
+					  		type="text" class="inputxt"  style="width:120px;" <#if po.fieldValidType?if_exists?html != ''> datatype="${po.fieldValidType?if_exists?html}"<#else><#if po.type == 'int'> datatype="n"<#elseif po.type=='double'> datatype="/^(-?\d+)(\.\d+)?$/"<#else><#if po.isNull != 'Y'> datatype="*"</#if></#if></#if>/>
 						<#elseif po.showType=='password'>
 							<input name="${sub.entityName?uncap_first}List[#index#].${po.fieldName}" maxlength="${po.length?c}" 
-					  		type="password" class="inputxt"  style="width:120px;"
-					  		<#if po.fieldValidType?if_exists?html != ''>
-					               datatype="${po.fieldValidType?if_exists?html}"
-					               <#else>
-					               <#if po.type == 'int'>
-					               datatype="n" 
-					               <#elseif po.type=='double'>
-					               datatype="/^(-?\d+)(\.\d+)?$/" 
-					               <#else>
-					               <#if po.isNull != 'Y'>datatype="*"</#if>
-					               </#if>
-					               </#if>>
+					  		type="password" class="inputxt"  style="width:120px;"<#if po.fieldValidType?if_exists?html != ''> datatype="${po.fieldValidType?if_exists?html}"<#else><#if po.type == 'int'> datatype="n"<#elseif po.type=='double'> datatype="/^(-?\d+)(\.\d+)?$/"<#else><#if po.isNull != 'Y'> datatype="*"</#if></#if></#if>/>
 						<#elseif po.showType=='radio' || po.showType=='select' || po.showType=='checkbox' || po.showType=='list'>
 							<t:dictSelect field="${sub.entityName?uncap_first}List[#index#].${po.fieldName}" type="${po.showType?if_exists?html}"
-										<#if po.dictTable?if_exists?html != ''>dictTable="${po.dictTable?if_exists?html}" dictField="${po.dictField?if_exists?html}" dictText="${po.dictText?if_exists?html}"<#else>typeGroupCode="${po.dictField}"</#if> defaultVal="" hasLabel="false"  title="${po.content}"></t:dictSelect>     
+										<#if po.dictTable?if_exists?html != ''> dictTable="${po.dictTable?if_exists?html}" dictField="${po.dictField?if_exists?html}" dictText="${po.dictText?if_exists?html}"<#else>typeGroupCode="${po.dictField}"</#if> defaultVal="" hasLabel="false"  title="${po.content}"></t:dictSelect>
 						<#elseif po.showType=='date'>
 							<input name="${sub.entityName?uncap_first}List[#index#].${po.fieldName}" maxlength="${po.length?c}" 
-					  		type="text" class="Wdate" onClick="WdatePicker()"  style="width:120px;"
-					  		<#if po.fieldValidType?if_exists?html != ''>
-					               datatype="${po.fieldValidType?if_exists?html}"
-					               <#else>
-					               <#if po.isNull != 'Y'>datatype="*"</#if> 
-					               </#if>>  
+					  		type="text" class="Wdate" onClick="WdatePicker()"  style="width:120px;"<#if po.fieldValidType?if_exists?html != ''> datatype="${po.fieldValidType?if_exists?html}"<#else><#if po.isNull != 'Y'>datatype="*"</#if></#if>/>
 					      <#elseif po.showType=='datetime'>
 					      	<input name="${sub.entityName?uncap_first}List[#index#].${po.fieldName}" maxlength="${po.length?c}" 
-						  		type="text"  class="Wdate" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"  style="width:120px;"
-						  		<#if po.fieldValidType?if_exists?html != ''>
-					               datatype="${po.fieldValidType?if_exists?html}"
-					               <#else>
-					               <#if po.isNull != 'Y'>datatype="*"</#if> 
-					               </#if>>  
+						  		type="text"  class="Wdate" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"  style="width:120px;"<#if po.fieldValidType?if_exists?html != ''> datatype="${po.fieldValidType?if_exists?html}"<#else><#if po.isNull != 'Y'>datatype="*"</#if></#if>/>
 					        <#elseif po.showType=='file'>
 										<input type="hidden" id="${sub.entityName?uncap_first}List[#index#].${po.fieldName}" name="${sub.entityName?uncap_first}List[#index#].${po.fieldName}" />
 										<a  target="_blank" id="${sub.entityName?uncap_first}List[#index#].${po.fieldName}_href">未上传</a>
@@ -196,18 +198,7 @@
 													onclick="commonUpload(commonUploadDefaultCallBack,'${sub.entityName?uncap_first}List\\[#index#\\]\\.${po.fieldName}')"/>
 					       <#else>
 					       	<input name="${sub.entityName?uncap_first}List[#index#].${po.fieldName}" maxlength="${po.length?c}" 
-						  		type="text" class="inputxt"  style="width:120px;"
-						  		<#if po.fieldValidType?if_exists?html != ''>
-					               datatype="${po.fieldValidType?if_exists?html}"
-					               <#else>
-					               <#if po.type == 'int'>
-					               datatype="n" 
-					               <#elseif po.type=='double'>
-					               datatype="/^(-?\d+)(\.\d+)?$/" 
-					               <#else>
-					               <#if po.isNull != 'Y'>datatype="*"</#if>
-					               </#if>
-					               </#if>>
+						  		type="text" class="inputxt"  style="width:120px;"<#if po.fieldValidType?if_exists?html != ''> datatype="${po.fieldValidType?if_exists?html}"<#else><#if po.type == 'int'> datatype="n"<#elseif po.type=='double'> datatype="/^(-?\d+)(\.\d+)?$/"<#else><#if po.isNull != 'Y'> datatype="*"</#if></#if></#if>/>
 					  </#if>
 					  <label class="Validform_label" style="display: none;">${po.content?if_exists?html}</label>
 				  </td>
@@ -217,5 +208,15 @@
 		 </tbody>
 		 </#list>
 		</table>
+<!--20160629  页脚显示 -->
+  <div style="position: absolute;bottom: 10px;left:10px;" id="footdiv">
+  <#list columnsfoot as foot>
+      <label  class="Validform_label footlabel">${foot.content}: </label>
+      <span  class="inputxt footspan">#####此处替换#####</span>
+
+  </#list>
+
+  </div>
+
  </body>
  <script src = "webpage/${bussiPackage?replace('.','/')}/${entityPackage}/${entityName?uncap_first}.js"></script>	

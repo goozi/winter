@@ -10,6 +10,7 @@ CKEDITOR.editorConfig = function( config ) {
 	config.font_defaultLabel = '宋体';
 	config.fontSize_defaultLabel = '12px';
 	config.tabSpaces = 2;
+	config.height = 320;
 
 	config.language = "zh-cn";
 	config.image_previewText = ' '; // 预览区域显示内容
@@ -17,6 +18,7 @@ CKEDITOR.editorConfig = function( config ) {
 			+ config.font_names;
 	config.skin = 'moonocolor';
 	config.toolbarGroups = [
+		{name:'insert',groups:['Image','Table','Smiley']},
 	        { name: 'document',    groups: [ 'mode', 'document', 'doctools' ] },
 	        { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
             { name: 'insert' },{name:'font'},{ name: 'tools' },
@@ -24,4 +26,5 @@ CKEDITOR.editorConfig = function( config ) {
             { name: 'links' },{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup', 'font'] },
             { name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align' ] },
             { name: 'forms' },{ name: 'styles' },{ name: 'colors' }];
+	config.filebrowserUploadUrl="systemController.do?ckeditorUpload";
 };

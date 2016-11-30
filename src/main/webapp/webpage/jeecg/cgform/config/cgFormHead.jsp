@@ -43,17 +43,24 @@ String langurl = basePath + "/plug-in/mutiLang/" + lang +".js";
 </head>
 <body style="overflow-y: hidden; overflow-x: hidden;" scroll="no">
 <!-- 增加beforeSubmit页面逻辑删除-->
-<t:formvalid formid="formobj" dialog="true" usePlugin="password" beforeSubmit="deleteUnUsedFiled();" layout="table" tiptype="1" action="cgFormHeadController.do?save">
+<t:formvalid formid="formobj" dialog="true" usePlugin="password" beforeSubmit="deleteUnUsedFiled();" layout="table" tiptype="1" action="cgFormHeadController.do?save" windowType="dialog">
 	<!-- tiptype="1" -->
 	<input id="id" name="id" type="hidden" value="${cgFormHeadPage.id}">
 	<input id="langurl" name="langurl" type="hidden" value="<%=langurl%>">
 	<table cellpadding="0" cellspacing="1" class="formtable">
 		<tr>
 			<td align="right"><label class="Validform_label"> <t:mutiLang langKey="table.name"/>: </label></td>
-			<td class="value" colspan="3">
+			<td class="value">
 			  <input class="inputxt" id="tableName" name="tableName" value="${cgFormHeadPage.tableName}"
 				prefixName="" <c:if test="${not empty cgFormHeadPage.tableName}">readonly="readonly"</c:if> datatype="*" validType="cgform_head,table_Name,id" nullmsg=<t:mutiLang langKey="please.input.table.name"/>> 
 				<span class="Validform_checktip"></span></td>
+			<td align="right"><label class="Validform_label">新增页面方式: </label></td>
+			<td class="value">
+				<select id="windowType" name="windowType">
+					<option value="tab" <c:if test="${cgFormHeadPage.windowType eq 'tab'}"> selected='selected'</c:if>>标签</option>
+					<option value="dialog" <c:if test="${cgFormHeadPage.windowType eq 'dialog'}"> selected="selected"</c:if>>弹出窗</option>
+				</select>
+			</td>
 		</tr>
 		<tr>
 			<td align="right"><label class="Validform_label"> <t:mutiLang langKey="pk.strategies"/>:</label></td>
@@ -123,6 +130,19 @@ String langurl = basePath + "/plug-in/mutiLang/" + lang +".js";
 			<td align="right"><label class="Validform_label"> idField: </label></td>
 			<td class="value"><input class="inputxt" id="treeIdFieldname" name="treeIdFieldname" value="id" datatype="s2-100"> <span class="Validform_checktip"></span></td>
 		
+		</tr>
+		<tr>
+			<td align="right"><label class="Validform_label"> 是否工作流:</label></td>
+			<td class="value" colspan="3">
+				<input id="isWorkFlow" type="hidden" value="${cgFormHeadPage.isWorkFlow}"/>
+				<input type="radio" name="isWorkFlow" value="0" checked="checked" onclick="changeSel()"/>否
+				<input type="radio" name="isWorkFlow" value="1" onclick="changeSel()"/>是
+				<div id="flowDiv" <c:if test="${cgFormHeadPage.isWorkFlow ne 1}">style="display: none"</c:if>>工作流：<input class="easyui-combobox" id="flowInfo"  value="${cgFormHeadPage.flowInfo}" name="flowInfo" data-options="valueField: 'id',
+						textField: 'value',
+						panelHeight:200,
+						editable:false,
+						url:'cgFormHeadController.do?loadFlowInfo'" ></div>
+				<span class="Validform_checktip"></span></td>
 		</tr>
 	</table>
   <div id="tabs" class="easyui-tabs" tabPosition="top" fit="false" style="margin: 0px; padding: 0px; overflow: hidden; width: auto;">

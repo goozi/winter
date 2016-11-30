@@ -3,13 +3,13 @@ package com.qihang.winter.web.system.service;
 import java.util.List;
 import java.util.Set;
 
+import com.qihang.buss.sc.sales.entity.TScIcJhstockbillEntity;
+import com.qihang.buss.sc.sys.entity.TScAccountConfigEntity;
+import com.qihang.buss.sc.sysaudit.entity.TSAuditRelationEntity;
 import com.qihang.winter.core.common.service.CommonService;
-import com.qihang.winter.web.system.pojo.base.DictEntity;
-import com.qihang.winter.web.system.pojo.base.TSFunction;
-import com.qihang.winter.web.system.pojo.base.TSIcon;
-import com.qihang.winter.web.system.pojo.base.TSType;
-import com.qihang.winter.web.system.pojo.base.TSTypegroup;
-import com.qihang.winter.web.system.pojo.base.TSUser;
+import com.qihang.winter.web.system.pojo.base.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 
@@ -28,6 +28,21 @@ public interface SystemService extends CommonService {
  	 * 返回类型： List<DictEntity>
  	 */
  	public List<DictEntity> queryDict(String dicTable, String dicCode, String dicText);
+
+	/*
+	 *通过字典代码和字典值得到字典名
+	 * @Param dicCode 字典代码
+	 * @Param typeCode 字典值
+	 */
+	public String typeName(String dicCode,String typeCode);
+
+	/**
+	 * 通过字典代码和字典名称获取字典的ID
+	 * @param dicName
+	 * @param typeCode
+     * @return
+     */
+	public String typeId(String dicName,String typeCode);
 	
 	/**
 	 * 登陆用户检查
@@ -41,7 +56,6 @@ public interface SystemService extends CommonService {
 	 * @param LogContent 内容
 	 * @param loglevel 级别
 	 * @param operatetype 类型
-	 * @param TUser 操作人
 	 */
 	public void addLog(String LogContent, Short loglevel,Short operatetype);
 	/**
@@ -53,14 +67,12 @@ public interface SystemService extends CommonService {
 	public TSType getType(String typecode, String typename, TSTypegroup tsTypegroup);
 	/**
 	 * 根据类型分组编码和名称获取TypeGroup,如果为空则创建一个
-	 * @param typecode
-	 * @param typename
 	 * @return
 	 */
 	public TSTypegroup getTypeGroup(String typegroupcode,String typgroupename);
 	/**
 	 * 根据用户ID 和 菜单Id 获取 具有操作权限的按钮Codes
-	 * @param roleId
+	 * @param userId
 	 * @param functionId
 	 * @return
 	 */
@@ -141,5 +153,107 @@ public interface SystemService extends CommonService {
 	 * 删除图标
 	 * @param icon
 	 */
-	public  void delTSIcons(TSIcon icon); 
+	public  void delTSIcons(TSIcon icon);
+
+	/**
+	 * 获取审核结果
+	 * @param id
+	 * @param tranType
+	 * @return
+	 */
+	public TSAuditRelationEntity getAuditInfo(String id, String tranType);
+
+	/**
+	 * 获取所有审核结果
+	 * @param id
+	 * @param tranType
+	 * @return
+	 */
+	public List<TSAuditRelationEntity> getAuditInfoList(String id, String tranType);
+   /**
+   * 通过CODE获取系统配置
+   * @param code
+   * @return
+   */
+   public String getConfigByCode(String code);
+
+	/**
+	 * 测试当前hibernate会话的连接信息
+	 * @author:hjh 20160906
+	 */
+	public void getConn();
+
+	/**
+	 * 通过jdbc到主数据库查询当前账套dbKey对应的账套信息
+	 * @param dbkey
+	 * @author:hjh 20160906
+     */
+	public TScAccountConfigEntity getCurrentAccountConfigByDbkey(String dbkey);
+
+	/**
+	 * 通过jdbc到主数据库查询当前账套Id对应的账套信息
+	 * @param accountId
+	 * @author:hjh 20160906
+	 */
+	public TScAccountConfigEntity getCurrentAccountConfigByAccountid(String accountId);
+
+	/**
+	 * 校验单据编号唯一性
+	 * @param tableName
+	 * @param billNo
+	 * @return
+	 */
+	public Boolean checkBillNo(String tableName, String billNo,String billId);
+
+	/**
+	 * 按条件到主数据库查询指定账定对应账套信息
+	 * @param fieldName
+	 * @param fieldValue
+	 * @return
+	 */
+	public DynamicDataSourceEntity getDynamicDataSourceByParameter(String fieldName, String fieldValue);
+
+	/**
+	 *
+	 * @param sonId
+	 * @return
+	 */
+	public Set<String> formatterSonId(String sonId);
+
+	/**
+	 * 获取经销商或部门分支机构id
+	 * @param sonInfo
+	 * @return
+	 */
+	public TSDepart getParentSonInfo(TSDepart sonInfo);
+
+	/**
+	 * 根据父部门id获取所有子部门id
+	 * @param id
+	 * @return
+	 */
+	public Set<String> getAllSonId(String id);
+
+	/**
+	 * 新增数据后，若需要多级审核，则在首页做出预警
+	 * @param tranType
+	 * @param id
+	 */
+	public void saveBillAuditStatus(String tranType, String id);
+
+	/**
+	 * 删除待审核预警数据
+	 * @param tranType
+	 * @param id
+	 */
+	public void delBillAuditStatus(String tranType, String id);
+
+	/**
+	 * 获取当前用户的审核级别
+	 * @param userId
+	 * @param id
+	 * @param tranType
+	 * @return
+	 */
+	public Set<Integer> getUserAuditLeave(String userId, String id, String tranType);
 }

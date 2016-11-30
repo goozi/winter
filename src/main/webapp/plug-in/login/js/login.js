@@ -9,8 +9,8 @@ $(document).ready(function () {
   $("#randCode").attr("nullmsg", pleaseinputvalidatecode);
   $("#randCode").attr("title", validatecode);
 
-  getCookie();
-  onfocus();
+    readCookies();
+    //onfocus();
 
   $(".on_off_checkbox").iphoneStyle();
   $('.tip a ').tipsy({
@@ -101,7 +101,7 @@ function zhanggm(orgId) {
 }
 //登录处理函数
 function Login(orgId) {
-  setCookie();
+    writeCookies();
   var actionurl = $('form').attr('action');//提交路径
   var checkurl = $('form').attr('check');//验证路径
   var formData = new Object();
@@ -120,7 +120,8 @@ function Login(orgId) {
     error: function () {// 请求失败处理函数
     },
     success: function (data) {
-      var d = $.parseJSON(data);
+      //var d = $.parseJSON(data);
+      var d = data;
       if (d.success) {
         loginsuccess();
         // todo  没有处理多语言，暂时这样判断下吧
@@ -174,39 +175,26 @@ function Login(orgId) {
   });
 }
 //设置cookie
-function setCookie() {
-  if ($('#on_off').val() == '1') {
-    $("input[iscookie='true']").each(function () {
-      $.cookie(this.name, $("#" + this.name).val(), "/", 24);
-      $.cookie("COOKIE_NAME", "true", "/", 24);
-    });
-  } else {
-    $("input[iscookie='true']").each(function () {
-      $.cookie(this.name, null);
-      $.cookie("COOKIE_NAME", null);
-    });
+function readCookies() {
+    if ($.cookie('rememberMe') == 'true') {
+        $('#rememberMe').prop('checked', true);
+        $('#userName').val($.cookie('userName'));
+        //$('#fsid').val($.cookie('fsid'));
   }
 }
-//读取cookie
-function getCookie() {
-  var COOKIE_NAME = $.cookie("COOKIE_NAME");
-  if (COOKIE_NAME != null) {
-    $("input[iscookie='true']").each(function () {
-      $($("#" + this.name).val($.cookie(this.name)));
-      if ("admin" == $.cookie(this.name)) {
-        $("#randCode").focus();
-      } else {
-        $("#password").val("");
-        $("#password").focus();
-      }
-    });
-    $("#on_off").attr("checked", true);
-    $("#on_off").val("1");
+
+function writeCookies() {
+    if ($('#rememberMe').prop('checked')) {
+        var userName = $("#userName").val();
+        //var password = $("#fsid").val();
+        $.cookie("rememberMe", "true", {expires: 7}); // 存储一个带7天期限的 cookie
+        $.cookie("userName", userName, {expires: 7}); // 存储一个带7天期限的 cookie
+        //$.cookie("fsid", password, {expires: 7}); // 存储一个带7天期限的 cookie
   }
   else {
-    $("#on_off").attr("checked", false);
-    $("#on_off").val("0");
-    $("#randCode").focus();
+        $.cookie("rememberMe", "false", {expires: -1});
+        $.cookie("userName", '', {expires: -1});
+        //$.cookie("fsid", '', {expires: -1});
   }
 }
 //点击消息关闭提示

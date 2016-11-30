@@ -5,9 +5,7 @@ import com.qihang.winter.core.common.model.json.ComboTree;
 import com.qihang.winter.core.common.model.json.DataGrid;
 import com.qihang.winter.core.common.model.json.TreeGrid;
 import com.qihang.winter.core.constant.Globals;
-import com.qihang.winter.core.util.MutiLangUtil;
-import com.qihang.winter.core.util.NumberComparator;
-import com.qihang.winter.core.util.StringUtil;
+import com.qihang.winter.core.util.*;
 import com.qihang.winter.tag.vo.datatable.SortDirection;
 import com.qihang.winter.tag.vo.easyui.ComboTreeModel;
 import com.qihang.winter.tag.vo.easyui.TreeGridModel;
@@ -20,13 +18,15 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import com.qihang.winter.core.common.controller.BaseController;
 import com.qihang.winter.core.common.hibernate.qbc.CriteriaQuery;
-import com.qihang.winter.core.util.oConvertUtils;
 import com.qihang.winter.tag.core.easyui.TagUtil;
 import com.qihang.winter.web.system.pojo.base.TSDataRule;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -86,7 +86,7 @@ public class FunctionController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "operation")
-	public ModelAndView operation(HttpServletRequest request, String functionId) {
+	public ModelAndView operation(HttpServletRequest request, @RequestParam(value="functionId",required = false)String functionId) {
 		request.setAttribute("functionId", functionId);
 		return new ModelAndView("system/operation/operationList");
 	}
@@ -98,7 +98,7 @@ public class FunctionController extends BaseController {
 	 */
 	@RequestMapping(params = "dataRule")
 	public ModelAndView operationData(HttpServletRequest request,
-			String functionId) {
+			@RequestParam(value = "functionId",required = false)String functionId) {
 		request.setAttribute("functionId", functionId);
 		return new ModelAndView("system/dataRule/ruleDataList");
 	}
@@ -112,9 +112,15 @@ public class FunctionController extends BaseController {
 	 */
 
 	@RequestMapping(params = "datagrid")
-	public void datagrid(HttpServletRequest request,
-			HttpServletResponse response, DataGrid dataGrid) {
+	public void datagrid(@Value("#{sysProp[PROJECT_CODE]}")String projectCode,HttpServletRequest request,
+											 HttpServletResponse response, DataGrid dataGrid) {
 		CriteriaQuery cq = new CriteriaQuery(TSFunction.class, dataGrid);
+		if(StringUtil.isNotEmpty(projectCode) || !"00".equals(projectCode)){
+			//一级菜单且排序号以项目代码开头或开发平台自带的菜单，或除一级菜单外的所有菜单
+			cq.or(Restrictions.and(Restrictions.or(Restrictions.like("functionOrder",projectCode+"%"),Restrictions.like("functionOrder","99%")),Restrictions.eq("functionLevel",
+							Short.valueOf("0"))),Restrictions.not(Restrictions.eq("functionLevel",Short.valueOf("0"))));
+		}
+		cq.add();
 		this.systemService.getDataGridReturn(cq, true);
 		TagUtil.datagrid(response, dataGrid);
 	}
@@ -370,9 +376,16 @@ public class FunctionController extends BaseController {
 	 */
 	@RequestMapping(params = "functionGrid")
 	@ResponseBody
-	public List<TreeGrid> functionGrid(HttpServletRequest request,
+	public List<TreeGrid> functionGrid(@Value("#{sysProp[PROJECT_CODE]}")String projectCode,HttpServletRequest request,
 																		 TreeGrid treegrid) {
 		CriteriaQuery cq = new CriteriaQuery(TSFunction.class);
+//		if(StringUtil.isNotEmpty(projectCode) && !"00".equals(projectCode) && !ResourceUtil.getSessionUserName().getUserName().equals("programmer")){
+		if(StringUtil.isNotEmpty(projectCode) && !"00".equals(projectCode)){
+			//一级菜单且排序号以项目代码开头或开发平台自带的菜单，或除一级菜单外的所有菜单
+			cq.or(Restrictions.and(Restrictions.or(Restrictions.like("functionOrder",projectCode+"%"),
+							Restrictions.like("functionOrder","99%")),Restrictions.eq("functionLevel",
+							Short.valueOf("0"))),Restrictions.not(Restrictions.eq("functionLevel",Short.valueOf("0"))));
+		}
 		String selfId = request.getParameter("selfId");
 		if (selfId != null) {
 			cq.notEq("id", selfId);
@@ -383,6 +396,7 @@ public class FunctionController extends BaseController {
 		if (treegrid.getId() == null) {
 			cq.isNull("TSFunction");
 		}
+
 		cq.addOrder("functionOrder", SortDirection.asc);
 		cq.add();
 		List<TSFunction> functionList = systemService.getListByCriteriaQuery(cq, false);
@@ -627,14 +641,14 @@ public class FunctionController extends BaseController {
 			systemService.addLog(message, Globals.Log_Type_UPDATE,
 					Globals.Log_Leavel_INFO);
 		} else {
-			if (justHaveDataRule(operation) == 0) {
+			if (justHaveDataRule(operation) <= 5) {
 				message = MutiLangUtil.paramAddSuccess("common.operation");
 				userService.save(operation);
 				systemService.addLog(message, Globals.Log_Type_INSERT,
 						Globals.Log_Leavel_INFO);
 			} else {
 
-				message = "操作 字段规则已存在";
+				message = "同一操作字段规则不可超过5条";
 			}
 		}
 		j.setMsg(message);
@@ -646,7 +660,7 @@ public class FunctionController extends BaseController {
 				.getId()+"' AND rule_column='"+dataRule.getRuleColumn()+"' AND rule_conditions='"+dataRule
 				.getRuleConditions()+"'";
 		
-		List<String> hasOperList = this.systemService.findListbySql(sql); 
+		List<String> hasOperList = this.systemService.findListbySql(sql);
 		return hasOperList.size();
 	}
 }

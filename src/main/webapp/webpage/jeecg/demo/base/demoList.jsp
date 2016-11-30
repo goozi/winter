@@ -10,7 +10,7 @@
 </t:datagrid>
 <div id="addDemoListtb" style="padding: 5px; height: 25px">
 <div style="float: left;">
-	<a href="#" class="easyui-linkbutton" plain="true" icon="icon-add" onclick="add('DEMO录入','demoController.do?aorudemo','addDemoList')">弹出方式添加</a>
+	<a href="#" class="easyui-linkbutton" plain="true" icon="icon-add" onclick="add('DEMO新增','demoController.do?aorudemo','addDemoList')">弹出方式添加</a>
 	<a href="#" class="easyui-linkbutton" plain="true" icon="icon-add" onclick="addbytab()">TAB方式添加</a>
 	<a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit" onclick="update('DEMO编辑','demoController.do?aorudemo','addDemoList')">弹出方式编辑</a>
 	<a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit" onclick="updatebytab()">TAB方式编辑</a>

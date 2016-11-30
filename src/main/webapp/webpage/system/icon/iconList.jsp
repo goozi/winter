@@ -12,8 +12,8 @@
         <t:dgCol title="common.icon.type" field="extend"></t:dgCol>
         <t:dgCol title="common.operation" field="opt"></t:dgCol>
         <t:dgDelOpt url="iconController.do?del&id={id}" title="common.delete"></t:dgDelOpt>
-        <t:dgToolBar title="common.add.param" langArg="common.icon" icon="icon-add" url="iconController.do?addorupdate" funname="add"></t:dgToolBar>
-        <t:dgToolBar title="common.edit.param" langArg="common.icon" icon="icon-edit" url="iconController.do?addorupdate" funname="update"></t:dgToolBar>
+        <t:dgToolBar title="common.add.param" langArg="common.icon" icon="icon-add" url="iconController.do?addorupdate" funname="add" windowType="dialog"></t:dgToolBar>
+        <t:dgToolBar title="common.edit.param" langArg="common.icon" icon="icon-edit" url="iconController.do?addorupdate" funname="update" windowType="dialog"></t:dgToolBar>
         <t:dgToolBar title="batch.generate.style" icon="icon-edit" url="iconController.do?repair" funname="doSubmit"></t:dgToolBar>
     </t:datagrid>
 </div>

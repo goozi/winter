@@ -4,6 +4,12 @@
 <html>
 <head>
 <t:base type="jquery,tools"></t:base>
+<script type="text/javascript">
+	$(function(){
+		$("#btn_sub").remove();
+		$("#closeTab").remove();
+	})
+</script>
 </head>
 <body style="overflow-y: hidden" scroll="no">
 <t:formvalid formid="formobj" layout="div" dialog="true">
@@ -13,8 +19,8 @@
 	<div class="form"><label class="form"> <t:mutiLang langKey="common.surname"/>: </label> ${user.realName}</div>
 	
 	<div class="form"><label class="form"> <t:mutiLang langKey="common.phone"/>: </label> ${user.mobilePhone}</div>
-	<div class="form"><label class="form"> <t:mutiLang langKey="common.office.tel"/>: </label> ${user.officePhone}</div>
-	<div class="form"><label class="form"> <t:mutiLang langKey="common.mail"/>: </label> ${user.email}</div>
+	<div class="form"><label class="form"> <t:mutiLang langKey="common.tel"/>: </label> ${user.officePhone}</div>
+	<div class="form"><label class="form"> <t:mutiLang langKey="common.email"/>: </label> ${user.email}</div>
 	</fieldset>
 	</form>
 </t:formvalid>

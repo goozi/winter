@@ -140,13 +140,20 @@ public class CgformCodeGenerateOneToMany
       }
 
       ArrayList pageColumns1 = new ArrayList();
+	  /**20160628 过滤出页脚字段 **/
+      ArrayList columnsfoot = new ArrayList();
       Iterator subColumnsMap1 = columns.iterator();
 
       while(subColumnsMap1.hasNext()) {
         CgFormFieldEntity subtables1 = (CgFormFieldEntity)subColumnsMap1.next();
-        if(StringUtils.isNotEmpty(subtables1.getIsShow()) && "Y".equalsIgnoreCase(subtables1.getIsShow())) {
-          pageColumns1.add(subtables1);
+        if(!"Y".equals(subtables1.getIsPageFoot())){
+          if(StringUtils.isNotEmpty(subtables1.getIsShow()) && "Y".equalsIgnoreCase(subtables1.getIsShow())) {
+            pageColumns1.add(subtables1);
+          }
+        } else {
+          columnsfoot.add(subtables1);
         }
+
       }
 
       String[] subtables2 = this.mainG.getCgFormHead().getSubTableStr().split(",");
@@ -154,6 +161,7 @@ public class CgformCodeGenerateOneToMany
       data.put("fieldMeta", serialVersionUID);
       data.put("columns", columns);
       data.put("pageColumns", pageColumns1);
+      data.put("columnsfoot", columnsfoot);
       data.put("buttons", this.mainG.getButtons() == null?new ArrayList(0):this.mainG.getButtons());
       data.put("buttonSqlMap", this.mainG.getButtonSqlMap() == null?new HashMap(0):this.mainG.getButtonSqlMap());
       data.put("subtables", subtables2);
